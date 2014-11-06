@@ -20,17 +20,20 @@
       <x>140</x>
       <y>0</y>
       <width>661</width>
-      <height>411</height>
+      <height>401</height>
      </rect>
     </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
    </widget>
-   <widget class="QListView" name="algorithmView">
+   <widget class="QListWidget" name="algorithmsList">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>30</y>
+      <y>0</y>
       <width>141</width>
-      <height>192</height>
+      <height>401</height>
      </rect>
     </property>
    </widget>
