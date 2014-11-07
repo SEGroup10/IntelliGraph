@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include "workspace.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,13 +22,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QGraphicsScene *scene;
-    QGraphicsEllipseItem *ellipse;
-
-    QGraphicsRectItem *rectangle;
-
+    void mousePressEvent(QMouseEvent *event);
 private:
     Ui::MainWindow *ui;
+    Workspace *workspace;
 };
 
 #endif // MAINWINDOW_H

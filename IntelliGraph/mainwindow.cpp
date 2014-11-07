@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "workspace.h"
 #include <QMessageBox>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QListWidgetItem>
+#include <QMouseEvent>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,26 +19,24 @@ MainWindow::MainWindow(QWidget *parent) :
     itm->setText("Algorithm 1");
     ui->algorithmsList->addItem(itm);
 
-    // We need a Scene on the GraphicsView to draw shapes
-    scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(scene);
-
-    // As a test we draw a purple circle.
-    QBrush purpleBrush(QColor(102, 0, 102));
-    QPen blackPen(Qt::black);
-
-    blackPen.setWidth(2);
-
-    // Here we add the circle to the scene
-    ellipse = scene->addEllipse(10, 10, 100, 100, blackPen, purpleBrush);
-
-    // And make it movable
-    ellipse->setFlag(QGraphicsItem::ItemIsMovable);
+    this->workspace = new Workspace( this, ui->graphicsView );
+    workspace->doStuff();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete workspace;
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if( (event->x() >= ui->graphicsView->x()) &&
+        (event->x() <= (ui->graphicsView->x() + ui->graphicsView->width())) &&
+        (event->y() >= ui->graphicsView->y()) &&
+        (event->y() <= (ui->graphicsView->y() + ui->graphicsView->height()))) {
+        workspace->handleClick( event );
+    }
 }
 
 void MainWindow::on_nextButton_clicked()
