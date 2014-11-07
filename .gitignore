@@ -1,0 +1,6 @@
+*.user
+*.pro.user
+*.pro.user.*
+build-*
+*~
+*.swp
