@@ -14,9 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp\
-        workspace.cpp
+        workspace.cpp \
+    colour.cpp \
+    node.cpp
 
 HEADERS  += mainwindow.h\
-         workspace.h
+         workspace.h \
+    colour.h \
+    node.h
 
 FORMS    += mainwindow.ui
