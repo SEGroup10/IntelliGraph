@@ -29,6 +29,7 @@ private:
 
     void addNode(int x,int y);
     void addEdge(Node *begin, Node *end);
+    void deleteEdge(Edge *target);
 };
 
 #endif // WORKSPACE_H

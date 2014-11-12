@@ -59,3 +59,10 @@ void Workspace::addEdge(Node *begin, Node *end)
 
     scene->addItem( edge );
 }
+
+void Workspace::deleteEdge(Edge *target)
+{
+    scene->removeItem( target );
+    edges.removeAt(target->getID());
+    delete target;
+}
