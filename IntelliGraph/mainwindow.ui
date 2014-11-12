@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>IntelliGraph</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGraphicsView" name="graphicsView">
@@ -19,8 +19,8 @@
      <rect>
       <x>140</x>
       <y>0</y>
-      <width>661</width>
-      <height>401</height>
+      <width>660</width>
+      <height>400</height>
      </rect>
     </property>
     <property name="lineWidth">
@@ -33,11 +33,11 @@
       <x>0</x>
       <y>0</y>
       <width>141</width>
-      <height>401</height>
+      <height>400</height>
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>280</x>

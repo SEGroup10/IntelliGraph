@@ -10,22 +10,25 @@
 #include <QDebug>
 #include <QScrollBar>
 
+#include "node.h"
+#include "edge.h"
+
 class Workspace
 {
 public:
     Workspace( QWidget *widget, QGraphicsView *elem );
-    void doStuff();
+    ~Workspace();
     void handleClick( QMouseEvent *event );
 private:
     QWidget *parent;
     QGraphicsView *drawingArea;
-
-    QList <int>Nodes; // Hier moet <int> later aangepast worden aan de "Node" class! Int is alleen een placeholder.
-    QList <int>Edges; // Hier moet <int> later aangepast worden aan de "Edge" class!
-
-    //TODO find out if these are needed and if they need to be deleted when destroying this class
-    QGraphicsEllipseItem *ellipse;
     QGraphicsScene *scene;
+
+    QList<Node*> nodes; // Hier moet <int> later aangepast worden aan de "Node" class! Int is alleen een placeholder.
+    QList<Edge*> edges; // Hier moet <int> later aangepast worden aan de "Edge" class!
+
+    void addNode(int x,int y);
+    void addEdge(Node *begin, Node *end);
 };
 
 #endif // WORKSPACE_H

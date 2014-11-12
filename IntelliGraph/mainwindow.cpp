@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->algorithmsList->addItem(itm);
 
     this->workspace = new Workspace( this, ui->graphicsView );
-    workspace->doStuff();
 }
 
 MainWindow::~MainWindow()

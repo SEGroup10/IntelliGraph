@@ -14,9 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp\
-        workspace.cpp
+        workspace.cpp \
+    colour.cpp \
+    node.cpp \
+    edge.cpp
 
 HEADERS  += mainwindow.h\
-         workspace.h
+         workspace.h \
+    colour.h \
+    node.h \
+    edge.h
 
 FORMS    += mainwindow.ui
