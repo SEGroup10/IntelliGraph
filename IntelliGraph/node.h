@@ -2,11 +2,11 @@
 #include "colour.h"
 using namespace std;
 
-class node
+class Node
 {
 	public:
-		node(int newID,int newSpecial,string newName, int X, int Y);
-		~node();
+        Node(int newID,int newSpecial,string newName, int X, int Y);
+        ~Node();
 		int getID();
 		string getName();
 		void changeName(string newName);

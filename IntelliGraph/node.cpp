@@ -1,10 +1,9 @@
 #include <string>
 #include "node.h"
-//#include "position.h"
-//#include "colour.h"
+
 using namespace std;
 
-node::node(int newID,int newSpecial,string newName, int X, int Y)
+Node::Node(int newID,int newSpecial,string newName, int X, int Y)
 {
 	ID = newID;
 	special = newSpecial;
@@ -13,62 +12,62 @@ node::node(int newID,int newSpecial,string newName, int X, int Y)
 	pos.Y = Y;
 }
 
-node::~node()
+Node::~Node()
 {
 
 };
 
-int node::getID()
+int Node::getID()
 {
 	return ID;
 }
 
-string node::getName()
+string Node::getName()
 {
 	return name;
 }
 
-void node::changeName(string newName)
+void Node::changeName(string newName)
 {
 	name = newName;
 	return;
 }
 
-int node::getSpecial()
+int Node::getSpecial()
 {
 	return special;
 }
 
-position node::getPosition()
+position Node::getPosition()
 {
 	return pos;
 }
 
-void node::changePosition(position newPos)
+void Node::changePosition(position newPos)
 {
 	pos = newPos;
 	return;
 }
 
-void node::changePositionXY(int newX, int newY)
+void Node::changePositionXY(int newX, int newY)
 {
 	pos.X = newX;
 	pos.Y = newY;
 	return;
 }
 
-colour node::getColour()
+colour Node::getColour()
 {
 	return col;
 }
 
-void node::changeColour(colour newCol)
+void Node::changeColour(colour newCol)
 {
 	col = newCol;
 	return;
 }
 
-void node::changeColourRGB(int newR, int newG, int newB)
+void Node::changeColourRGB(int newR, int newG, int newB)
 {
 	col.changeColourRGB(newR,newG,newB);
 	return;
