@@ -25,12 +25,13 @@ class Node: public QGraphicsEllipseItem
 
 
 	public:
-        Node(int newID,int newSpecial,string newName, int x, int y);
+        Node(int newID,int x,int y);
         ~Node();
 		int getID();
 		string getName();
 		void changeName(string newName);
 		int getSpecial();
+        void setSpecial(int newSpecial);
         //position getPosition();
         //void changePosition(position newPos);
         //void changePositionXY(int newX,int newY);

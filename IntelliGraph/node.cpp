@@ -2,18 +2,23 @@
 
 using namespace std;
 
-Node::Node(int newID,int newSpecial,string newName, int x, int y): QGraphicsEllipseItem(x, y, NODESIZE, NODESIZE, 0)
+Node::Node(int newID, int x, int y): QGraphicsEllipseItem(0, 0, NODESIZE, NODESIZE, 0)
 {
 	ID = newID;
-	special = newSpecial;
-	name = newName;
+    special = 0;
+    name = "";
     col = QColor(200, 200, 0);
+    label = new QGraphicsSimpleTextItem();
+
+    //The first and second param of QGraphicsEllipseItem are an offset from
+    //the position, which is by default 0. We set the offset to 0 in the
+    //constructor and set the correct position below.
+    //
+    //Because logic.
+    this->setPos(x, y);
 
     setFlag(QGraphicsItem::ItemIsMovable);
 
-    label = new QGraphicsSimpleTextItem();
-    label->setText(QString(newName.c_str()));
-    label->setPos(x+(NODESIZE/2)-(label->boundingRect().width()/2),y+(NODESIZE/2)-(label->boundingRect().height()/2));
     //this->scene() is NULL until this node gets added to a scene.
     //So we add this label in the workspace function instead
 }
@@ -36,12 +41,18 @@ string Node::getName()
 void Node::changeName(string newName)
 {
 	name = newName;
-	return;
+    label->setText(QString(newName.c_str()));
+    label->setPos(x()+(NODESIZE/2)-(label->boundingRect().width()/2),this->y()+(NODESIZE/2)-(label->boundingRect().height()/2));
 }
 
 int Node::getSpecial()
 {
 	return special;
+}
+
+void Node::setSpecial( int newSpecial )
+{
+    special = newSpecial;
 }
 
 /*position Node::getPosition()

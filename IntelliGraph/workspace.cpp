@@ -42,8 +42,11 @@ void Workspace::handleClick( QMouseEvent *event ) {
 
 void Workspace::addNode(int x, int y)
 {
-    Node* node = new Node(nodes.count(),0,"Something",x,y);
+    Node* node = new Node(nodes.count(),x,y);
     nodes.append( node );
+
+    //FIXME Delete me at some point
+    node->changeName( "something" );
 
     scene->addItem( node );
     scene->addItem( node->getLabel() );
