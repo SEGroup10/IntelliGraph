@@ -2,6 +2,7 @@
 #define NODE_H
 
 #define NODESIZE 100
+#define FONTSIZE 18
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsItem>
@@ -15,41 +16,41 @@
 #include <QString>
 #include <QGraphicsScene>
 #include <QRectF>
+#include <QPaintEvent>
 
 #include <string>
-#include "colour.h"
+#include <sstream>
+//#include "colour.h"
 using namespace std;
 
-class Node: public QGraphicsEllipseItem
+class Node: public QGraphicsItem
 {
-
-
 	public:
         Node(int newID,int x,int y);
         ~Node();
+
 		int getID();
 		string getName();
 		void changeName(string newName);
 		int getSpecial();
         void setSpecial(int newSpecial);
-        //position getPosition();
-        //void changePosition(position newPos);
-        //void changePositionXY(int newX,int newY);
         QColor getColour();
         void changeColour(QColor newCol);
 		void changeColourRGB(int newR,int newG, int newB);
 
-        QGraphicsSimpleTextItem* getLabel();
+        QRectF boundingRect() const;
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        //QGraphicsSimpleTextItem* getLabel();
+    protected:
+        void mousePressEvent(QGraphicsSceneMouseEvent *event);
 	private:
 		int ID;
 		string name;
-		int special;
-        //position pos; //Information already available through inheritance
+        int special;
         QColor col;
-        QGraphicsSimpleTextItem* label;
+        //QGraphicsSimpleTextItem* label;
 
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        string itos(int number);
 };
 
 #endif
