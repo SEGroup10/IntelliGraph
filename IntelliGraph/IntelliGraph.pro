@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         mainwindow.cpp\
         workspace.cpp \
     colour.cpp \
-    node.cpp
+    node.cpp \
+    edge.cpp
 
 HEADERS  += mainwindow.h\
          workspace.h \
     colour.h \
-    node.h
+    node.h \
+    edge.h
 
 FORMS    += mainwindow.ui
