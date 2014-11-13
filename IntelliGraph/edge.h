@@ -27,7 +27,7 @@ class Edge: public QGraphicsLineItem
         string getName();
         void changeName(string newName);
         void paint(QPainter *painter);
-
+        bool hasNode(Node *target);
     private:
         int ID;
         string name;

@@ -17,6 +17,7 @@ class MainWindow : public QMainWindow
 public slots:
     void on_nextButton_clicked();
     void on_exportButton_clicked();
+    void on_testLinks_clicked();
 
 public:
     explicit MainWindow(QWidget *parent = 0);

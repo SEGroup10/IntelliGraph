@@ -2,13 +2,12 @@
 
 using namespace std;
 
-Node::Node(int newID, int x, int y): QGraphicsEllipseItem(0, 0, NODESIZE, NODESIZE, 0)
+Node::Node(int newID, int x, int y): QGraphicsItem()
 {
 	ID = newID;
     special = 0;
-    name = "";
+    name = itos(newID);
     col = QColor(200, 200, 0);
-    label = new QGraphicsSimpleTextItem();
 
     //The first and second param of QGraphicsEllipseItem are an offset from
     //the position, which is by default 0. We set the offset to 0 in the
@@ -16,6 +15,7 @@ Node::Node(int newID, int x, int y): QGraphicsEllipseItem(0, 0, NODESIZE, NODESI
     //
     //Because logic.
     this->setPos(x, y);
+    //this->setText(QString(name.c_str()));
 
     setFlag(QGraphicsItem::ItemIsMovable);
 
@@ -26,7 +26,7 @@ Node::Node(int newID, int x, int y): QGraphicsEllipseItem(0, 0, NODESIZE, NODESI
 Node::~Node()
 {
 
-};
+}
 
 int Node::getID()
 {
@@ -40,9 +40,7 @@ string Node::getName()
 
 void Node::changeName(string newName)
 {
-	name = newName;
-    label->setText(QString(newName.c_str()));
-    label->setPos(x()+(NODESIZE/2)-(label->boundingRect().width()/2),this->y()+(NODESIZE/2)-(label->boundingRect().height()/2));
+    name = newName;
 }
 
 int Node::getSpecial()
@@ -54,24 +52,6 @@ void Node::setSpecial( int newSpecial )
 {
     special = newSpecial;
 }
-
-/*position Node::getPosition()
-{
-	return pos;
-}
-
-void Node::changePosition(position newPos)
-{
-	pos = newPos;
-	return;
-}
-
-void Node::changePositionXY(int newX, int newY)
-{
-	pos.X = newX;
-	pos.Y = newY;
-	return;
-}*/
 
 QColor Node::getColour()
 {
@@ -87,32 +67,51 @@ void Node::changeColour(QColor newCol)
 void Node::changeColourRGB(int newR, int newG, int newB)
 {
     col.setRgb(newR,newG,newB);
-	return;
+    return;
+}
+
+QRectF Node::boundingRect() const
+{
+    return QRectF(0, 0, NODESIZE, NODESIZE);
+}
+
+void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QRectF rect = boundingRect();
+    QBrush brush(getColour());
+    QPen pen(Qt::black);
+    QFont font = painter->font();
+
+    font.setPointSize(FONTSIZE);
+    painter->setFont(font);
+    painter->setBrush(brush);
+
+    pen.setWidth(3);
+    painter->setPen(pen);
+    painter->drawEllipse(rect);
+
+    pen.setWidth(1);
+    painter->setPen(pen);
+    painter->drawText(rect, Qt::AlignCenter, QString(name.c_str()));
+}
+
+string Node::itos(int number)
+{
+    ostringstream temp;
+    temp << number;
+    return temp.str();
 }
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "Type of event:" << event->type();
+    qDebug() << "Node:" << this->name.c_str();
+    qDebug() << "Type of event:" << event;
     if( event->type() == QEvent::GraphicsSceneMouseDoubleClick ) {
         qDebug() << "Poof! A dialog box for the element with ID" << this->ID << "appears.";
     }
-}
-
-
-void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QBrush brush(getColour());
-    QPen pen(Qt::black);
-    pen.setWidth(2);
-
-    painter->setBrush(brush);
-    painter->setPen(pen);
-    painter->drawEllipse(boundingRect());
-}
-
-QGraphicsSimpleTextItem* Node::getLabel()
-{
-    return label;
+    // update grpahics
+    update();
+    QGraphicsItem::mousePressEvent(event);
 }
 
 

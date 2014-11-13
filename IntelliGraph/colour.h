@@ -1,3 +1,6 @@
+#ifndef COLOUR_H
+#define COLOUR_H
+
 #include <string>
 using namespace std;
 
@@ -21,3 +24,4 @@ class position
 		int Y;
 };
 
+#endif // COLOUR_H

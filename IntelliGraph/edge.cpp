@@ -13,7 +13,7 @@ Edge::Edge(int newID, Node * newBegin, Node * newEnd): QGraphicsLineItem(newBegi
 Edge::~Edge()
 {
 
-};
+}
 
 int Edge::getID()
 {
@@ -40,5 +40,8 @@ void Edge::paint(QPainter *painter)
     painter->drawLine(begin->pos().x(), begin->pos().y(), end->pos().x(), end->pos().y());
 }
 
-
+bool Edge::hasNode(Node *target)
+{
+    return (begin == target || end == target);
+}
 

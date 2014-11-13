@@ -19,7 +19,9 @@ public:
     Workspace( QWidget *widget, QGraphicsView *elem );
     ~Workspace();
     void handleClick( QMouseEvent *event );
+    void linkTest();
 private:
+
     QWidget *parent;
     QGraphicsView *drawingArea;
     QGraphicsScene *scene;
@@ -27,7 +29,9 @@ private:
     QList<Node*> nodes; // Hier moet <int> later aangepast worden aan de "Node" class! Int is alleen een placeholder.
     QList<Edge*> edges; // Hier moet <int> later aangepast worden aan de "Edge" class!
 
-    void addNode(int x,int y);
+    void addNode(int x, int y);
+    void addNode(int x, int y, string label);
+    void deleteNode(Node *target);
     void addEdge(Node *begin, Node *end);
     void deleteEdge(Edge *target);
 };

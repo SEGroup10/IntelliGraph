@@ -35,6 +35,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         (event->y() >= ui->graphicsView->y()) &&
         (event->y() <= (ui->graphicsView->y() + ui->graphicsView->height()))) {
         workspace->handleClick( event );
+
     }
 }
 
@@ -56,4 +57,9 @@ void MainWindow::on_exportButton_clicked()
     msgBox.setStandardButtons(QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Cancel);
     msgBox.exec();
+}
+
+void MainWindow::on_testLinks_clicked()
+{
+    workspace->linkTest();
 }
