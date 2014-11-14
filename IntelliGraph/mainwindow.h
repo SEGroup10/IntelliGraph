@@ -3,6 +3,13 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QMouseEvent>
+#include <QResizeEvent>
+#include <QMessageBox>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
+#include <QListWidgetItem>
+#include <QDebug>
 #include "workspace.h"
 
 namespace Ui {
@@ -24,6 +31,7 @@ public:
     ~MainWindow();
 
     void mousePressEvent(QMouseEvent *event);
+    void resizeEvent(QResizeEvent *event);
 private:
     Ui::MainWindow *ui;
     Workspace *workspace;

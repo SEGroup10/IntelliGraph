@@ -9,6 +9,8 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QScrollBar>
+#include <QResizeEvent>
+#include <QSize>
 
 #include "node.h"
 #include "edge.h"
@@ -20,14 +22,18 @@ public:
     ~Workspace();
     void handleClick( QMouseEvent *event );
     void linkTest();
+
+    void handleResize();
 private:
 
     QWidget *parent;
     QGraphicsView *drawingArea;
     QGraphicsScene *scene;
 
-    QList<Node*> nodes; // Hier moet <int> later aangepast worden aan de "Node" class! Int is alleen een placeholder.
-    QList<Edge*> edges; // Hier moet <int> later aangepast worden aan de "Edge" class!
+    QList<Node*> nodes;
+    QList<Edge*> edges;
+
+    QGraphicsRectItem *sizeenforcer;
 
     void addNode(int x, int y);
     void addNode(int x, int y, string label);

@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "workspace.h"
-#include <QMessageBox>
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-#include <QListWidgetItem>
-#include <QMouseEvent>
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -37,6 +31,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         workspace->handleClick( event );
 
     }
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    workspace->handleResize();
 }
 
 void MainWindow::on_nextButton_clicked()
