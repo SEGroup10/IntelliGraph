@@ -18,22 +18,32 @@
 
 using namespace std;
 
+class Workspace;
+
 class Edge: public QGraphicsLineItem
 {
     public:
-        Edge(int newID, Node * newBegin, Node * newEnd);
+        Edge(int newID, Node * newBegin, Node * newEnd, Workspace * parent);
         ~Edge();
         int getID();
         string getName();
-        void changeName(string newName);
+        void setName( string newName );
+        int getWeight();
+        void setWeight( int newWeight );
         void paint(QPainter *painter);
         bool hasNode(Node *target);
+
+    protected:
+        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
     private:
         int ID;
         string name;
+        int weight;
+        bool direction;
         Node * begin;
         Node * end;
-        bool direction;
+        Workspace * parent;
 };
 
 

@@ -20,13 +20,17 @@
 
 #include <string>
 #include <sstream>
+
 //#include "colour.h"
+
 using namespace std;
+
+class Workspace;
 
 class Node: public QGraphicsItem
 {
 	public:
-        Node(int newID,int x,int y);
+        Node(int newID,int x,int y, Workspace * newParent);
         ~Node();
 
 		int getID();
@@ -41,13 +45,16 @@ class Node: public QGraphicsItem
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
         //QGraphicsSimpleTextItem* getLabel();
+
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 	private:
 		int ID;
 		string name;
         int special;
         QColor col;
+        Workspace * parent;
         //QGraphicsSimpleTextItem* label;
 
         string itos(int number);

@@ -1,13 +1,15 @@
 #include "node.h"
+#include "workspace.h"
 
 using namespace std;
 
-Node::Node(int newID, int x, int y): QGraphicsItem()
+Node::Node(int newID, int x, int y, Workspace * newParent): QGraphicsItem()
 {
 	ID = newID;
     special = 0;
     name = itos(newID);
     col = QColor(200, 200, 0);
+    parent = newParent;
 
     //The first and second param of QGraphicsEllipseItem are an offset from
     //the position, which is by default 0. We set the offset to 0 in the
@@ -21,6 +23,7 @@ Node::Node(int newID, int x, int y): QGraphicsItem()
 
     //this->scene() is NULL until this node gets added to a scene.
     //So we add this label in the workspace function instead
+
 }
 
 Node::~Node()
@@ -104,11 +107,21 @@ string Node::itos(int number)
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "Node:" << this->name.c_str();
-    qDebug() << "Type of event:" << event;
-    if( event->type() == QEvent::GraphicsSceneMouseDoubleClick ) {
-        qDebug() << "Poof! A dialog box for the element with ID" << this->ID << "appears.";
+    if(parent->getMode() == Workspace::Mode::selectMode)
+        parent->setSelectNode(this);
+
+    if(parent->getMode() == Workspace::Mode::edgeMode)
+    {
+        if(parent->getItem(1) == NULL)
+            parent->setItem(this,1);
+        else if(parent->getItem(1) != this)
+        {
+            parent->setItem(this,2);
+            parent->addEdge(parent->getItem(1),parent->getItem(2));
+            parent->clearSelection();
+        }
     }
+
     // update grpahics
     update();
     QGraphicsItem::mousePressEvent(event);
