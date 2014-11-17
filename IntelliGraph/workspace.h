@@ -15,6 +15,8 @@
 #include "node.h"
 #include "edge.h"
 
+using namespace std;
+
 class Workspace
 {
 public:
@@ -35,8 +37,8 @@ private:
 
     QGraphicsRectItem *sizeenforcer;
 
-    void addNode(int x, int y);
-    void addNode(int x, int y, string label);
+    Node *addNode(int x, int y);
+    Node *addNode(int x, int y, NodeType::Type type);
     void deleteNode(Node *target);
     void addEdge(Node *begin, Node *end);
     void deleteEdge(Edge *target);

@@ -28,6 +28,11 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem )
     //Scene rect back to automatic. Since we now have items in it, the bounding box will be at least the size
     //that contains these elements. Mission accomplished.
     scene->setSceneRect(QRectF());
+
+    // add start and end node
+    Node *start = addNode(100, 100, NodeType::START);
+    Node *end = addNode(400, 100, NodeType::END);
+    addEdge(start, end);
 }
 
 Workspace::~Workspace()
@@ -88,22 +93,21 @@ void Workspace::linkTest()
     }
 }
 
-void Workspace::addNode(int x, int y)
+Node *Workspace::addNode(int x, int y)
 {
-    Node* node = new Node(nodes.count(),x,y);
+    QPointF pos(x, y);
+    Node* node = new Node(nodes.count(), pos, this);
     nodes.append( node );
     scene->addItem( node );
-    //scene->addItem( node->getLabel() );
+    return node;
 }
-void Workspace::addNode(int x, int y, string label)
+Node *Workspace::addNode(int x, int y, NodeType::Type type)
 {
-    Node* node = new Node(nodes.count(),x,y);
+    QPointF pos(x, y);
+    Node* node = new Node(nodes.count(), pos, this, type);
     nodes.append( node );
-
-    node->changeName( label );
-
     scene->addItem( node );
-    //scene->addItem( node->getLabel() );
+    return node;
 }
 
 void Workspace::deleteNode(Node *target)
