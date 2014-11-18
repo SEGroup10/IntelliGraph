@@ -49,6 +49,23 @@
        </widget>
       </item>
       <item>
+<<<<<<< HEAD
+=======
+       <widget class="QPushButton" name="selectButton">
+        <property name="text">
+         <string>Select</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="edgeButton">
+        <property name="text">
+         <string>Create Edge</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+>>>>>>> Ruud
        <widget class="QPushButton" name="nextButton">
         <property name="text">
          <string>Next</string>

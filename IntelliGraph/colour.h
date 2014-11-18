@@ -12,6 +12,10 @@ class colour
 		int getR();
 		int getG();
 		int getB();
+<<<<<<< HEAD
+=======
+
+>>>>>>> Ruud
 	private:
 		int R, G, B;
 };

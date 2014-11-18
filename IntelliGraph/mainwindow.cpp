@@ -48,6 +48,22 @@ void MainWindow::on_nextButton_clicked()
      msgBox.exec();
 }
 
+void MainWindow::on_selectButton_clicked()
+{
+    workspace->setMode(Workspace::selectMode);
+    workspace->clearSelection();
+    foreach(Node* i, workspace->getNodes())
+        i->setFlag(QGraphicsItem::ItemIsMovable, true);
+}
+
+void MainWindow::on_edgeButton_clicked()
+{
+    workspace->setMode(Workspace::edgeMode);
+    workspace->clearSelection();
+    foreach(Node* i, workspace->getNodes())
+        i->setFlag(QGraphicsItem::ItemIsMovable, false);
+}
+
 void MainWindow::on_exportButton_clicked()
 {
     // Some test messagebox for the exportButton
