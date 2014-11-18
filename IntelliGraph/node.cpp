@@ -1,13 +1,16 @@
 #include "node.h"
+#include "workspace.h"
 
 using namespace std;
 
 // Initializes the node class
 Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
 {
+    _dragging = false;
     _id = id;
     _label = itos(id);
     _context = context;
+    this->setZValue(2);
     this->setType(NodeType::STANDARD);
 
     //The first and second param of QGraphicsEllipseItem are an offset from
@@ -20,9 +23,11 @@ Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
 }
 Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): QGraphicsItem()
 {
+    _dragging = false;
     _id = id;
     _label = itos(id);
     _context = context;
+    this->setZValue(2);
     this->setType(type);
 
     //The first and second param of QGraphicsEllipseItem are an offset from
@@ -60,6 +65,14 @@ NodeType::Type Node::getType() {
 // Gets the Colour
 QColor Node::getColour() {
     return _colour;
+}
+
+// Gets the center position of this object
+QPointF Node::getCenter() {
+    double x = this->pos().x(), y = this->pos().y();
+    x += NODESIZE / 2;
+    y += NODESIZE / 2;
+    return QPointF(x, y);
 }
 
 // Sets the Label
@@ -133,6 +146,7 @@ string Node::itos(int number)
 // Mouse press event
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    _dragging = true;
     if(_context->getMode() == Workspace::selectMode)
             _context->setSelectNode(this);
 
@@ -153,7 +167,35 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsItem::mousePressEvent(event);
     this->update();
 }
+// Mouse double click event
+void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    qDebug() << "Poof! A dialog box for the element with ID" << _id << "appears.";
+}
 
+void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    _dragging = false;
+    // update grpahics
+    QGraphicsItem::mouseReleaseEvent(event);
+    this->update();
+}
 
+void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (_dragging)
+    {
+        this->update();
+    }
+    // update grpahics
+    QGraphicsItem::mouseMoveEvent(event);
+}
 
-
+// Custom update routine
+void Node::update()
+{
+    // update edges attached to node
+    _context->updateConnectedEdges(this);
+    // update this item
+    QGraphicsItem::update(boundingRect());
+}

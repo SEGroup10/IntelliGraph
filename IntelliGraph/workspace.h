@@ -48,6 +48,7 @@ class Workspace
         Edge * getSelectEdge();
 
         // Instance functions
+        void updateConnectedEdges(Node *target);
         Node *addNode(int x, int y);
         Node *addNode(int x, int y, NodeType::Type type);
         void deleteNode(Node *target);

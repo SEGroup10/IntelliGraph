@@ -168,6 +168,19 @@ Edge * Workspace::getSelectEdge()
     return selectEdge;
 }
 
+void Workspace::updateConnectedEdges(Node *target)
+{
+    Edge *temp = NULL;
+    for (int i = 0; i < edges.length(); i++)
+    {
+        temp = edges.at(i);
+        if (temp != NULL && temp->hasNode(target))
+        {
+            temp->update();
+        }
+    }
+}
+
 Node *Workspace::addNode(int x, int y)
 {
     QPointF pos(x, y);
