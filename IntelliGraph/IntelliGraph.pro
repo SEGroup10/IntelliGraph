@@ -23,6 +23,7 @@ HEADERS  += mainwindow.h\
          workspace.h \
     colour.h \
     node.h \
-    edge.h
+    edge.h \
+    nodetype.h
 
 FORMS    += mainwindow.ui

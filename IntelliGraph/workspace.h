@@ -12,6 +12,9 @@
 
 #include "node.h"
 #include "edge.h"
+#include "nodetype.h"
+
+class Node;
 
 class Edge;
 

@@ -20,15 +20,10 @@
 #include <string>
 #include <sstream>
 
-using namespace std;
+#include "workspace.h"
+#include "nodetype.h"
 
-namespace NodeType {
-    enum Type {
-        STANDARD,
-        START,
-        END
-    };
-}
+using namespace std;
 
 class Workspace;
 

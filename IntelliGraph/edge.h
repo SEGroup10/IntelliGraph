@@ -21,6 +21,8 @@ using namespace std;
 
 class Workspace;
 
+class Node;
+
 class Edge: public QGraphicsLineItem
 {
     public:
