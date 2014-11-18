@@ -13,17 +13,22 @@
 #include "node.h"
 #include "edge.h"
 
-using namespace std;
+class Edge;
 
 class Workspace
 {
     public:
+        enum Mode {
+            selectMode,
+            nodeMode,
+            edgeMode
+        };
         Workspace( QWidget *widget, QGraphicsView *elem );
         ~Workspace();
 
         // Main functions
-        enum Mode { selectMode, nodeMode, edgeMode };
         void handleClick( QMouseEvent *event );
+        void handleResize();
         void linkTest();
         void clearSelection();
 
@@ -40,8 +45,8 @@ class Workspace
         Edge * getSelectEdge();
 
         // Instance functions
-        void addNode(int x, int y);
-        void addNode(int x, int y, string label);
+        Node *addNode(int x, int y);
+        Node *addNode(int x, int y, NodeType::Type type);
         void deleteNode(Node *target);
         void addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
@@ -51,7 +56,9 @@ class Workspace
         QGraphicsView * drawingArea;
         QGraphicsScene * scene;
 
-        Mode mode;
+        QGraphicsRectItem *sizeenforcer;
+
+        Workspace::Mode mode;
         Node * item1;
         Node * item2;
 

@@ -15,6 +15,7 @@
 #include <QLineF>
 
 #include "node.h"
+#include "workspace.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ class Workspace;
 class Edge: public QGraphicsLineItem
 {
     public:
-        Edge(int newID, Node * newBegin, Node * newEnd, Workspace * parent);
+        Edge(int newID, Node * newBegin, Node * newEnd, Workspace * newParent);
         ~Edge();
         int getID();
         string getName();

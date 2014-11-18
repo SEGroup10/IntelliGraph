@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#define NODESIZE 100
+#define NODESIZE 80
 #define FONTSIZE 18
 
 #include <QGraphicsEllipseItem>
@@ -17,47 +17,58 @@
 #include <QGraphicsScene>
 #include <QRectF>
 #include <QPaintEvent>
-
 #include <string>
 #include <sstream>
 
-//#include "colour.h"
-
 using namespace std;
+
+namespace NodeType {
+    enum Type {
+        STANDARD,
+        START,
+        END
+    };
+}
 
 class Workspace;
 
 class Node: public QGraphicsItem
 {
 	public:
-        Node(int newID,int x,int y, Workspace * newParent);
+        // (de)Constructors
+        Node(int id, QPointF position, Workspace *context);
+        Node(int id, QPointF position, Workspace *context, NodeType::Type type);
         ~Node();
 
-		int getID();
-		string getName();
-		void changeName(string newName);
-		int getSpecial();
-        void setSpecial(int newSpecial);
+        // Getters
+        int getID();
+        string getLabel();
+        NodeType::Type getType();
         QColor getColour();
-        void changeColour(QColor newCol);
-		void changeColourRGB(int newR,int newG, int newB);
 
+        // Setters
+        void setLabel(string label);
+        void setType(NodeType::Type type);
+        void setColour(QColor colour);
+        void setColourRGB(int r, int g, int b);
+
+        // Painting functions
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-        //QGraphicsSimpleTextItem* getLabel();
 
-    protected:
+    private:
+        // Events
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
-	private:
-		int ID;
-		string name;
-        int special;
-        QColor col;
-        Workspace * parent;
-        //QGraphicsSimpleTextItem* label;
-
+        // Utility functions
         string itos(int number);
+
+        // Data
+        int _id;
+        string _label;
+        NodeType::Type _type;
+        QColor _colour;
+        Workspace *_context;
 };
 
 #endif

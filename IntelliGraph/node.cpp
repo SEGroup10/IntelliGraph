@@ -1,103 +1,128 @@
 #include "node.h"
-#include "workspace.h"
 
 using namespace std;
 
-Node::Node(int newID, int x, int y, Workspace * newParent): QGraphicsItem()
+// Initializes the node class
+Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
 {
-	ID = newID;
-    special = 0;
-    name = itos(newID);
-    col = QColor(200, 200, 0);
-    parent = newParent;
+    _id = id;
+    _label = itos(id);
+    _context = context;
+    this->setType(NodeType::STANDARD);
 
     //The first and second param of QGraphicsEllipseItem are an offset from
     //the position, which is by default 0. We set the offset to 0 in the
     //constructor and set the correct position below.
     //
     //Because logic.
-    this->setPos(x, y);
-    //this->setText(QString(name.c_str()));
-
+    this->setPos(position);
     setFlag(QGraphicsItem::ItemIsMovable);
+}
+Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): QGraphicsItem()
+{
+    _id = id;
+    _label = itos(id);
+    _context = context;
+    this->setType(type);
 
-    //this->scene() is NULL until this node gets added to a scene.
-    //So we add this label in the workspace function instead
-
+    //The first and second param of QGraphicsEllipseItem are an offset from
+    //the position, which is by default 0. We set the offset to 0 in the
+    //constructor and set the correct position below.
+    //
+    //Because logic.
+    this->setPos(position);
+    setFlag(QGraphicsItem::ItemIsMovable);
 }
 
+// Deconstructs the node class instance
 Node::~Node()
 {
 
 }
 
+// Gets the ID
 int Node::getID()
 {
-	return ID;
+    return _id;
 }
 
-string Node::getName()
+// Gets the Label
+string Node::getLabel()
 {
-	return name;
+    return _label;
 }
 
-void Node::changeName(string newName)
+// Gets the Type
+NodeType::Type Node::getType() {
+    return _type;
+}
+
+// Gets the Colour
+QColor Node::getColour() {
+    return _colour;
+}
+
+// Sets the Label
+void Node::setLabel(string label) {
+    _label = label;
+    this->update();
+}
+
+// Sets the Type
+void Node::setType(NodeType::Type type)
 {
-    name = newName;
+    _type = type;
+    switch (type)
+    {
+        case NodeType::START:
+            _colour = QColor(0, 255, 0);
+            break;
+        case NodeType::END:
+            _colour = QColor(255, 0, 0);
+            break;
+        case NodeType::STANDARD:
+            _colour = QColor(255, 255, 255);
+            break;
+    }
+    this->update();
 }
 
-int Node::getSpecial()
+// Sets the Colour
+void Node::setColour(QColor colour)
 {
-	return special;
+    _colour = colour;
+    this->update();
 }
-
-void Node::setSpecial( int newSpecial )
+void Node::setColourRGB(int r, int g, int b)
 {
-    special = newSpecial;
+    this->setColour(QColor(r, g, b));
 }
 
-QColor Node::getColour()
-{
-    return col;
-}
-
-void Node::changeColour(QColor newCol)
-{
-	col = newCol;
-	return;
-}
-
-void Node::changeColourRGB(int newR, int newG, int newB)
-{
-    col.setRgb(newR,newG,newB);
-    return;
-}
-
+// Return bounding rectangle
 QRectF Node::boundingRect() const
 {
     return QRectF(0, 0, NODESIZE, NODESIZE);
 }
 
+// Paints the node
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QRectF rect = boundingRect();
-    QBrush brush(getColour());
+    QBrush brush(_colour);
     QPen pen(Qt::black);
     QFont font = painter->font();
-
     font.setPointSize(FONTSIZE);
+    pen.setWidth(2);
+
     painter->setFont(font);
     painter->setBrush(brush);
-
-    pen.setWidth(3);
     painter->setPen(pen);
+
     painter->drawEllipse(rect);
-
-    pen.setWidth(1);
-    painter->setPen(pen);
-    painter->drawText(rect, Qt::AlignCenter, QString(name.c_str()));
+    painter->drawText(rect, Qt::AlignCenter, QString(_label.c_str()));
 }
 
+// convert an int to a string
 string Node::itos(int number)
 {
     ostringstream temp;
@@ -105,26 +130,17 @@ string Node::itos(int number)
     return temp.str();
 }
 
+// Mouse press event
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(parent->getMode() == Workspace::Mode::selectMode)
-        parent->setSelectNode(this);
-
-    if(parent->getMode() == Workspace::Mode::edgeMode)
-    {
-        if(parent->getItem(1) == NULL)
-            parent->setItem(this,1);
-        else if(parent->getItem(1) != this)
-        {
-            parent->setItem(this,2);
-            parent->addEdge(parent->getItem(1),parent->getItem(2));
-            parent->clearSelection();
-        }
+    qDebug() << "Node:" << this->_label.c_str();
+    qDebug() << "Type of event:" << event;
+    if( event->type() == QEvent::GraphicsSceneMouseDoubleClick ) {
+        qDebug() << "Poof! A dialog box for the element with ID" << _id << "appears.";
     }
-
     // update grpahics
-    update();
     QGraphicsItem::mousePressEvent(event);
+    this->update();
 }
 
 

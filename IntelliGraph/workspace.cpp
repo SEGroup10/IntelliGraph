@@ -14,18 +14,27 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem )
     //We can only add elements *inside* the bounding box of the scene, but by default this bounding box has
     //no width or height, so we can't add anything...
     //We set this bounding box to be a fixed value here so we can add something.
-    scene->setSceneRect(drawingArea->x(), drawingArea->y(), drawingArea->width()-10, drawingArea->height()-10);
+    scene->setSceneRect(0, 0, drawingArea->width(), drawingArea->height());
 
     //When using a dynamic scene rect, the scene rect is the bounding box of the elements.
     //These invisible elements force the bounding box to be the size of the initial workspace
     //allowing us to dynamically add elements in it.
     scene->addRect(0,0,0,0,QPen(),QBrush());
-    scene->addRect(drawingArea->width(),drawingArea->height(),0,0,QPen(),QBrush());
+    sizeenforcer = scene->addRect(0,0,0,0,QPen(),QBrush());
+    //Position of enforcer is set as soon as the first resize event is called. See
+    //http://stackoverflow.com/q/26920575/2209007 for more information
 
     //Scene rect back to automatic. Since we now have items in it, the bounding box will be at least the size
     //that contains these elements. Mission accomplished.
     scene->setSceneRect(QRectF());
-    mode = selectMode;
+
+    //A toolbar will manipulate these modes
+    mode = Workspace::selectMode;
+
+    //Adding initial nodes.
+    Node *start = addNode(100, 100, NodeType::START);
+    Node *end = addNode(400, 100, NodeType::END);
+    addEdge(start, end);
 }
 
 Workspace::~Workspace()
@@ -43,9 +52,39 @@ void Workspace::handleClick( QMouseEvent *event )
 
     qDebug() << scene->sceneRect().x();
 
-    if(mode == selectMode)
+    if(mode == Workspace::selectMode)
         if( event->type() == QEvent::MouseButtonDblClick )
             addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
+}
+
+void Workspace::handleResize()
+{
+    //This enforces the scene to be at least the size of the drawingArea. If this is not the case, adding
+    //elements will not work as expected.
+    if( scene->width() < (drawingArea->width()-drawingArea->verticalScrollBar()->width()) ||
+        scene->height() < (drawingArea->height()-drawingArea->horizontalScrollBar()->height()) ) {
+
+        //If the drawingarea is bigger than the scene, biggestX will be the new x coordinate
+        //of the enforcer, otherwise it will be it's current x coordinate
+        int biggestX = sizeenforcer->x() > (drawingArea->width() + drawingArea->sceneRect().x()) ?
+                       sizeenforcer->x() : (drawingArea->width() + drawingArea->sceneRect().x());
+        int biggestY = sizeenforcer->y() > (drawingArea->height() + drawingArea->sceneRect().y()) ?
+                       sizeenforcer->y() : (drawingArea->height() + drawingArea->sceneRect().y());
+
+        //We want the scene to be inside the scrollbars if possible
+        biggestX -= drawingArea->verticalScrollBar()->width();
+        biggestY -= drawingArea->horizontalScrollBar()->height();
+
+        //Static size of scene rect so we can move the enforcer outside the current area
+        scene->setSceneRect(drawingArea->sceneRect().x(), drawingArea->sceneRect().y(), biggestX-3, biggestY-3);
+
+        //Move the enforcer to it's new position.
+        sizeenforcer->setPos(biggestX-3, biggestY-3);
+
+        //The scene rect is now dynamic again and will automatically expand if you move something
+        //outside the screen
+        scene->setSceneRect(QRectF());
+    }
 }
 
 void Workspace::linkTest()
@@ -129,23 +168,23 @@ Edge * Workspace::getSelectEdge()
     return selectEdge;
 }
 
-void Workspace::addNode(int x, int y)
+Node *Workspace::addNode(int x, int y)
 {
-    Node* node = new Node(nodes.count(),x,y,this);
+    QPointF pos(x, y);
+    Node* node = new Node(nodes.count(), pos, this);
     nodes.append( node );
     scene->addItem( node );
-    //scene->addItem( node->getLabel() );
+    return node;
 }
 
-void Workspace::addNode(int x, int y, string label)
+Node *Workspace::addNode(int x, int y, NodeType::Type type)
 {
-    Node* node = new Node(nodes.count(),x,y,this);
+    QPointF pos(x, y);
+    Node* node = new Node(nodes.count(), pos, this, type);
     nodes.append( node );
 
-    node->changeName( label );
-
     scene->addItem( node );
-    //scene->addItem( node->getLabel() );
+    return node;
 }
 
 void Workspace::deleteNode(Node *target)

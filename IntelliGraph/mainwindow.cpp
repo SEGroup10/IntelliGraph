@@ -1,14 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "workspace.h"
-#include <QMessageBox>
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-#include <QListWidgetItem>
-#include <QMouseEvent>
-#include <QDebug>
-
-#include "node.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -41,6 +33,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     }
 }
 
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    workspace->handleResize();
+}
+
 void MainWindow::on_nextButton_clicked()
 {
     // Some test messagebox for the nextButton
@@ -51,6 +48,22 @@ void MainWindow::on_nextButton_clicked()
      msgBox.exec();
 }
 
+void MainWindow::on_selectButton_clicked()
+{
+    workspace->setMode(Workspace::selectMode);
+    workspace->clearSelection();
+    foreach(Node* i, workspace->getNodes())
+        i->setFlag(QGraphicsItem::ItemIsMovable, true);
+}
+
+void MainWindow::on_edgeButton_clicked()
+{
+    workspace->setMode(Workspace::edgeMode);
+    workspace->clearSelection();
+    foreach(Node* i, workspace->getNodes())
+        i->setFlag(QGraphicsItem::ItemIsMovable, false);
+}
+
 void MainWindow::on_exportButton_clicked()
 {
     // Some test messagebox for the exportButton
@@ -59,22 +72,6 @@ void MainWindow::on_exportButton_clicked()
     msgBox.setStandardButtons(QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Cancel);
     msgBox.exec();
-}
-
-void MainWindow::on_selectButton_clicked()
-{
-    workspace->setMode(Workspace::Mode::selectMode);
-    workspace->clearSelection();
-    foreach(Node* i, workspace->getNodes())
-        i->setFlag(QGraphicsItem::ItemIsMovable, true);
-}
-
-void MainWindow::on_edgeButton_clicked()
-{
-    workspace->setMode(Workspace::Mode::edgeMode);
-    workspace->clearSelection();
-    foreach(Node* i, workspace->getNodes())
-        i->setFlag(QGraphicsItem::ItemIsMovable, false);
 }
 
 void MainWindow::on_testLinks_clicked()
