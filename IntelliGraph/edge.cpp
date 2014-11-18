@@ -68,7 +68,12 @@ void Edge::setWeight(double weight)
 // Return bounding rectangle
 QRectF Edge::boundingRect() const
 {
-    return QRectF(_start->getCenter(), _end->getCenter());
+    QPointF s = _start->getCenter();
+    QPointF e = _end->getCenter();
+    QPointF topleft = QPointF(min(s.x(), e.x()), min(s.y(), e.y()));
+    QPointF bottomright = QPointF(max(s.x(), e.x()), max(s.y(), e.y()));
+
+    return QRectF(topleft, bottomright);//_start->getCenter(), _end->getCenter());
 }
 
 // Paint the object
