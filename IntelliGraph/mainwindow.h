@@ -25,11 +25,8 @@ public slots:
     void on_nextButton_clicked();
     void on_exportButton_clicked();
     void on_testLinks_clicked();
-<<<<<<< HEAD
-=======
     void on_selectButton_clicked();
     void on_edgeButton_clicked();
->>>>>>> Ruud
 
 public:
     explicit MainWindow(QWidget *parent = 0);
