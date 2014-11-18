@@ -133,11 +133,22 @@ string Node::itos(int number)
 // Mouse press event
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "Node:" << this->_label.c_str();
-    qDebug() << "Type of event:" << event;
-    if( event->type() == QEvent::GraphicsSceneMouseDoubleClick ) {
-        qDebug() << "Poof! A dialog box for the element with ID" << _id << "appears.";
+    if(_context->getMode() == Workspace::selectMode)
+            _context->setSelectNode(this);
+
+    if(_context->getMode() == Workspace::edgeMode)
+    {
+        if(_context->getItem(1) == NULL)
+            _context->setItem(this,1);
+        else if(_context->getItem(1) != this)
+        {
+            _context->setItem(this,2);
+            _context->addEdge(_context->getItem(1),_context->getItem(2));
+            _context->clearSelection();
+        }
     }
+
+
     // update grpahics
     QGraphicsItem::mousePressEvent(event);
     this->update();
