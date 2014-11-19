@@ -130,6 +130,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setFont(font);
     painter->setBrush(brush);
     painter->setPen(pen);
+    painter->setRenderHint(QPainter::Antialiasing);
 
     painter->drawEllipse(rect);
     painter->drawText(rect, Qt::AlignCenter, QString(_label.c_str()));

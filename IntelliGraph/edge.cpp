@@ -82,6 +82,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QPen pen(Qt::black);
     pen.setWidth(2);
     painter->setPen(pen);
+    painter->setRenderHint(QPainter::Antialiasing);
     painter->drawLine(_start->getCenter(), _end->getCenter());
 }
 
