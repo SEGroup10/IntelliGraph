@@ -98,6 +98,7 @@ string Edge::dtos(double number)
 // Custom update routine
 void Edge::update()
 {
+    QGraphicsItem::prepareGeometryChange();
     QGraphicsItem::update(boundingRect());
 }
 
