@@ -13,6 +13,8 @@
 #include <QString>
 #include <QGraphicsScene>
 #include <QLineF>
+#include <QtMath>
+
 class Workspace;
 class Node;
 
@@ -51,6 +53,8 @@ class Edge: public QGraphicsItem
         int _id;
         double _weight;
         string _label;
+        bool _flip;
+        int _margin;
         Node *_start;
         Node *_end;
         Workspace *_context;

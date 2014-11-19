@@ -10,7 +10,9 @@ Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
     _id = id;
     _start = start;
     _end = end;
-    _label = "";
+    _label = "1";
+    _flip = false;
+    _margin = 50;
     _weight = 1.0;
     _context = context;
     this->setZValue(1);
@@ -70,8 +72,8 @@ QRectF Edge::boundingRect() const
 {
     QPointF s = _start->getCenter();
     QPointF e = _end->getCenter();
-    QPointF topleft = QPointF(min(s.x(), e.x()), min(s.y(), e.y()));
-    QPointF bottomright = QPointF(max(s.x(), e.x()), max(s.y(), e.y()));
+    QPointF topleft = QPointF(min(s.x(), e.x())-_margin, min(s.y(), e.y())-_margin);
+    QPointF bottomright = QPointF(max(s.x(), e.x())+_margin, max(s.y(), e.y())+_margin);
 
     return QRectF(topleft, bottomright);//_start->getCenter(), _end->getCenter());
 }
@@ -84,6 +86,18 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setPen(pen);
     painter->setRenderHint(QPainter::Antialiasing);
     painter->drawLine(_start->getCenter(), _end->getCenter());
+
+    QFont font = painter->font();
+    font.setPointSize(FONTSIZE);
+    painter->setFont(font);
+
+    QLineF line(_end->getCenter(),_start->getCenter());
+
+    if(!_flip)
+        painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString(_label.c_str()));
+    else
+        painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString(_label.c_str()));
+
 }
 
 
