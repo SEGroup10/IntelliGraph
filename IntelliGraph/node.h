@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#define NODESIZE 100
+#define NODESIZE 80
 #define FONTSIZE 18
 
 #include <QGraphicsEllipseItem>
@@ -17,11 +17,10 @@
 #include <QGraphicsScene>
 #include <QRectF>
 #include <QPaintEvent>
-
 #include <string>
 #include <sstream>
 
-//#include "colour.h"
+#include "nodetype.h"
 
 using namespace std;
 
@@ -30,34 +29,46 @@ class Workspace;
 class Node: public QGraphicsItem
 {
 	public:
-        Node(int newID,int x,int y, Workspace * newParent);
+        // (de)Constructors
+        Node(int id, QPointF position, Workspace *context);
+        Node(int id, QPointF position, Workspace *context, NodeType::Type type);
         ~Node();
 
-		int getID();
-		string getName();
-		void changeName(string newName);
-		int getSpecial();
-        void setSpecial(int newSpecial);
+        // Getters
+        int getID();
+        string getLabel();
+        NodeType::Type getType();
         QColor getColour();
-        void changeColour(QColor newCol);
-		void changeColourRGB(int newR,int newG, int newB);
+        QPointF getCenter();
 
+        // Setters
+        void setLabel(string label);
+        void setType(NodeType::Type type);
+        void setColour(QColor colour);
+        void setColourRGB(int r, int g, int b);
+
+        // Painting functions
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-        //QGraphicsSimpleTextItem* getLabel();
 
-    protected:
+    private:
+        // Events
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+        void update();
 
-	private:
-		int ID;
-		string name;
-        int special;
-        QColor col;
-        Workspace * parent;
-        //QGraphicsSimpleTextItem* label;
-
+        // Utility functions
         string itos(int number);
+
+        // Data
+        bool _dragging;
+        int _id;
+        string _label;
+        NodeType::Type _type;
+        QColor _colour;
+        Workspace *_context;
 };
 
 #endif

@@ -13,39 +13,47 @@
 #include <QString>
 #include <QGraphicsScene>
 #include <QLineF>
-
-#include "node.h"
+class Workspace;
+class Node;
 
 using namespace std;
 
-class Workspace;
-
-class Edge: public QGraphicsLineItem
+class Edge: public QGraphicsItem
 {
     public:
-        Edge(int newID, Node * newBegin, Node * newEnd, Workspace * parent);
+        // (de)Constructors
+        Edge(int id, Node *start, Node *end, Workspace *context);
         ~Edge();
+
+        // Getters
         int getID();
-        string getName();
-        void setName( string newName );
-        int getWeight();
-        void setWeight( int newWeight );
-        void paint(QPainter *painter);
+        string getLabel();
+        double getWeight();
         bool hasNode(Node *target);
 
-    protected:
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        // Setters
+        void setLabel(string label);
+        void setWeight(double weight);
+
+        // Painting functions
+        void update();
+        QRectF boundingRect() const;
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     private:
-        int ID;
-        string name;
-        int weight;
-        bool direction;
-        Node * begin;
-        Node * end;
-        Workspace * parent;
+        // Events
+        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+        // Utility functions
+        string dtos(double number);
+
+        // Data
+        int _id;
+        double _weight;
+        string _label;
+        Node *_start;
+        Node *_end;
+        Workspace *_context;
 };
-
-
 
 #endif // EDGE_H
