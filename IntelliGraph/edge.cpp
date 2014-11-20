@@ -118,8 +118,5 @@ void Edge::update()
 
 void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(_context->getMode() == Workspace::selectMode)
-       _context->setSelectEdge(this);
-
     this->update();
 }

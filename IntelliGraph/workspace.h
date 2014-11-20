@@ -40,12 +40,12 @@ class Workspace: public QGraphicsScene
         QList<Edge*> getEdges();
         void setMode(Workspace::Mode newMode);
         Workspace::Mode getMode();
-        Node * getItem(int num);
-        void setItem(Node * newItem, int num);
-        void setSelectNode(Node * newSelectNode);
-        Node * getSelectNode();
-        void setSelectEdge(Edge * newSelectEdge);
-        Edge * getSelectEdge();
+        //Node * getItem(int num);
+        //void setItem(Node * newItem, int num);
+        //void setSelectNode(Node * newSelectNode);
+        //Node * getSelectNode();
+        //void setSelectEdge(Edge * newSelectEdge);
+        //Edge * getSelectEdge();
 
         // Instance functions
         void updateConnectedEdges(Node *target);
@@ -56,6 +56,14 @@ class Workspace: public QGraphicsScene
         void deleteEdge(Edge *target);
 
     private:
+        bool clickedOnNode(Node *&node);
+        bool clickedOnEdge(Edge *&edge);
+
+        // events
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
+        void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+       // bool _dragging;
         QWidget * parent;
         QGraphicsView * drawingArea;
         //QGraphicsScene * scene;
@@ -66,8 +74,8 @@ class Workspace: public QGraphicsScene
         Node * item1;
         Node * item2;
 
-        Node * selectNode;
-        Edge * selectEdge;
+        Node * selectedNode;
+        Edge * selectedEdge;
 
         QList<Node*> nodes;
         QList<Edge*> edges;

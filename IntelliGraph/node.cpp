@@ -6,7 +6,6 @@ using namespace std;
 // Initializes the node class
 Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
 {
-    _dragging = false;
     _id = id;
     _label = itos(id);
     _context = context;
@@ -20,10 +19,10 @@ Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
     //Because logic.
     this->setPos(position);
     setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): QGraphicsItem()
 {
-    _dragging = false;
     _id = id;
     _label = itos(id);
     _context = context;
@@ -37,6 +36,7 @@ Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): Q
     //Because logic.
     this->setPos(position);
     setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
 // Deconstructs the node class instance
@@ -145,51 +145,12 @@ string Node::itos(int number)
 }
 
 // Mouse press event
-void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
+QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    _dragging = true;
-    if(_context->getMode() == Workspace::selectMode)
-            _context->setSelectNode(this);
-
-    if(_context->getMode() == Workspace::edgeMode)
-    {
-        if(_context->getItem(1) == NULL)
-            _context->setItem(this,1);
-        else if(_context->getItem(1) != this)
-        {
-            _context->setItem(this,2);
-            _context->addEdge(_context->getItem(1),_context->getItem(2));
-            _context->clearSelection();
-        }
-    }
-
-
-    // update grpahics
-    QGraphicsItem::mousePressEvent(event);
-    this->update();
-}
-// Mouse double click event
-void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    qDebug() << "Poof! A dialog box for the element with ID" << _id << "appears.";
-}
-
-void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    _dragging = false;
-    // update grpahics
-    QGraphicsItem::mouseReleaseEvent(event);
-    this->update();
-}
-
-void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (_dragging)
-    {
+    if (change == QGraphicsItem::ItemScenePositionHasChanged) {
         this->update();
     }
-    // update grpahics
-    QGraphicsItem::mouseMoveEvent(event);
+    return QGraphicsItem::itemChange(change, value);
 }
 
 // Custom update routine

@@ -53,17 +53,13 @@ class Node: public QGraphicsItem
 
     private:
         // Events
-        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-        void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+        QVariant itemChange(GraphicsItemChange change, const QVariant &value);
         void update();
 
         // Utility functions
         string itos(int number);
 
         // Data
-        bool _dragging;
         int _id;
         string _label;
         NodeType::Type _type;

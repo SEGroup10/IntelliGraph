@@ -44,7 +44,7 @@ Workspace::~Workspace()
 
 void Workspace::handleClick( QMouseEvent *event )
 {
-    int x, y;
+    /*int x, y;
     x = event->x() - drawingArea->x() - drawingArea->horizontalScrollBar()->minimum() + drawingArea->horizontalScrollBar()->value() + this->sceneRect().x();
     y = event->y() - drawingArea->y() - drawingArea->verticalScrollBar()->minimum() + drawingArea->verticalScrollBar()->value() + this->sceneRect().y();
 
@@ -54,7 +54,7 @@ void Workspace::handleClick( QMouseEvent *event )
 
     if(mode == Workspace::selectMode)
         if( event->type() == QEvent::MouseButtonDblClick )
-            addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
+            addNode( x - (NODESIZE/2), y - (NODESIZE/2) );*/
 }
 
 void Workspace::handleResize()
@@ -104,8 +104,8 @@ void Workspace::clearSelection()
 {
     item1 = NULL;
     item2 = NULL;
-    selectNode = NULL;
-    selectEdge = NULL;
+    selectedNode = NULL;
+    selectedEdge = NULL;
 }
 
 QList<Node*> Workspace::getNodes()
@@ -128,7 +128,7 @@ Workspace::Mode Workspace::getMode()
     return mode;
 }
 
-Node * Workspace::getItem(int num)
+/*Node * Workspace::getItem(int num)
 {
     if(num == 1)
         return item1;
@@ -166,7 +166,7 @@ void Workspace::setSelectEdge( Edge * newSelectEdge )
 Edge * Workspace::getSelectEdge()
 {
     return selectEdge;
-}
+}*/
 
 void Workspace::updateConnectedEdges(Node *target)
 {
@@ -229,4 +229,70 @@ void Workspace::deleteEdge(Edge *target)
     this->removeItem( target );
     edges.removeAt(target->getID());
     delete target;
+}
+
+bool Workspace::clickedOnNode(Node *&node)
+{
+    Node *temp;
+    node = NULL;
+    for (int i = 0; i < nodes.length(); i++) {
+        temp = nodes.at(i);
+        if (temp->isUnderMouse()) {
+            node = temp;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Workspace::clickedOnEdge(Edge *&edge)
+{
+    Edge *temp;
+    edge = NULL;
+    for (int i = 0; i < edges.length(); i++) {
+        temp = edges.at(i);
+        if (temp->isUnderMouse()) {
+            edge = temp;
+            return true;
+        }
+    }
+    return false;
+}
+
+void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    Node *tmp;
+    int x = event->scenePos().x(),  y = event->scenePos().y();
+
+    if (clickedOnNode(tmp)) {
+        qDebug() << "Poof! A dialog box for the element with ID" << selectedNode->getID() << "appears.";
+    } else if(mode == Workspace::selectMode) {
+        addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
+    }
+    QGraphicsScene::mouseDoubleClickEvent(event);
+}
+
+void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    //_dragging = true;
+    Node *n; Edge *e;
+    if (clickedOnNode(n)) {
+        if(mode == Workspace::selectMode) {
+            selectedNode = n;
+        } else if(mode == Workspace::edgeMode)  {
+            if(item1 == NULL) {
+                item1 = n;
+            } else if(item1 != n) {
+                item2 = n;
+                this->addEdge(item1, item2);
+                this->clearSelection();
+            }
+        }
+    } else if (clickedOnEdge(e)) {
+        if(mode == Workspace::selectMode) {
+            selectedEdge = e;
+        }
+    }
+
+    QGraphicsScene::mousePressEvent(event);
 }
