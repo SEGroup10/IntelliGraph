@@ -20,7 +20,6 @@
 #include <string>
 #include <sstream>
 
-#include "workspace.h"
 #include "nodetype.h"
 
 using namespace std;
@@ -40,6 +39,7 @@ class Node: public QGraphicsItem
         string getLabel();
         NodeType::Type getType();
         QColor getColour();
+        QPointF getCenter();
 
         // Setters
         void setLabel(string label);
@@ -53,7 +53,8 @@ class Node: public QGraphicsItem
 
     private:
         // Events
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+        void update();
 
         // Utility functions
         string itos(int number);

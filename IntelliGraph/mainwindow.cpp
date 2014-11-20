@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     itm->setText("Algorithm 1");
     ui->algorithmsList->addItem(itm);
 
-    this->workspace = new Workspace( this, ui->graphicsView );
+    this->workspace = new Workspace( this, ui->graphicsView);
 }
 
 MainWindow::~MainWindow()

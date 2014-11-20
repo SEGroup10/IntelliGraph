@@ -1,66 +1,122 @@
 #include "edge.h"
+#include "node.h"
 #include "workspace.h"
 
 using namespace std;
 
-Edge::Edge(int newID, Node * newBegin, Node * newEnd, Workspace * newParent): QGraphicsLineItem(newBegin->pos().x()+NODESIZE/2, newBegin->pos().y()+NODESIZE/2,
-                                                                                                newEnd->pos().x()+NODESIZE/2, newEnd->pos().y()+NODESIZE/2, 0)
+// initializes the edge class
+Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
 {
-    ID = newID;
-    begin = newBegin;
-    end = newEnd;
-    parent = newParent;
+    _id = id;
+    _start = start;
+    _end = end;
+    _label = "1";
+    _flip = false;
+    _margin = 50;
+    _weight = 1.0;
+    _context = context;
+    this->setZValue(1);
 }
 
+// Deconstructs the edge class instance
 Edge::~Edge()
 {
 
 }
 
+// Gets the Id
 int Edge::getID()
 {
-    return ID;
+    return _id;
 }
 
-string Edge::getName()
+// Gets the Label
+string Edge::getLabel()
 {
-    return name;
+    return _label;
 }
 
-void Edge::setName( string newName )
+// Gets the path weight
+double Edge::getWeight()
 {
-    name = newName;
+    return _weight;
 }
 
-int Edge::getWeight()
+// Checks if this edge is connected to target
+bool Edge::hasNode(Node *target)
 {
-    return weight;
+    return (_start == target || _end == target);
 }
 
-void Edge::setWeight( int newWeight )
+// Sets the Label
+void Edge::setLabel(string label)
 {
-    weight = newWeight;
+    _label = label;
+    this->update();
 }
 
-void Edge::paint(QPainter *painter)
+// Sets the Weight
+void Edge::setWeight(double weight)
+{
+    // if label set to weight change it
+    if (dtos(_weight) == _label)
+    {
+        _label = dtos(weight);
+    }
+    _weight = weight;
+    this->update();
+}
+
+// Return bounding rectangle
+QRectF Edge::boundingRect() const
+{
+    QPointF s = _start->getCenter();
+    QPointF e = _end->getCenter();
+    QPointF topleft = QPointF(min(s.x(), e.x())-_margin, min(s.y(), e.y())-_margin);
+    QPointF bottomright = QPointF(max(s.x(), e.x())+_margin, max(s.y(), e.y())+_margin);
+
+    return QRectF(topleft, bottomright);//_start->getCenter(), _end->getCenter());
+}
+
+// Paint the object
+void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPen pen(Qt::black);
     pen.setWidth(2);
-
     painter->setPen(pen);
-    painter->drawLine(begin->pos().x(), begin->pos().y(), end->pos().x(), end->pos().y());
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->drawLine(_start->getCenter(), _end->getCenter());
+
+    QFont font = painter->font();
+    font.setPointSize(FONTSIZE);
+    painter->setFont(font);
+
+    QLineF line(_end->getCenter(),_start->getCenter());
+
+    if(!_flip)
+        painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString(_label.c_str()));
+    else
+        painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString(_label.c_str()));
+
 }
 
-bool Edge::hasNode(Node *target)
+
+// convert an double to a string
+string Edge::dtos(double number)
 {
-    return (begin == target || end == target);
+    ostringstream temp;
+    temp << number;
+    return temp.str();
+}
+
+// Custom update routine
+void Edge::update()
+{
+    QGraphicsItem::prepareGeometryChange();
+    QGraphicsItem::update(boundingRect());
 }
 
 void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(parent->getMode() == Workspace::selectMode)
-        parent->setSelectEdge(this);
-
-    update();
+    this->update();
 }
-

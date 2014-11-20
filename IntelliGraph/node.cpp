@@ -1,4 +1,5 @@
 #include "node.h"
+#include "workspace.h"
 
 using namespace std;
 
@@ -8,6 +9,7 @@ Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
     _id = id;
     _label = itos(id);
     _context = context;
+    this->setZValue(2);
     this->setType(NodeType::STANDARD);
 
     //The first and second param of QGraphicsEllipseItem are an offset from
@@ -17,12 +19,14 @@ Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
     //Because logic.
     this->setPos(position);
     setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): QGraphicsItem()
 {
     _id = id;
     _label = itos(id);
     _context = context;
+    this->setZValue(2);
     this->setType(type);
 
     //The first and second param of QGraphicsEllipseItem are an offset from
@@ -32,6 +36,7 @@ Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): Q
     //Because logic.
     this->setPos(position);
     setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
 // Deconstructs the node class instance
@@ -60,6 +65,14 @@ NodeType::Type Node::getType() {
 // Gets the Colour
 QColor Node::getColour() {
     return _colour;
+}
+
+// Gets the center position of this object
+QPointF Node::getCenter() {
+    double x = this->pos().x(), y = this->pos().y();
+    x += NODESIZE / 2;
+    y += NODESIZE / 2;
+    return QPointF(x, y);
 }
 
 // Sets the Label
@@ -117,6 +130,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setFont(font);
     painter->setBrush(brush);
     painter->setPen(pen);
+    painter->setRenderHint(QPainter::Antialiasing);
 
     painter->drawEllipse(rect);
     painter->drawText(rect, Qt::AlignCenter, QString(_label.c_str()));
@@ -131,18 +145,19 @@ string Node::itos(int number)
 }
 
 // Mouse press event
-void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
+QVariant Node::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    qDebug() << "Node:" << this->_label.c_str();
-    qDebug() << "Type of event:" << event;
-    if( event->type() == QEvent::GraphicsSceneMouseDoubleClick ) {
-        qDebug() << "Poof! A dialog box for the element with ID" << _id << "appears.";
+    if (change == QGraphicsItem::ItemScenePositionHasChanged) {
+        this->update();
     }
-    // update grpahics
-    QGraphicsItem::mousePressEvent(event);
-    this->update();
+    return QGraphicsItem::itemChange(change, value);
 }
 
-
-
-
+// Custom update routine
+void Node::update()
+{
+    // update edges attached to node
+    _context->updateConnectedEdges(this);
+    // update this item
+    QGraphicsItem::update(boundingRect());
+}
