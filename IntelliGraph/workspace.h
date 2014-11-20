@@ -13,9 +13,10 @@
 #include "node.h"
 #include "edge.h"
 #include "nodetype.h"
+#include "popup.h"
 
 class Node;
-
+class Popup;
 class Edge;
 
 class Workspace: public QGraphicsScene
@@ -54,6 +55,7 @@ class Workspace: public QGraphicsScene
         void deleteNode(Node *target);
         void addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
+        bool popupChecked;
 
     private:
         bool clickedOnNode(Node *&node);
@@ -79,6 +81,8 @@ class Workspace: public QGraphicsScene
 
         QList<Node*> nodes;
         QList<Edge*> edges;
+
+        Popup *popup;
 };
 
 #endif // WORKSPACE_H

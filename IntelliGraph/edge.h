@@ -15,6 +15,9 @@
 #include <QLineF>
 #include <QtMath>
 
+#include "node.h"       //kan weg?
+#include "workspace.h"  //kan weg?
+
 class Workspace;
 class Node;
 

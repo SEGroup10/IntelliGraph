@@ -265,7 +265,11 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     int x = event->scenePos().x(),  y = event->scenePos().y();
 
     if (clickedOnNode(tmp)) {
-        qDebug() << "Poof! A dialog box for the element with ID" << selectedNode->getID() << "appears.";
+        popup = new Popup();
+        Node *caller = tmp;
+        popup->setCaller(caller);
+        popup->setLabel("Current label: " + tmp->getLabel());
+        popup->show();
     } else if(mode == Workspace::selectMode) {
         addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
     }

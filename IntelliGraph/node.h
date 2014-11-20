@@ -21,10 +21,12 @@
 #include <sstream>
 
 #include "nodetype.h"
+#include "workspace.h" //kan weg?
 
 using namespace std;
 
 class Workspace;
+class Popup;
 
 class Node: public QGraphicsItem
 {

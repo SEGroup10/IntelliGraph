@@ -16,12 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp\
         workspace.cpp \
     node.cpp \
-    edge.cpp
+    edge.cpp \
+    popup.cpp
 
 HEADERS  += mainwindow.h\
          workspace.h \
     node.h \
     edge.h \
-    nodetype.h
+    nodetype.h \
+    popup.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    popup.ui
