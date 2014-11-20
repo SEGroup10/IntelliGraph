@@ -7,7 +7,8 @@ Popup::Popup(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Node settings");
-    this->fillColors();
+    this->setFixedSize(382, 180);
+    this->fillColours();
 
 }
 
@@ -21,7 +22,7 @@ void Popup::setLabel(string label) {
     ui->label->setText(qlabel);
 }
 
-void Popup::fillColors() {
+void Popup::fillColours() {
     ui->colorComboBox->addItem("");
     foreach (QString clr, QColor::colorNames()) {
         colors.append(clr);

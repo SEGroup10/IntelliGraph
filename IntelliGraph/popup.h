@@ -31,7 +31,7 @@ private slots:
 private:
     Ui::Popup *ui;
     QList<QColor> colors;
-    void fillColors();
+    void fillColours();
     Node *caller;
 };
 
