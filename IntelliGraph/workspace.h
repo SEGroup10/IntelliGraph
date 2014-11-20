@@ -18,7 +18,7 @@ class Node;
 
 class Edge;
 
-class Workspace
+class Workspace: public QGraphicsScene
 {
     public:
         enum Mode {
@@ -30,7 +30,7 @@ class Workspace
         ~Workspace();
 
         // Main functions
-        void handleClick( QMouseEvent *event );
+        void handleClick( QMouseEvent *event);
         void handleResize();
         void linkTest();
         void clearSelection();
@@ -58,7 +58,7 @@ class Workspace
     private:
         QWidget * parent;
         QGraphicsView * drawingArea;
-        QGraphicsScene * scene;
+        //QGraphicsScene * scene;
 
         QGraphicsRectItem *sizeenforcer;
 
