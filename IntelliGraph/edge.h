@@ -2,6 +2,8 @@
 #define EDGE_H
 
 #define EDGECLICKSPACE 8
+#define ARROWSIZE 30
+#define SMALLARROWSIZE 10
 
 #include <QGraphicsLineItem>
 #include <QGraphicsItem>
@@ -28,43 +30,44 @@ using namespace std;
 
 class Edge: public QGraphicsItem
 {
-    public:
-        // (de)Constructors
-        Edge(int id, Node *start, Node *end, Workspace *context);
-        ~Edge();
+	public:
+		// (de)Constructors
+		Edge(int id, Node *start, Node *end, Workspace *context);
+		~Edge();
 
-        // Getters
-        int getID();
-        string getLabel();
-        double getWeight();
-        bool hasNode(Node *target);
+		// Getters
+		int getID();
+		string getLabel();
+		double getWeight();
+		bool hasNode(Node *target);
 
-        // Setters
-        void setLabel(string label);
-        void setWeight(double weight);
+		// Setters
+		void setLabel(string label);
+		void setWeight(double weight);
 
-        // Painting functions
-        void update();
-        QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+		// Painting functions
+		void update();
+		QRectF boundingRect() const;
+		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-        bool isUnderMouse( QPointF ) const;
-    private:
-        // Events
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+		bool isUnderMouse( QPointF ) const;
+	private:
+		// Events
+		void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
-        // Utility functions
-        string dtos(double number);
+		// Utility functions
+		string dtos(double number);
 
-        // Data
-        int _id;
-        double _weight;
-        string _label;
-        bool _flip;
-        int _margin;
-        Node *_start;
-        Node *_end;
-        Workspace *_context;
+		// Data
+		int _id;
+		double _weight;
+		string _label;
+		bool _flip;
+		int _margin;
+		bool _direction;
+		Node *_start;
+		Node *_end;
+		Workspace *_context;
 };
 
 #endif // EDGE_H
