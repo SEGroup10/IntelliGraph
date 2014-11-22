@@ -21,7 +21,7 @@
 #include <sstream>
 
 #include "nodetype.h"
-#include "workspace.h" //kan weg?
+#include "workspace.h"
 
 using namespace std;
 

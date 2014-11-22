@@ -45,6 +45,7 @@ class Edge: public QGraphicsItem
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+        bool isUnderMouse( QPoint );
     private:
         // Events
         void mousePressEvent(QGraphicsSceneMouseEvent *event);

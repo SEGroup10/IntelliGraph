@@ -119,4 +119,10 @@ void Edge::update()
 void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     this->update();
+    event->ignore();
+}
+
+bool Edge::isUnderMouse(QPoint mousepos)
+{
+    return QGraphicsItem::isUnderMouse();
 }

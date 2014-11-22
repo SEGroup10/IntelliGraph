@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Popup</class>
- <widget class="QDialog" name="Popup">
+ <class>PopupEdge</class>
+ <widget class="QDialog" name="PopupEdge">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Node properties</string>
+   <string>Edge properties</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -45,16 +45,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="colorComboBox">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>80</y>
-     <width>161</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
@@ -68,25 +58,38 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Node properties</string>
+       <string>Edge properties</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Change node label:</string>
+       <string>Change edge weight:</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QLabel" name="colorLabel">
       <property name="text">
-       <string>Change node color:</string>
+       <string>Directed:</string>
       </property>
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QPlainTextEdit" name="labelTextbox_2">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>70</y>
+     <width>161</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>
@@ -94,32 +97,32 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Popup</receiver>
+   <receiver>PopupEdge</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>180</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
+     <x>190</x>
+     <y>89</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Popup</receiver>
+   <receiver>PopupEdge</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>180</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>190</x>
+     <y>89</y>
     </hint>
    </hints>
   </connection>

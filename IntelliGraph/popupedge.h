@@ -1,5 +1,5 @@
-#ifndef POPUP_H
-#define POPUP_H
+#ifndef POPUPEDGE_H
+#define POPUPEDGE_H
 
 #include <QDialog>
 #include <QPlainTextEdit>
@@ -7,34 +7,36 @@
 #include <string>
 
 #include "workspace.h"
+#include "edge.h"
 #include <QList>
 #include <QDebug>
-#include "ui_popup.h"
+#include "ui_popupedge.h"
 
 using namespace std;
 
 //class Popup;
-class Node;
+class Edge;
 
 
-class Popup : public QDialog
+class PopupEdge : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit Popup(QWidget *parent = 0);
-    ~Popup();
+    explicit PopupEdge(QWidget *parent = 0);
+    ~PopupEdge();
     void setLabel(string label);
-    void setCaller(Node* _caller);
+    void setCaller(Edge* _caller);
 
 private slots:
     void on_buttonBox_accepted();
 
+    void on_buttonBox_rejected();
+
 private:
-    Ui::Popup *ui;
+    Ui::PopupEdge *ui;
     QList<QColor> colors;
-    void fillColours();
-    Node *caller;
+    Edge *caller;
 };
 
-#endif // POPUP_H
+#endif // POPUPEDGE_H

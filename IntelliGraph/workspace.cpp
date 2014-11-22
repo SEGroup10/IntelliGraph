@@ -249,9 +249,10 @@ bool Workspace::clickedOnEdge(Edge *&edge)
 {
     Edge *temp;
     edge = NULL;
+    QPoint mousepos = parent->mapFromGlobal( QCursor::pos() );
     for (int i = 0; i < edges.length(); i++) {
         temp = edges.at(i);
-        if (temp->isUnderMouse()) {
+        if (temp->isUnderMouse(mousepos)) {
             edge = temp;
             return true;
         }
@@ -261,15 +262,28 @@ bool Workspace::clickedOnEdge(Edge *&edge)
 
 void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    Node *tmp;
+    Node *n; Edge *e;
     int x = event->scenePos().x(),  y = event->scenePos().y();
 
-    if (clickedOnNode(tmp)) {
+    if (clickedOnNode(n)) {
+        //Close dialog; if we don't do this, we loose the reference
+        //creating a potential memory leak
+        if( popup != NULL ) {
+            delete popup;
+        }
         popup = new Popup();
-        Node *caller = tmp;
-        popup->setCaller(caller);
-        popup->setLabel("Current label: " + tmp->getLabel());
+        popup->setCaller(n);
+        popup->setLabel(n->getLabel());
         popup->show();
+    } else if (clickedOnEdge(e)) {
+        //Close dialog; if we don't do this, we loose the reference
+        //creating a potential memory leak
+        if( popupedge != NULL ) {
+            delete popupedge;
+        }
+        popupedge = new PopupEdge();
+        popupedge->setCaller(e);
+        popupedge->show();
     } else if(mode == Workspace::selectMode) {
         addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
     }
@@ -283,6 +297,7 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (clickedOnNode(n)) {
         if(mode == Workspace::selectMode) {
             selectedNode = n;
+            selectedEdge = NULL;
         } else if(mode == Workspace::edgeMode)  {
             if(item1 == NULL) {
                 item1 = n;
@@ -295,6 +310,7 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
     } else if (clickedOnEdge(e)) {
         if(mode == Workspace::selectMode) {
             selectedEdge = e;
+            selectedNode = NULL;
         }
     }
 

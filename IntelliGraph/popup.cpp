@@ -6,7 +6,6 @@ Popup::Popup(QWidget *parent) :
     ui(new Ui::Popup)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Node settings");
     this->setFixedSize(382, 180);
     this->fillColours();
 
@@ -18,8 +17,9 @@ Popup::~Popup()
 }
 
 void Popup::setLabel(string label) {
-    QString qlabel = QString::fromStdString(label);
-    ui->label->setText(qlabel);
+    //QString qlabel = QString::fromStdString(label);
+    //ui->label->setText(qlabel);
+    ui->labelTextbox->setPlainText( QString::fromStdString(label) );
 }
 
 void Popup::fillColours() {

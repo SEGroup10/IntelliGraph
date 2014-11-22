@@ -14,9 +14,11 @@
 #include "edge.h"
 #include "nodetype.h"
 #include "popup.h"
+#include "popupedge.h"
 
 class Node;
 class Popup;
+class PopupEdge;
 class Edge;
 
 class Workspace: public QGraphicsScene
@@ -83,6 +85,7 @@ class Workspace: public QGraphicsScene
         QList<Edge*> edges;
 
         Popup *popup;
+        PopupEdge *popupedge;
 };
 
 #endif // WORKSPACE_H
