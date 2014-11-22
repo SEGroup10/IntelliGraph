@@ -96,11 +96,11 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 	QLineF line(_end->getCenter(),_start->getCenter());
 
-	if (line.length() >= NODESIZE + 15) {
+	if (line.length() >= NODESIZE) {
 		//lets first check if the distance between the two is more than 20 pixels...
 		//then 60 for a bigger arrow
 		int ArrowSize;
-		line.length() >= NODESIZE + 60 ? ArrowSize = ARROWSIZE : ArrowSize = SMALLARROWSIZE;
+		line.length() >= NODESIZE*2 ? ArrowSize = ARROWSIZE : ArrowSize = SMALLARROWSIZE;
 
 		double angle = ::acos(line.dx() / line.length());
 		if (line.dy() >= 0) {
