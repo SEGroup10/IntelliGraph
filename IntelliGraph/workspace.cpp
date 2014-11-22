@@ -35,6 +35,10 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
     Node *start = addNode(100, 100, NodeType::START);
     Node *end = addNode(400, 100, NodeType::END);
     addEdge(start, end);
+
+    //Init popup and popupedge for systems that do not automatically initialize it with null
+    popup = NULL;
+    popupedge = NULL;
 }
 
 Workspace::~Workspace()
@@ -231,13 +235,13 @@ void Workspace::deleteEdge(Edge *target)
     delete target;
 }
 
-bool Workspace::clickedOnNode(Node *&node)
+bool Workspace::clickedOnNode(Node *&node, QPointF pos)
 {
     Node *temp;
     node = NULL;
     for (int i = 0; i < nodes.length(); i++) {
         temp = nodes.at(i);
-        if (temp->isUnderMouse()) {
+        if (temp->isUnderMouse(pos)) {
             node = temp;
             return true;
         }
@@ -245,14 +249,13 @@ bool Workspace::clickedOnNode(Node *&node)
     return false;
 }
 
-bool Workspace::clickedOnEdge(Edge *&edge)
+bool Workspace::clickedOnEdge(Edge *&edge, QPointF pos)
 {
     Edge *temp;
     edge = NULL;
-    QPoint mousepos = parent->mapFromGlobal( QCursor::pos() );
     for (int i = 0; i < edges.length(); i++) {
         temp = edges.at(i);
-        if (temp->isUnderMouse(mousepos)) {
+        if (temp->isUnderMouse(pos)) {
             edge = temp;
             return true;
         }
@@ -265,7 +268,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     Node *n; Edge *e;
     int x = event->scenePos().x(),  y = event->scenePos().y();
 
-    if (clickedOnNode(n)) {
+    if (clickedOnNode(n,event->scenePos())) {
         //Close dialog; if we don't do this, we loose the reference
         //creating a potential memory leak
         if( popup != NULL ) {
@@ -275,7 +278,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         popup->setCaller(n);
         popup->setLabel(n->getLabel());
         popup->show();
-    } else if (clickedOnEdge(e)) {
+    } else if (clickedOnEdge(e,event->scenePos())) {
         //Close dialog; if we don't do this, we loose the reference
         //creating a potential memory leak
         if( popupedge != NULL ) {
@@ -283,6 +286,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         }
         popupedge = new PopupEdge();
         popupedge->setCaller(e);
+        popupedge->setLabel(e->getLabel());
         popupedge->show();
     } else if(mode == Workspace::selectMode) {
         addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
@@ -294,7 +298,7 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     //_dragging = true;
     Node *n; Edge *e;
-    if (clickedOnNode(n)) {
+    if (clickedOnNode(n,event->scenePos())) {
         if(mode == Workspace::selectMode) {
             selectedNode = n;
             selectedEdge = NULL;
@@ -307,7 +311,7 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 this->clearSelection();
             }
         }
-    } else if (clickedOnEdge(e)) {
+    } else if (clickedOnEdge(e,event->scenePos())) {
         if(mode == Workspace::selectMode) {
             selectedEdge = e;
             selectedNode = NULL;

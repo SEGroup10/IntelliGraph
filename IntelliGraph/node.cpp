@@ -67,7 +67,7 @@ QColor Node::getColour() {
 }
 
 // Gets the center position of this object
-QPointF Node::getCenter() {
+QPointF Node::getCenter() const {
     double x = this->pos().x(), y = this->pos().y();
     x += NODESIZE / 2;
     y += NODESIZE / 2;
@@ -159,4 +159,15 @@ void Node::update()
     _context->updateConnectedEdges(this);
     // update this item
     QGraphicsItem::update(boundingRect());
+}
+
+bool Node::isUnderMouse( QPointF mousepos ) const
+{
+    //Pythagoras
+    qreal a = mousepos.x() - this->getCenter().x();
+    qreal b = mousepos.y() - this->getCenter().y();
+    qreal c = qSqrt( qPow(a,2) + qPow(b,2) );
+
+    return c < (NODESIZE/2);
+
 }

@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QScrollBar>
+#include <QPointF>
 
 #include "node.h"
 #include "edge.h"
@@ -60,8 +61,8 @@ class Workspace: public QGraphicsScene
         bool popupChecked;
 
     private:
-        bool clickedOnNode(Node *&node);
-        bool clickedOnEdge(Edge *&edge);
+        bool clickedOnNode(Node *&node, QPointF pos);
+        bool clickedOnEdge(Edge *&edge,QPointF pos);
 
         // events
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);

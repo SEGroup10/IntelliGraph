@@ -41,7 +41,7 @@ class Node: public QGraphicsItem
         string getLabel();
         NodeType::Type getType();
         QColor getColour();
-        QPointF getCenter();
+        QPointF getCenter() const;
 
         // Setters
         void setLabel(string label);
@@ -52,6 +52,8 @@ class Node: public QGraphicsItem
         // Painting functions
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+        bool isUnderMouse(QPointF mousepos) const;
 
     private:
         // Events

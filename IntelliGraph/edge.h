@@ -1,6 +1,8 @@
 #ifndef EDGE_H
 #define EDGE_H
 
+#define EDGECLICKSPACE 8
+
 #include <QGraphicsLineItem>
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
@@ -14,9 +16,10 @@
 #include <QGraphicsScene>
 #include <QLineF>
 #include <QtMath>
+#include <QPointF>
 
-#include "node.h"       //kan weg?
-#include "workspace.h"  //kan weg?
+#include "node.h"
+#include "workspace.h"
 
 class Workspace;
 class Node;
@@ -45,7 +48,7 @@ class Edge: public QGraphicsItem
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-        bool isUnderMouse( QPoint );
+        bool isUnderMouse( QPointF ) const;
     private:
         // Events
         void mousePressEvent(QGraphicsSceneMouseEvent *event);

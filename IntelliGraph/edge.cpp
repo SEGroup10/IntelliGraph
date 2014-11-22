@@ -122,7 +122,28 @@ void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event)
     event->ignore();
 }
 
-bool Edge::isUnderMouse(QPoint mousepos)
+bool Edge::isUnderMouse(QPointF mousepos) const
 {
-    return QGraphicsItem::isUnderMouse();
+    qreal width = this->_end->getCenter().x() - this->_start->getCenter().x();
+    qreal height = this->_end->getCenter().y() - this->_start->getCenter().y();
+    qreal delta;
+    qreal projection;
+
+    //fancy way of getting a relative absolute value
+    if( width*width > height*height ) {
+        //Project on the x axis
+        delta = height / width;
+        projection = (mousepos.y() - this->_start->getCenter().y()) - ((mousepos.x() - this->_start->getCenter().x()) * delta);
+    } else if( width == 0 && height == 0 ) {
+        //Basically this edge does not exist
+        return false;
+    } else {
+        //Project on the y axis
+        delta = width / height;
+        projection = (mousepos.x() - this->_start->getCenter().x()) - ((mousepos.y() - this->_start->getCenter().y()) * delta);
+    }
+
+    //If we ever decide to build a zoom function, this ensures that the click space stays the same as
+    //the user will not become more accurate at clicking if the ui becomes smaller
+    return (projection >= (-EDGECLICKSPACE*this->scale()) && projection <= (EDGECLICKSPACE*this->scale()));
 }
