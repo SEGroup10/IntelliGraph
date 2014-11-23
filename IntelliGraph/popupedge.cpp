@@ -23,7 +23,7 @@ void PopupEdge::setLabel(string label) {
 
 void PopupEdge::on_buttonBox_accepted() {
     if (ui->labelTextbox->toPlainText().size() != 0) {
-        this->caller->setLabel(ui->labelTextbox->toPlainText().toStdString());
+		this->caller->setLabel(ui->labelTextbox->toPlainText().toStdString(),true);
     }
 }
 

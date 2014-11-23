@@ -286,7 +286,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         }
         popupedge = new PopupEdge();
         popupedge->setCaller(e);
-        popupedge->setLabel(e->getLabel());
+		popupedge->setLabel(e->getLabel(true));
         popupedge->show();
     } else if(mode == Workspace::selectMode) {
         addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
@@ -307,7 +307,26 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 item1 = n;
             } else if(item1 != n) {
                 item2 = n;
-                this->addEdge(item1, item2);
+				bool didWefindsomething = false;
+				foreach (Edge *edge, edges)
+				{
+					if (edge->hasStartNode(item1) && edge->hasEndNode(item2))
+					{
+						didWefindsomething = true;
+						qDebug() << "YARR THIS ONE ALREADY EXISTS ME LAD!";
+						//this edge already exists
+					}
+					else if (edge->hasStartNode(item2) && edge->hasEndNode(item1))
+					{
+						edge->setBidirectional(true);
+						didWefindsomething = true;
+						qDebug() << "Let's have it go both ways then, shall we?";
+						//lets make the existing one bidirectional
+					}
+				}
+				if (!didWefindsomething) {
+					this->addEdge(item1, item2);
+				}
                 this->clearSelection();
             }
         }

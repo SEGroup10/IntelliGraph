@@ -17,6 +17,7 @@
 #include <QString>
 #include <QGraphicsScene>
 #include <QLineF>
+#include <QRectF>
 #include <QtMath>
 #include <QPointF>
 
@@ -37,13 +38,17 @@ class Edge: public QGraphicsItem
 
 		// Getters
 		int getID();
-		string getLabel();
-		double getWeight();
+		string getLabel(bool label1);
+		double getWeight(bool weight1);
 		bool hasNode(Node *target);
+		bool hasStartNode(Node *target);
+		bool hasEndNode(Node *target);
+		bool getBidirectional();
 
 		// Setters
-		void setLabel(string label);
-		void setWeight(double weight);
+		void setLabel(string label, bool label1);
+		void setWeight(double weight, bool weight1);
+		void setBidirectional(bool bidirectional);
 
 		// Painting functions
 		void update();
@@ -60,11 +65,14 @@ class Edge: public QGraphicsItem
 
 		// Data
 		int _id;
-		double _weight;
-		string _label;
+		double _weight1;
+		double _weight2;
+		string _label1;
+		string _label2;
 		bool _flip;
 		int _margin;
-		bool _direction;
+		bool _directional;
+		bool _bidirectional;
 		Node *_start;
 		Node *_end;
 		Workspace *_context;

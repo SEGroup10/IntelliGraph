@@ -12,12 +12,15 @@ Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
 	_id = id;
 	_start = start;
 	_end = end;
-	_label = "1";
+	_label1 = "1";
+	_label2 = "2";
 	_flip = false;
 	_margin = 50;
-	_weight = 1.0;
+	_weight1 = 1.0;
+	_weight2 = 1.0;
 	_context = context;
-	_direction = true;
+	_directional = true;
+	_bidirectional = false;
 	this->setZValue(1);
 }
 
@@ -34,15 +37,18 @@ int Edge::getID()
 }
 
 // Gets the Label
-string Edge::getLabel()
+string Edge::getLabel(bool label1)
 {
-	return _label;
+	if (label1) return _label1;
+	else return _label2;
 }
 
+
 // Gets the path weight
-double Edge::getWeight()
+double Edge::getWeight(bool weight1)
 {
-	return _weight;
+	if (weight1) return _weight1;
+	else return _weight2;
 }
 
 // Checks if this edge is connected to target
@@ -51,23 +57,52 @@ bool Edge::hasNode(Node *target)
 	return (_start == target || _end == target);
 }
 
-// Sets the Label
-void Edge::setLabel(string label)
+bool Edge::hasStartNode(Node *target)
 {
-	_label = label;
+	return (_start == target);
+}
+
+bool Edge::hasEndNode(Node *target)
+{
+	return (_end == target);
+}
+
+// Sets the Label
+void Edge::setLabel(string label, bool label1)
+{
+	label1 ? _label1 = label : _label2 = label;
 	this->update();
 }
 
 // Sets the Weight
-void Edge::setWeight(double weight)
+void Edge::setWeight(double weight, bool weight1)
 {
 	// if label set to weight change it
-	if (dtos(_weight) == _label)
-	{
-		_label = dtos(weight);
-	}_direction = true;
-	_weight = weight;
+	if (weight1) {
+	if (dtos(_weight1) == _label1) {
+			_label1 = dtos(weight);
+		}
+		_directional = true;
+		_weight1 = weight;
+	}
+	else {
+		if (dtos(_weight2) == _label2) {
+				_label2 = dtos(weight);
+		}
+		_directional = true;
+		_weight2 = weight;
+	}
 	this->update();
+}
+
+bool Edge::getBidirectional()
+{
+	return _bidirectional;
+}
+
+void Edge::setBidirectional(bool bidirectional)
+{
+	_bidirectional = bidirectional;
 }
 
 // Return bounding rectangle
@@ -75,8 +110,10 @@ QRectF Edge::boundingRect() const
 {
 	QPointF s = _start->getCenter();
 	QPointF e = _end->getCenter();
-	QPointF topleft = QPointF(min(s.x(), e.x())-_margin, min(s.y(), e.y())-_margin);
-	QPointF bottomright = QPointF(max(s.x(), e.x())+_margin, max(s.y(), e.y())+_margin);
+	int _practicalMargin;
+	_bidirectional ? _practicalMargin = _margin * 10 : _practicalMargin = _margin;
+	QPointF topleft = QPointF(min(s.x(), e.x())-_practicalMargin, min(s.y(), e.y())-_practicalMargin);
+	QPointF bottomright = QPointF(max(s.x(), e.x())+_practicalMargin, max(s.y(), e.y())+_practicalMargin);
 
 	return QRectF(topleft, bottomright);//_start->getCenter(), _end->getCenter());
 }
@@ -88,40 +125,54 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 	pen.setWidth(2);
 	painter->setPen(pen);
 	painter->setRenderHint(QPainter::Antialiasing);
-	painter->drawLine(_start->getCenter(), _end->getCenter());
-
 	QFont font = painter->font();
 	font.setPointSize(FONTSIZE);
 	painter->setFont(font);
-
 	QLineF line(_end->getCenter(),_start->getCenter());
-
-	if (line.length() >= NODESIZE) {
-		//lets first check if the distance between the two is more than 20 pixels...
-		//then 60 for a bigger arrow
-		int ArrowSize;
-		line.length() >= NODESIZE*2 ? ArrowSize = ARROWSIZE : ArrowSize = SMALLARROWSIZE;
-
-		double angle = ::acos(line.dx() / line.length());
-		if (line.dy() >= 0) {
-			angle = 2*Pi - angle;
-		}
-		QPointF Point1 = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
-		if (_direction) {
+	double angle = ::acos(line.dx() / line.length());
+	if (line.dy() >= 0) {
+		angle = 2*Pi - angle;
+	}
+	painter->drawLine(line);
+	//int angleDeg = (angle*360/(2*Pi));
+	//painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg+45)*16, 90*16);
+	//painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg-45)*16, -90*16);
+	//dont touch this, work in progress to make a double arch.
+	if (_directional) {
+		if (line.length() >= NODESIZE) {
+			//lets first check if the distance between the two is more than 20 pixels...
+			//then 60 for a bigger arrow
+			int ArrowSize;
+			line.length() >= NODESIZE*2 ? ArrowSize = ARROWSIZE : ArrowSize = SMALLARROWSIZE;
+			QPointF Point1 = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
 			QPointF Point2 = Point1 - QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
 			QPointF Point3 = Point1 - QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
-			painter->setBrush(Qt::magenta);
-			//een beetje gay is oke? lol!
+			painter->setBrush(Qt::green);
 			painter->drawPolygon(QPolygonF() << Point1 << Point2 << Point3);
 			//qDebug() << "DrawPolygon";
+			if (_bidirectional) {
+				QPointF Point4 = _start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
+				QPointF Point5 = Point4 + QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
+				QPointF Point6 = Point4 + QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
+				painter->setBrush(Qt::red);
+				painter->drawPolygon(QPolygonF() << Point4 << Point5 << Point6);
+			}
 		}
 	}
-
-	if(!_flip)
-		painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString(_label.c_str()));
-	else
-		painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString(_label.c_str()));
-
+	if (_bidirectional) {
+		pen.setColor(Qt::green);
+		painter->setPen(pen);
+		painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString(_label1.c_str()));
+		pen.setColor(Qt::red);
+		painter->setPen(pen);
+		painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString(_label2.c_str()));
+	}
+	else {
+		if(!_flip)
+			painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString(_label1.c_str()));
+		else
+			painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString(_label1.c_str()));
+	}
 }
 
 
