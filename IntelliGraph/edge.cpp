@@ -100,6 +100,8 @@ bool Edge::getBidirectional()
 	return _bidirectional;
 }
 
+//Makes an edge bidirectional
+//Do not put any 'side-effects' in this function
 void Edge::setBidirectional(bool bidirectional)
 {
 	_bidirectional = bidirectional;
@@ -134,9 +136,10 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 		angle = 2*Pi - angle;
 	}
 	painter->drawLine(line);
-	//int angleDeg = (angle*360/(2*Pi));
-	//painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg+45)*16, 90*16);
-	//painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg-45)*16, -90*16);
+    //TODO LOOK AT IT OR DELETE
+    //int angleDeg = (angle*360/(2*Pi));
+    //painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg+45)*16, 90*16);
+    //painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg-45)*16, -90*16);
 	//dont touch this, work in progress to make a double arch.
 	if (_directional) {
 		if (line.length() >= NODESIZE) {
@@ -148,7 +151,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 			QPointF Point2 = Point1 - QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
 			QPointF Point3 = Point1 - QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
 			painter->setBrush(Qt::green);
-			painter->drawPolygon(QPolygonF() << Point1 << Point2 << Point3);
+            painter->drawPolygon(QPolygonF() << Point1 << Point2 << Point3);
 			//qDebug() << "DrawPolygon";
 			if (_bidirectional) {
 				QPointF Point4 = _start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );

@@ -95,6 +95,8 @@ void Node::setType(NodeType::Type type)
         case NodeType::STANDARD:
             _colour = QColor(255, 255, 255);
             break;
+        default:
+            Q_ASSERT_X(false, "Node::setType", "unrecognized nodetype");
     }
     this->update();
 }

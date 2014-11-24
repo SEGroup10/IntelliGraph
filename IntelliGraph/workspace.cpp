@@ -93,7 +93,8 @@ void Workspace::handleResize()
 
 void Workspace::linkTest()
 {
-    Node *edge_start;
+    //TODO REMOVE THIS
+    /*Node *edge_start;
     if (nodes.count() > 1)
     {
         edge_start = nodes.at(0);
@@ -101,7 +102,8 @@ void Workspace::linkTest()
         {
             addEdge(edge_start, nodes.at(i));
         }
-    }
+    }*/
+    qDebug() << "Disabled";
 }
 
 void Workspace::clearSelection()
@@ -206,17 +208,27 @@ Node *Workspace::addNode(int x, int y, NodeType::Type type)
 
 void Workspace::deleteNode(Node *target)
 {
-    this->removeItem( target );
-    // remove connected edges
-    for( int i = 0; i < edges.count(); i++ )
-    {
-        if( edges.at(i)->hasNode(target))
+    bool repeat = true;
+    while( repeat ) {
+        //If no edges had to be deleted, repeat will be false at the end of the while loop
+        repeat = false;
+
+        //Delete any edge that connects to the deleted node
+        for( int i = 0; i < edges.count(); i++ )
         {
-            deleteEdge(edges.at(i));
+            if( edges.at(i)->hasNode(target))
+            {
+                deleteEdge(edges.at(i));
+                //Continueing with this loop will result in undefined behaviour
+                //break out of for loop and start all over again
+                repeat = true;
+                break;
+            }
         }
     }
-    //
-    nodes.removeAt(target->getID());
+
+    nodes.removeAt(nodes.indexOf(target));
+    this->removeItem( target );
     delete target;
 }
 
@@ -228,10 +240,12 @@ void Workspace::addEdge(Node *begin, Node *end)
     this->addItem( edge );
 }
 
+//Removes a directional or bidirectional edge
+//Do not use this if you want to only delete one way
 void Workspace::deleteEdge(Edge *target)
 {
+    edges.removeAt(edges.indexOf(target));
     this->removeItem( target );
-    edges.removeAt(target->getID());
     delete target;
 }
 
@@ -239,7 +253,7 @@ bool Workspace::clickedOnNode(Node *&node, QPointF pos)
 {
     Node *temp;
     node = NULL;
-    for (int i = 0; i < nodes.length(); i++) {
+    for (int i = nodes.length() - 1; i >= 0; i--) {
         temp = nodes.at(i);
         if (temp->isUnderMouse(pos)) {
             node = temp;
@@ -253,7 +267,7 @@ bool Workspace::clickedOnEdge(Edge *&edge, QPointF pos)
 {
     Edge *temp;
     edge = NULL;
-    for (int i = 0; i < edges.length(); i++) {
+    for (int i = edges.length() - 1; i >= 0; i--) {
         temp = edges.at(i);
         if (temp->isUnderMouse(pos)) {
             edge = temp;
@@ -268,28 +282,36 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     Node *n; Edge *e;
     int x = event->scenePos().x(),  y = event->scenePos().y();
 
-    if (clickedOnNode(n,event->scenePos())) {
-        //Close dialog; if we don't do this, we loose the reference
-        //creating a potential memory leak
-        if( popup != NULL ) {
-            delete popup;
+    if( mode == Workspace::selectMode) {
+        if (clickedOnNode(n,event->scenePos())) {
+            //Close dialog; if we don't do this, we loose the reference
+            //creating a potential memory leak
+            /*if( popup != NULL ) {
+                delete popup;
+            }
+            popup = new Popup();
+            popup->setCaller(n);
+            popup->setLabel(n->getLabel());
+            popup->show();*/
+            deleteNode(n);
+        } else if (clickedOnEdge(e,event->scenePos())) {
+            //Close dialog; if we don't do this, we loose the reference
+            //creating a potential memory leak
+            /*if( popupedge != NULL ) {
+                delete popupedge;
+            }
+            popupedge = new PopupEdge();
+            popupedge->setCaller(e);
+            popupedge->setLabel(e->getLabel(true));
+            popupedge->show();*/
+            deleteEdge(e);
+        } else {
+            addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
         }
-        popup = new Popup();
-        popup->setCaller(n);
-        popup->setLabel(n->getLabel());
-        popup->show();
-    } else if (clickedOnEdge(e,event->scenePos())) {
-        //Close dialog; if we don't do this, we loose the reference
-        //creating a potential memory leak
-        if( popupedge != NULL ) {
-            delete popupedge;
+    } else if( mode == Workspace::edgeMode ) {
+        if( clickedOnNode(n,event->scenePos()) ) {
+            item1 = n;
         }
-        popupedge = new PopupEdge();
-        popupedge->setCaller(e);
-		popupedge->setLabel(e->getLabel(true));
-        popupedge->show();
-    } else if(mode == Workspace::selectMode) {
-        addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
     }
     QGraphicsScene::mouseDoubleClickEvent(event);
 }
@@ -312,16 +334,15 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
 				{
 					if (edge->hasStartNode(item1) && edge->hasEndNode(item2))
 					{
-						didWefindsomething = true;
-						qDebug() << "YARR THIS ONE ALREADY EXISTS ME LAD!";
-						//this edge already exists
+                        //this edge already exists
+                        didWefindsomething = true;
 					}
 					else if (edge->hasStartNode(item2) && edge->hasEndNode(item1))
 					{
-						edge->setBidirectional(true);
+                        //lets make the existing one bidirectional
+                        //even if it is already bidirectional
+                        edge->setBidirectional(true);
 						didWefindsomething = true;
-						qDebug() << "Let's have it go both ways then, shall we?";
-						//lets make the existing one bidirectional
 					}
 				}
 				if (!didWefindsomething) {
