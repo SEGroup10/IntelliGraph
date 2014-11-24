@@ -286,25 +286,23 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         if (clickedOnNode(n,event->scenePos())) {
             //Close dialog; if we don't do this, we loose the reference
             //creating a potential memory leak
-            /*if( popup != NULL ) {
+            if( popup != NULL ) {
                 delete popup;
             }
             popup = new Popup();
             popup->setCaller(n);
             popup->setLabel(n->getLabel());
-            popup->show();*/
-            deleteNode(n);
+            popup->show();
         } else if (clickedOnEdge(e,event->scenePos())) {
             //Close dialog; if we don't do this, we loose the reference
             //creating a potential memory leak
-            /*if( popupedge != NULL ) {
+            if( popupedge != NULL ) {
                 delete popupedge;
             }
             popupedge = new PopupEdge();
             popupedge->setCaller(e);
             popupedge->setLabel(e->getLabel(true));
-            popupedge->show();*/
-            deleteEdge(e);
+            popupedge->show();
         } else {
             addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
         }
