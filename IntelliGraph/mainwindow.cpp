@@ -48,20 +48,20 @@ void MainWindow::on_nextButton_clicked()
      msgBox.exec();
 }
 
-void MainWindow::on_selectButton_clicked()
+void MainWindow::on_modeButton_clicked()
 {
-    workspace->setMode(Workspace::selectMode);
     workspace->clearSelection();
-    foreach(Node* i, workspace->getNodes())
-        i->setFlag(QGraphicsItem::ItemIsMovable, true);
-}
-
-void MainWindow::on_edgeButton_clicked()
-{
-    workspace->setMode(Workspace::edgeMode);
-    workspace->clearSelection();
-    foreach(Node* i, workspace->getNodes())
-        i->setFlag(QGraphicsItem::ItemIsMovable, false);
+    if (workspace->getMode() == Workspace::selectMode) {
+        workspace->setMode(Workspace::edgeMode);
+        ui->modeButton->setText(QString("Edge Mode"));
+        foreach(Node* i, workspace->getNodes())
+            i->setFlag(QGraphicsItem::ItemIsMovable, false);
+    } else {
+        workspace->setMode(Workspace::selectMode);
+        ui->modeButton->setText(QString("Select Mode"));
+        foreach(Node* i, workspace->getNodes())
+            i->setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
 }
 
 void MainWindow::on_exportButton_clicked()
