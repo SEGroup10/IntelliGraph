@@ -22,10 +22,10 @@ class Popup : public QDialog
     Q_OBJECT
 
 public:
-    explicit Popup(QWidget *parent = 0);
+    explicit Popup(QWidget *parent = 0, Node *_caller = 0);
     ~Popup();
     void setLabel(string label);
-    void setCaller(Node* _caller);
+    void setCaller(Node *_caller);
 
 private slots:
     void on_buttonBox_accepted();

@@ -1,11 +1,12 @@
 #include "popup.h"
 
 
-Popup::Popup(QWidget *parent) :
+Popup::Popup(QWidget *parent, Node *_caller) :
     QDialog(parent),
     ui(new Ui::Popup)
 {
     ui->setupUi(this);
+    this->setCaller(_caller);
     this->setFixedSize(382, 250);
     this->fillColours();
     this->setSliders();
