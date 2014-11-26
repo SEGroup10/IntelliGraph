@@ -40,6 +40,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::on_nextButton_clicked()
 {
+    workspace->getNodes().at(0)->highlight(QColor(255, 0, 0));
     // Some test messagebox for the nextButton
      QMessageBox msgBox;
      msgBox.setText("nextButton works");
