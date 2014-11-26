@@ -43,7 +43,7 @@ private:
     Ui::Popup *ui;
     QList<QColor> colors;
     void fillColours();
-    void setSliders();
+    void setSliders(QColor currentColor);
     Node *caller;
     QColor currentColor;
     QColor newColor;
