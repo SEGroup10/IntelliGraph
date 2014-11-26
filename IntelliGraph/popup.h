@@ -7,22 +7,22 @@
 #include <string>
 
 #include "workspace.h"
+#include "node.h"
 #include <QList>
 #include <QDebug>
 #include "ui_popup.h"
 
 using namespace std;
 
-//class Popup;
 class Node;
-
+class Workspace;
 
 class Popup : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit Popup(QWidget *parent = 0, Node *_caller = 0);
+    explicit Popup(QWidget *parent = 0, Node *_caller = 0, Workspace *workspace = 0);
     ~Popup();
     void setLabel(string label);
     void setCaller(Node *_caller);
@@ -39,14 +39,19 @@ private slots:
 
     void on_colorComboBox_currentIndexChanged(int index);
 
+    void on_DeleteButton_clicked();
+
 private:
     Ui::Popup *ui;
     QList<QColor> colors;
-    void fillColours();
-    void setSliders(QColor currentColor);
     Node *caller;
+    Workspace *workspace;
     QColor currentColor;
     QColor newColor;
+
+    void fillColours();
+    void setSliders(QColor currentColor);
+    void setWorkspace( Workspace* );
 };
 
 #endif // POPUP_H

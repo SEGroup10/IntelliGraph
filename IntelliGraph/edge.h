@@ -40,10 +40,14 @@ class Edge: public QGraphicsItem
 		int getID();
 		string getLabel(bool label1);
 		double getWeight(bool weight1);
-		bool hasNode(Node *target);
-		bool hasStartNode(Node *target);
-		bool hasEndNode(Node *target);
 		bool getBidirectional();
+        Node *getBeginNode();
+        Node *getEndNode();
+
+        // Comparators
+        bool hasNode(Node *target);
+        bool hasStartNode(Node *target);
+        bool hasEndNode(Node *target);
 
 		// Setters
 		void setLabel(string label, bool label1);

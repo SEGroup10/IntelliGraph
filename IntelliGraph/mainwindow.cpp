@@ -74,8 +74,3 @@ void MainWindow::on_exportButton_clicked()
     msgBox.setDefaultButton(QMessageBox::Cancel);
     msgBox.exec();
 }
-
-void MainWindow::on_testLinks_clicked()
-{
-    workspace->linkTest();
-}

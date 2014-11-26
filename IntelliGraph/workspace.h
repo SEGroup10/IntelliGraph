@@ -56,7 +56,7 @@ class Workspace: public QGraphicsScene
         Node *addNode(int x, int y);
         Node *addNode(int x, int y, NodeType::Type type);
         void deleteNode(Node *target);
-        void addEdge(Node *begin, Node *end);
+        Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
         bool popupChecked;
 

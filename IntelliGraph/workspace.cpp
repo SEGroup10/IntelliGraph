@@ -232,12 +232,14 @@ void Workspace::deleteNode(Node *target)
     delete target;
 }
 
-void Workspace::addEdge(Node *begin, Node *end)
+Edge* Workspace::addEdge(Node *begin, Node *end)
 {
     Edge* edge = new Edge(edges.count(),begin,end,this);
     edges.append(edge);
 
     this->addItem( edge );
+
+    return edge;
 }
 
 //Removes a directional or bidirectional edge
@@ -289,8 +291,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             if( popup != NULL ) {
                 delete popup;
             }
-            popup = new Popup(this->parent, n);
-            popup->setLabel(n->getLabel());
+            popup = new Popup(this->parent, n, this);
             popup->show();
         } else if (clickedOnEdge(e,event->scenePos())) {
             //Close dialog; if we don't do this, we loose the reference
@@ -298,9 +299,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             if( popupedge != NULL ) {
                 delete popupedge;
             }
-            popupedge = new PopupEdge();
-            popupedge->setCaller(e);
-            popupedge->setLabel(e->getLabel(true));
+            popupedge = new PopupEdge(this->parent, e, this);
             popupedge->show();
         } else {
             addNode( x - (NODESIZE/2), y - (NODESIZE/2) );

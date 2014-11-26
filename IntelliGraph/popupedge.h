@@ -23,20 +23,38 @@ class PopupEdge : public QDialog
     Q_OBJECT
 
 public:
-    explicit PopupEdge(QWidget *parent = 0);
+    explicit PopupEdge(QWidget *parent = 0, Edge *_caller = 0, Workspace *workspace = 0);
     ~PopupEdge();
-    void setLabel(string label);
-    void setCaller(Edge* _caller);
+
 
 private slots:
     void on_buttonBox_accepted();
 
     void on_buttonBox_rejected();
 
+    void on_DeleteEdge_clicked();
+
 private:
     Ui::PopupEdge *ui;
     QList<QColor> colors;
     Edge *caller;
+    Workspace *workspace;
+
+    void setCaller(Edge* _caller);
+    void setLabelLeft( string label );
+    void setLabelRight( string label );
+    void setWorkspace( Workspace *workspace );
+
+    void setWeightLeftToRight( string label );
+    void setWeightRightToLeft( string label );
+    void setCheckedLeftToRight( bool check );
+    void setCheckedRightToLeft( bool check );
+
+    string getWeightLeftToRight();
+    string getWeightRightToLeft();
+    bool getCheckedLeftToRight();
+    bool getCheckedRightToLeft();
+
 };
 
 #endif // POPUPEDGE_H

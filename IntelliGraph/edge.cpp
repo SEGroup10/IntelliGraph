@@ -36,7 +36,8 @@ int Edge::getID()
 	return _id;
 }
 
-// Gets the Label
+//Returns label from begin to end if true is passed
+//Returns label from end to begin if false is passed
 string Edge::getLabel(bool label1)
 {
 	if (label1) return _label1;
@@ -44,11 +45,22 @@ string Edge::getLabel(bool label1)
 }
 
 
-// Gets the path weight
+//Returns weight from begin to end if true is passed
+//Returns weight from end to begin if false is passed
 double Edge::getWeight(bool weight1)
 {
 	if (weight1) return _weight1;
 	else return _weight2;
+}
+
+Node *Edge::getBeginNode()
+{
+    return _start;
+}
+
+Node *Edge::getEndNode()
+{
+    return _end;
 }
 
 // Checks if this edge is connected to target

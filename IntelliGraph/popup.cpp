@@ -1,7 +1,7 @@
 #include "popup.h"
 
 
-Popup::Popup(QWidget *parent, Node *_caller) :
+Popup::Popup(QWidget *parent, Node *_caller, Workspace *workspace) :
     QDialog(parent),
     ui(new Ui::Popup)
 {
@@ -11,6 +11,7 @@ Popup::Popup(QWidget *parent, Node *_caller) :
     this->fillColours();
     this->setSliders( caller->getColour() );
     this->setWindowFlags(Qt::Tool);
+    this->setWorkspace( workspace );
 }
 
 Popup::~Popup()
@@ -19,7 +20,7 @@ Popup::~Popup()
 }
 
 void Popup::setLabel(string label) {
-    ui->labelTextbox->setPlainText( QString::fromStdString(label) );
+    ui->labelTextbox->setText( QString::fromStdString(label) );
 }
 
 void Popup::fillColours() {
@@ -47,8 +48,8 @@ void Popup::setSliders( QColor currentColor ) {
 }
 
 void Popup::on_buttonBox_accepted() {
-    if (ui->labelTextbox->toPlainText().size() != 0) {
-        this->caller->setLabel(ui->labelTextbox->toPlainText().toStdString());
+    if (ui->labelTextbox->text().size() != 0) {
+        this->caller->setLabel(ui->labelTextbox->text().toStdString());
     }
 
     if (ui->colorComboBox->currentIndex() != 0) {
@@ -89,4 +90,14 @@ void Popup::on_colorComboBox_currentIndexChanged(int index) {
         QColor selected = (colors[ui->colorComboBox->currentIndex() - 1]);
         setSliders( selected );
     }
+}
+
+void Popup::setWorkspace( Workspace *workspace )
+{
+    this->workspace = workspace;
+}
+
+void Popup::on_DeleteButton_clicked()
+{
+    workspace->deleteNode(this->caller);
 }
