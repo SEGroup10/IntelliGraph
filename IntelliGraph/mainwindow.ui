@@ -42,16 +42,9 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="selectButton">
-        <property name="text">
-         <string>Node Mode</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="modeButton">
         <property name="text">
-         <string>Edge Mode</string>
+         <string>Select Mode</string>
         </property>
        </widget>
       </item>
