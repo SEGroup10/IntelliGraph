@@ -127,6 +127,11 @@ void Node::highlight(QColor color) {
     this->update();
 }
 
+void Node::removeHighlight() {
+    _isHighlighted = false;
+    this->update();
+}
+
 // Paints the node
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -186,5 +191,4 @@ bool Node::isUnderMouse( QPointF mousepos ) const
     qreal c = qSqrt( qPow(a,2) + qPow(b,2) );
 
     return c < (NODESIZE/2);
-
 }

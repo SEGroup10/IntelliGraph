@@ -43,7 +43,13 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
     popupedge = NULL;
 
     //Init loadedAlgorithm for systems that do not automatically initialize it with null
-    loadedAlgorithm = NULL;
+    //loadedAlgorithm = NULL;
+    //TODO Remove this and uncomment above!
+    loadedAlgorithm = new SampleAlgorithm( this );
+    //This should happen in the algorithm initializer
+    loadedAlgorithm->processNodes( nodes );
+    loadedAlgorithm->processEdges( edges );
+    loadedAlgorithm->init();
 }
 
 Workspace::~Workspace()
@@ -327,19 +333,43 @@ Node *Workspace::getNodeById( int id )
             return node;
         }
     }
+    return NULL;
 }
 
 //Handles a click on the next button
 void Workspace::handleNext()
 {
-    //TODO Enable This
     //You should not be able to click the next button if no algorithm is loaded
     Q_ASSERT_X( (loadedAlgorithm != NULL), "Workspace::handleNext()", "loadedAlgorithm is NULL");
+
+    Node *oldNode = getNodeById( loadedAlgorithm->getHighlightedNode() );
+    Q_ASSERT_X( (oldNode != NULL ), "Workspace::handleNext()", "old Node is NULL");
+    oldNode->removeHighlight();
+
     if( loadedAlgorithm->next() ) {
+        qDebug() << "loaded Next: " << loadedAlgorithm->getHighlightedNode();
         Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
         Q_ASSERT_X( (node != NULL), "Workspace::handleNext()", "id returned by algorithm does not exist");
         node->highlight(QColor(255,0,0));
     }
 
-    nodes.at(0)->highlight(QColor(255, 0, 0));
+    //nodes.at(0)->highlight(QColor(255, 0, 0));
+}
+
+//Test function to test functionality of algorithms
+void Workspace::test() {
+    qDebug() << "resetting algorithm";
+    delete loadedAlgorithm;
+
+    foreach( Node *node, nodes ) {
+        node->removeHighlight();
+    }
+
+    loadedAlgorithm = new SampleAlgorithm( this );
+    loadedAlgorithm->processNodes( nodes );
+    loadedAlgorithm->processEdges( edges );
+    loadedAlgorithm->init();
+    Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
+    Q_ASSERT_X( (node != NULL), "Workspace::test()", "id returned by algorithm does not exist");
+    node->highlight(QColor(255,0,0));
 }

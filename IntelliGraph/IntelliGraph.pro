@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     node.cpp \
     edge.cpp \
     popup.cpp \
-    popupedge.cpp
+    popupedge.cpp \
+    samplealgorithm.cpp
 
 HEADERS  += mainwindow.h\
          workspace.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h\
     nodetype.h \
     popup.h \
     popupedge.h \
-    algorithminterface.h
+    algorithminterface.h \
+    samplealgorithm.h
 
 FORMS    += mainwindow.ui \
     popup.ui \
