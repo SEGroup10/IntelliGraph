@@ -26,7 +26,8 @@ HEADERS  += mainwindow.h\
     edge.h \
     nodetype.h \
     popup.h \
-    popupedge.h
+    popupedge.h \
+    algorithminterface.h
 
 FORMS    += mainwindow.ui \
     popup.ui \

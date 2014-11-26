@@ -16,6 +16,7 @@
 #include "nodetype.h"
 #include "popup.h"
 #include "popupedge.h"
+#include "algorithminterface.h"
 
 class Node;
 class Popup;
@@ -36,7 +37,7 @@ class Workspace: public QGraphicsScene
         // Main functions
         void handleClick( QMouseEvent *event);
         void handleResize();
-        void linkTest();
+        void handleNext();
         void clearSelection();
 
         // Data functions
@@ -44,12 +45,9 @@ class Workspace: public QGraphicsScene
         QList<Edge*> getEdges();
         void setMode(Workspace::Mode newMode);
         Workspace::Mode getMode();
-        //Node * getItem(int num);
-        //void setItem(Node * newItem, int num);
-        //void setSelectNode(Node * newSelectNode);
-        //Node * getSelectNode();
-        //void setSelectEdge(Edge * newSelectEdge);
-        //Edge * getSelectEdge();
+
+        //What does this do?
+        bool popupChecked;
 
         // Instance functions
         void updateConnectedEdges(Node *target);
@@ -58,7 +56,6 @@ class Workspace: public QGraphicsScene
         void deleteNode(Node *target);
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
-        bool popupChecked;
 
     private:
         bool clickedOnNode(Node *&node, QPointF pos);
@@ -67,6 +64,10 @@ class Workspace: public QGraphicsScene
         // events
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
         void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+        Node* getNodeById( int id );
+
+        int getNewId();
 
        // bool _dragging;
         QWidget * parent;
@@ -87,6 +88,10 @@ class Workspace: public QGraphicsScene
 
         Popup *popup;
         PopupEdge *popupedge;
+
+        AlgorithmInterface *loadedAlgorithm;
+
+        static int IDCounter;
 };
 
 #endif // WORKSPACE_H

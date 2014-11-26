@@ -2,13 +2,15 @@
 
 using namespace std;
 
+//Init static variable
+int Workspace::IDCounter = 0;
+
 Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( widget )
 {
     this->drawingArea = elem;
     this->parent = widget;
 
     // We need a Scene on the GraphicsView to draw shapes
-   // scene = new QGraphicsScene( parent );
     drawingArea->setScene(this);
 
     //We can only add elements *inside* the bounding box of the scene, but by default this bounding box has
@@ -39,6 +41,9 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
     //Init popup and popupedge for systems that do not automatically initialize it with null
     popup = NULL;
     popupedge = NULL;
+
+    //Init loadedAlgorithm for systems that do not automatically initialize it with null
+    loadedAlgorithm = NULL;
 }
 
 Workspace::~Workspace()
@@ -91,21 +96,6 @@ void Workspace::handleResize()
     }
 }
 
-void Workspace::linkTest()
-{
-    //TODO REMOVE THIS
-    /*Node *edge_start;
-    if (nodes.count() > 1)
-    {
-        edge_start = nodes.at(0);
-        for (int i = 1; i < nodes.count(); i++)
-        {
-            addEdge(edge_start, nodes.at(i));
-        }
-    }*/
-    qDebug() << "Disabled";
-}
-
 void Workspace::clearSelection()
 {
     item1 = NULL;
@@ -134,46 +124,6 @@ Workspace::Mode Workspace::getMode()
     return mode;
 }
 
-/*Node * Workspace::getItem(int num)
-{
-    if(num == 1)
-        return item1;
-    else if(num == 2)
-        return item2;
-    else
-        return NULL;
-}
-
-void Workspace::setItem(Node * newItem, int num)
-{
-    if(num == 1)
-        item1 = newItem;
-    else if(num == 2)
-        item2 = newItem;
-    else
-        return;
-}
-
-void Workspace::setSelectNode( Node * newSelectNode )
-{
-    selectNode = newSelectNode;
-}
-
-Node * Workspace::getSelectNode()
-{
-    return selectNode;
-}
-
-void Workspace::setSelectEdge( Edge * newSelectEdge )
-{
-    selectEdge = newSelectEdge;
-}
-
-Edge * Workspace::getSelectEdge()
-{
-    return selectEdge;
-}*/
-
 void Workspace::updateConnectedEdges(Node *target)
 {
     Edge *temp = NULL;
@@ -190,7 +140,7 @@ void Workspace::updateConnectedEdges(Node *target)
 Node *Workspace::addNode(int x, int y)
 {
     QPointF pos(x, y);
-    Node* node = new Node(nodes.count(), pos, this);
+    Node* node = new Node(getNewId(), pos, this);
     nodes.append( node );
     this->addItem( node );
     return node;
@@ -199,7 +149,7 @@ Node *Workspace::addNode(int x, int y)
 Node *Workspace::addNode(int x, int y, NodeType::Type type)
 {
     QPointF pos(x, y);
-    Node* node = new Node(nodes.count(), pos, this, type);
+    Node* node = new Node(getNewId(), pos, this, type);
     nodes.append( node );
 
     this->addItem( node );
@@ -234,7 +184,7 @@ void Workspace::deleteNode(Node *target)
 
 Edge* Workspace::addEdge(Node *begin, Node *end)
 {
-    Edge* edge = new Edge(edges.count(),begin,end,this);
+    Edge* edge = new Edge(getNewId(),begin,end,this);
     edges.append(edge);
 
     this->addItem( edge );
@@ -251,6 +201,9 @@ void Workspace::deleteEdge(Edge *target)
     delete target;
 }
 
+//Will return true and change the passed variable node if
+//a node is found at the position of the click
+//otherwise returns false and changes the reference to NULL
 bool Workspace::clickedOnNode(Node *&node, QPointF pos)
 {
     Node *temp;
@@ -265,6 +218,9 @@ bool Workspace::clickedOnNode(Node *&node, QPointF pos)
     return false;
 }
 
+//Will return true and change the passed variable edge if
+//an edge is found at the position of the click
+//otherwise returns false and changes the reference to NULL
 bool Workspace::clickedOnEdge(Edge *&edge, QPointF pos)
 {
     Edge *temp;
@@ -355,4 +311,35 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mousePressEvent(event);
+}
+
+//Returns a guaranteed unique id until we run out of ints. If this happens, close the application. Seriously...
+int Workspace::getNewId()
+{
+    return IDCounter++;
+}
+
+//Returns a Node with this id; if no such node exists returns null
+Node *Workspace::getNodeById( int id )
+{
+    foreach( Node *node, nodes ) {
+        if( node->getID() == id ) {
+            return node;
+        }
+    }
+}
+
+//Handles a click on the next button
+void Workspace::handleNext()
+{
+    //TODO Enable This
+    //You should not be able to click the next button if no algorithm is loaded
+    Q_ASSERT_X( (loadedAlgorithm != NULL), "Workspace::handleNext()", "loadedAlgorithm is NULL");
+    if( loadedAlgorithm->next() ) {
+        Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
+        Q_ASSERT_X( (node != NULL), "Workspace::handleNext()", "id returned by algorithm does not exist");
+        node->highlight(QColor(255,0,0));
+    }
+
+    nodes.at(0)->highlight(QColor(255, 0, 0));
 }

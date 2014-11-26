@@ -7,7 +7,7 @@ Popup::Popup(QWidget *parent, Node *_caller, Workspace *workspace) :
 {
     ui->setupUi(this);
     this->setCaller(_caller);
-    //this->setFixedSize(382, 350);
+    this->setLabel(caller->getLabel());
     this->fillColours();
     this->setSliders( caller->getColour() );
     this->setWindowFlags(Qt::Tool);
