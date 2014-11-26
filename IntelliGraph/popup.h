@@ -15,7 +15,7 @@ using namespace std;
 
 //class Popup;
 class Node;
-
+class Workspace;
 
 class Popup : public QDialog
 {
@@ -27,7 +27,7 @@ public:
     void setLabel(string label);
     void setCaller(Node *_caller);
     void updateColour(int r, int g, int b);
-
+    void setWorkspace(Workspace*);
 private slots:
     void on_buttonBox_accepted();
 
@@ -39,6 +39,8 @@ private slots:
 
     void on_colorComboBox_currentIndexChanged(int index);
 
+    void on_DeleteNode_clicked();
+
 private:
     Ui::Popup *ui;
     QList<QColor> colors;
@@ -47,6 +49,7 @@ private:
     Node *caller;
     QColor currentColor;
     QColor newColor;
+    Workspace *wrkspc;
 };
 
 #endif // POPUP_H

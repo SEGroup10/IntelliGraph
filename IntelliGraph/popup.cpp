@@ -131,3 +131,14 @@ void Popup::on_colorComboBox_currentIndexChanged(int index) {
         updateColour(selected.red(), selected.green(), selected.blue());
     }
 }
+
+
+void  Popup::setWorkspace(Workspace *p){
+    wrkspc=p;
+}
+
+void Popup::on_DeleteNode_clicked()
+{
+    wrkspc->deleteNode(this->caller);
+    delete this;
+}

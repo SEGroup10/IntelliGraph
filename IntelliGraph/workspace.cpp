@@ -291,6 +291,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             }
             popup = new Popup(this->parent, n);
             popup->setLabel(n->getLabel());
+            popup->setWorkspace(this);
             popup->show();
         } else if (clickedOnEdge(e,event->scenePos())) {
             //Close dialog; if we don't do this, we loose the reference
@@ -301,6 +302,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             popupedge = new PopupEdge();
             popupedge->setCaller(e);
             popupedge->setLabel(e->getLabel(true));
+            popupedge->setWorkspace(this);
             popupedge->show();
         } else {
             addNode( x - (NODESIZE/2), y - (NODESIZE/2) );
@@ -357,3 +359,6 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     QGraphicsScene::mousePressEvent(event);
 }
+
+
+

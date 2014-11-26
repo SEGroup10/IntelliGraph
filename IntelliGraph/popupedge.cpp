@@ -35,3 +35,20 @@ void PopupEdge::on_buttonBox_rejected()
 {
 
 }
+
+
+
+void PopupEdge::on_DeleteEdge_clicked()
+{
+    wrkspc->deleteEdge(this->caller);
+        delete this;
+}
+
+void PopupEdge::setWorkspace(Workspace *p){
+    wrkspc=p;
+}
+
+void PopupEdge::on_DeleteNode_clicked()
+{
+
+}

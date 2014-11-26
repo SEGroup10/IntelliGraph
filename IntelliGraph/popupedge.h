@@ -27,16 +27,23 @@ public:
     ~PopupEdge();
     void setLabel(string label);
     void setCaller(Edge* _caller);
+    void setWorkspace(Workspace*);
 
 private slots:
     void on_buttonBox_accepted();
 
     void on_buttonBox_rejected();
 
+    void on_DeleteNode_clicked();
+
+    void on_DeleteEdge_clicked();
+
 private:
     Ui::PopupEdge *ui;
     QList<QColor> colors;
     Edge *caller;
+    Workspace *wrkspc;
+
 };
 
 #endif // POPUPEDGE_H
