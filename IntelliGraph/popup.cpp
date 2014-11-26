@@ -6,9 +6,9 @@ Popup::Popup(QWidget *parent) :
     ui(new Ui::Popup)
 {
     ui->setupUi(this);
-    this->setFixedSize(382, 180);
+    this->setFixedSize(382, 250);
     this->fillColours();
-
+    this->setSliders();
 }
 
 Popup::~Popup()
@@ -28,6 +28,24 @@ void Popup::fillColours() {
         colors.append(clr);
         ui->colorComboBox->addItem(clr);
     }
+}
+
+void Popup::setSliders() {
+    currentColor = caller->getColour();
+    ui->colourPreview->setStyleSheet("QLabel { background-color : rgb(" +
+                                     QString::number(currentColor.red()) + ", " +
+                                     QString::number(currentColor.green()) + ", " +
+                                     QString::number(currentColor.blue()) + ");}");
+    ui->redSlider->setMinimum(0);
+    ui->redSlider->setMaximum(255);
+
+    ui->greenSlider->setMinimum(0);
+    ui->greenSlider->setMaximum(255);
+    ui->greenSlider->setValue(currentColor.green());
+
+    ui->blueSlider->setMinimum(0);
+    ui->blueSlider->setMaximum(255);
+    ui->blueSlider->setValue(currentColor.blue());
 }
 
 void Popup::on_buttonBox_accepted() {
