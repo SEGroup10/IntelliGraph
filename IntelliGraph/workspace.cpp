@@ -289,8 +289,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             if( popup != NULL ) {
                 delete popup;
             }
-            popup = new Popup();
-            popup->setCaller(n);
+            popup = new Popup(this->parent, n);
             popup->setLabel(n->getLabel());
             popup->show();
         } else if (clickedOnEdge(e,event->scenePos())) {
