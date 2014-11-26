@@ -25,8 +25,7 @@ public slots:
     void on_nextButton_clicked();
     void on_exportButton_clicked();
     void on_testLinks_clicked();
-    void on_selectButton_clicked();
-    void on_edgeButton_clicked();
+    void on_modeButton_clicked();
 
 public:
     explicit MainWindow(QWidget *parent = 0);

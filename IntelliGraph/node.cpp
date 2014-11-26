@@ -8,6 +8,7 @@ Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
     _id = id;
     _label = itos(id);
     _context = context;
+    _isHighlighted = false;
     this->setZValue(2);
     this->setType(NodeType::STANDARD);
 
@@ -25,6 +26,7 @@ Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): Q
     _id = id;
     _label = itos(id);
     _context = context;
+    _isHighlighted = false;
     this->setZValue(2);
     this->setType(type);
 
@@ -118,6 +120,13 @@ QRectF Node::boundingRect() const
     return QRectF(0, 0, NODESIZE, NODESIZE);
 }
 
+// highlights current node
+void Node::highlight(QColor color) {
+    _isHighlighted = true;
+    _highlightColour = color;
+    this->update();
+}
+
 // Paints the node
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -129,10 +138,16 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     pen.setWidth(2);
 
     painter->setFont(font);
-    painter->setBrush(brush);
-    painter->setPen(pen);
     painter->setRenderHint(QPainter::Antialiasing);
 
+    if (_isHighlighted) {
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(QBrush(_highlightColour));
+        painter->drawEllipse(QRectF(-4, -4, NODESIZE+8, NODESIZE+8));
+    }
+
+    painter->setPen(pen);
+    painter->setBrush(brush);
     painter->drawEllipse(rect);
     painter->drawText(rect, Qt::AlignCenter, QString(_label.c_str()));
 }

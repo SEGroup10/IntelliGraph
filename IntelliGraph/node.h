@@ -51,6 +51,7 @@ class Node: public QGraphicsItem
 
         // Painting functions
         QRectF boundingRect() const;
+        void highlight(QColor color);
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
         bool isUnderMouse(QPointF mousepos) const;
@@ -67,8 +68,9 @@ class Node: public QGraphicsItem
         int _id;
         string _label;
         NodeType::Type _type;
-        QColor _colour;
+        QColor _colour, _highlightColour;
         Workspace *_context;
+        bool _isHighlighted;
 };
 
 #endif

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>IntelliGraph</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="images.qrc">
+    <normaloff>:/images/images/icon.ico</normaloff>:/images/images/icon.ico</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">/* http://paletton.com/#uid=13U0u0kd1oO0hT21i-bwUkbDIde
  * color 1: #E9EAEB
@@ -64,10 +68,10 @@ QMainWindow {
      <widget class="QWidget" name="topbar" native="true">
       <layout class="QHBoxLayout" name="toplayout">
        <property name="topMargin">
-        <number>2</number>
+        <number>4</number>
        </property>
        <property name="bottomMargin">
-        <number>2</number>
+        <number>4</number>
        </property>
        <item>
         <spacer name="horizontalSpacer">
@@ -83,16 +87,16 @@ QMainWindow {
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="edgeButton">
+        <widget class="QPushButton" name="selectButton">
          <property name="text">
-          <string>Create Edge</string>
+          <string>Node Mode</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="selectButton">
+        <widget class="QPushButton" name="modeButton">
          <property name="text">
-          <string>Select</string>
+          <string>Edge Mode</string>
          </property>
         </widget>
        </item>
@@ -113,9 +117,9 @@ QMainWindow {
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="testLinks">
+        <widget class="QPushButton" name="config">
          <property name="text">
-          <string>test links</string>
+          <string>Config</string>
          </property>
         </widget>
        </item>
@@ -220,6 +224,8 @@ QMainWindow {
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections/>
 </ui>

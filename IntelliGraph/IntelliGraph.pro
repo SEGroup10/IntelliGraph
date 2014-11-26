@@ -31,3 +31,6 @@ HEADERS  += mainwindow.h\
 FORMS    += mainwindow.ui \
     popup.ui \
     popupedge.ui
+
+RESOURCES += \
+    images.qrc
