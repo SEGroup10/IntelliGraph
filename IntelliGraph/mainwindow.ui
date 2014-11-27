@@ -74,6 +74,13 @@ QMainWindow {
         <number>4</number>
        </property>
        <item>
+        <widget class="QPushButton" name="refreshButton">
+         <property name="text">
+          <string>Refresh</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
           <string>TestAlgorithm</string>
@@ -94,34 +101,11 @@ QMainWindow {
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="selectButton">
-         <property name="text">
-          <string>Node Mode</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="modeButton">
          <property name="text">
           <string>Edge Mode</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item>
         <widget class="QPushButton" name="config">

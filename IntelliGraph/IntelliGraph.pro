@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = IntelliGraph
 TEMPLATE = app
 
+DESTDIR = $$PWD
 
 SOURCES += main.cpp\
         mainwindow.cpp\
@@ -37,3 +38,5 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     images.qrc
+
+INCLUDEPATH += $$PWD/algorithms

@@ -30,7 +30,6 @@ class Workspace: public QGraphicsScene
     public:
         enum Mode {
             selectMode,
-            nodeMode,
             edgeMode
         };
         Workspace( QWidget *widget, QGraphicsView *elem );
