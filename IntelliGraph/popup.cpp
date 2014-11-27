@@ -12,6 +12,7 @@ Popup::Popup(QWidget *parent, Node *_caller, Workspace *workspace) :
     this->setSliders( caller->getColour() );
     this->setWindowFlags(Qt::Tool);
     this->setWorkspace( workspace );
+
 }
 
 Popup::~Popup()

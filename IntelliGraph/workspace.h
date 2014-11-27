@@ -29,7 +29,8 @@ class Workspace: public QGraphicsScene
         enum Mode {
             selectMode,
             nodeMode,
-            edgeMode
+            edgeMode,
+            viewMode
         };
         Workspace( QWidget *widget, QGraphicsView *elem );
         ~Workspace();
