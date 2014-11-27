@@ -14,21 +14,21 @@ class AlgorithmInterface {
         virtual ~AlgorithmInterface() {}
 
         //This is guaranteed to be called before the first time next() is called
-        virtual void init();
+        virtual void init() = 0;
 
         //This is called whenever the next button is clicked. The internal state should be updated
-        virtual bool next();
+        virtual bool next() = 0;
 
         //This should return the id of the node that should be highlighted
-        virtual int getHighlightedNode();
+        virtual int getHighlightedNode() = 0;
 
         //An AlgorithmInterface can accept pushed information about nodes
         //This interface shall not manipulate these Nodes in any way or form
-        virtual void processNodes( const QList<const Node*> ) const;
+        virtual void processNodes( QList<Node*> ) = 0;
 
         //An AlgorithmInterface can accept pushed information about edges
         //This interface shall not manipulate these Edges in any way or form
-        virtual void processEdges( const QList<const Edge*> ) const;
+        virtual void processEdges( QList<Edge*> ) = 0;
 };
 
 #endif // ALGORITHMINTERFACE_H

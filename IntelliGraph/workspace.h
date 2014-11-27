@@ -17,11 +17,13 @@
 #include "popup.h"
 #include "popupedge.h"
 #include "algorithminterface.h"
+#include "samplealgorithm.h"
 
 class Node;
 class Popup;
 class PopupEdge;
 class Edge;
+class AlgorithmInterface;
 
 class Workspace: public QGraphicsScene
 {
@@ -57,6 +59,8 @@ class Workspace: public QGraphicsScene
         void deleteNode(Node *target);
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
+
+        void test();
 
     private:
         bool clickedOnNode(Node *&node, QPointF pos);
