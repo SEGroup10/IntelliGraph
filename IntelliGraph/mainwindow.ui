@@ -103,7 +103,7 @@ QMainWindow {
        <item>
         <widget class="QPushButton" name="modeButton">
          <property name="text">
-          <string>Edge Mode</string>
+          <string>Select Mode</string>
          </property>
         </widget>
        </item>

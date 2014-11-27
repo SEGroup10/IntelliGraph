@@ -10,6 +10,9 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
     this->drawingArea = elem;
     this->parent = widget;
 
+    this->item1 = NULL;
+    this->item2 = NULL;
+
     // We need a Scene on the GraphicsView to draw shapes
     drawingArea->setScene(this);
 
@@ -36,7 +39,7 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
     //Adding initial nodes.
     Node *start = addNode(100, 100, NodeType::START);
     Node *end = addNode(400, 100, NodeType::END);
-    addEdge(start, end);
+    //addEdge(start, end);
 
     //Init popup and popupedge for systems that do not automatically initialize it with null
     popup = NULL;
@@ -104,6 +107,11 @@ void Workspace::handleResize()
 
 void Workspace::clearSelection()
 {
+    if(item1 != NULL)
+        item1->removeHighlight();
+    if(item2 != NULL)
+        item2->removeHighlight();
+
     item1 = NULL;
     item2 = NULL;
     selectedNode = NULL;
@@ -268,7 +276,12 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         }
     } else if( mode == Workspace::edgeMode ) {
         if( clickedOnNode(n,event->scenePos()) ) {
-            item1 = n;
+            if( item1 == NULL ) {
+                item1 = n;
+                item1->highlight(QColor(255,0,0));
+            } else if(item1 == n) {
+                this->clearSelection();
+            }
         }
     }
     QGraphicsScene::mouseDoubleClickEvent(event);
@@ -285,7 +298,11 @@ void Workspace::mousePressEvent(QGraphicsSceneMouseEvent *event)
         } else if(mode == Workspace::edgeMode)  {
             if(item1 == NULL) {
                 item1 = n;
-            } else if(item1 != n) {
+                item1->highlight(QColor(255,0,0));
+            } else if(item1 == n) {
+                this->clearSelection();
+            }
+            else if(item1 != n) {
                 item2 = n;
 				bool didWefindsomething = false;
 				foreach (Edge *edge, edges)

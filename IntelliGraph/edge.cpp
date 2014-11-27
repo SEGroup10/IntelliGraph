@@ -140,14 +140,20 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 	painter->setPen(pen);
 	painter->setRenderHint(QPainter::Antialiasing);
 	QFont font = painter->font();
-	font.setPointSize(FONTSIZE);
-	painter->setFont(font);
 	QLineF line(_end->getCenter(),_start->getCenter());
 	double angle = ::acos(line.dx() / line.length());
 	if (line.dy() >= 0) {
 		angle = 2*Pi - angle;
 	}
 	painter->drawLine(line);
+
+    int dist = line.length()/(NODESIZE * 2) * FONTSIZE;
+    if(dist <= 1)
+        dist = 1;
+    line.length() >= NODESIZE * 2 ? font.setPointSize(FONTSIZE) : font.setPointSize(dist);
+
+    painter->setFont(font);
+
     //TODO LOOK AT IT OR DELETE
     //int angleDeg = (angle*360/(2*Pi));
     //painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg+45)*16, 90*16);
@@ -158,7 +164,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 			//lets first check if the distance between the two is more than 20 pixels...
 			//then 60 for a bigger arrow
 			int ArrowSize;
-			line.length() >= NODESIZE*2 ? ArrowSize = ARROWSIZE : ArrowSize = SMALLARROWSIZE;
+            line.length() >= NODESIZE * 3 ? ArrowSize = ARROWSIZE : ArrowSize = line.length()/(NODESIZE * 3) * ARROWSIZE;
 			QPointF Point1 = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
 			QPointF Point2 = Point1 - QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
 			QPointF Point3 = Point1 - QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
@@ -174,6 +180,8 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 			}
 		}
 	}
+
+
 	if (_bidirectional) {
 		pen.setColor(Qt::green);
 		painter->setPen(pen);
