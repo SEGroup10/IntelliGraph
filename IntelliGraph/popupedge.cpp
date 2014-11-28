@@ -132,3 +132,24 @@ void PopupEdge::on_DeleteEdge_clicked()
 {
     workspace->deleteEdge( caller );
 }
+
+void PopupEdge::on_leftToRightWeight_textChanged(const QString &arg1)
+{
+    if(!is_number((ui->leftToRightWeight->text().toStdString()))){
+        ui->leftToRightWeight->setText("");
+    }
+}
+
+bool PopupEdge::is_number(const std::string& s)
+{
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
+
+void PopupEdge::on_rightToLeftWeight_textChanged(const QString &arg1)
+{
+    if(!is_number((ui->rightToLeftWeight->text().toStdString()))){
+        ui->rightToLeftWeight->setText("");
+    }
+}

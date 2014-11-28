@@ -190,6 +190,9 @@ QDialog {
      <height>20</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>only numbers are accepted</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="rightToLeftWeight">
    <property name="geometry">
@@ -199,6 +202,9 @@ QDialog {
      <width>113</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>only numbers are accepted</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="rightToLeftCheckbox">

@@ -34,6 +34,10 @@ private slots:
 
     void on_DeleteEdge_clicked();
 
+    void on_leftToRightWeight_textChanged(const QString &arg1);
+
+    void on_rightToLeftWeight_textChanged(const QString &arg1);
+
 private:
     Ui::PopupEdge *ui;
     QList<QColor> colors;
@@ -54,6 +58,7 @@ private:
     string getWeightRightToLeft();
     bool getCheckedLeftToRight();
     bool getCheckedRightToLeft();
+    bool is_number(const std::string& s);
 
 };
 
