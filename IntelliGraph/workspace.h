@@ -16,14 +16,12 @@
 #include "nodetype.h"
 #include "popup.h"
 #include "popupedge.h"
-#include "algorithminterface.h"
-#include "samplealgorithm.h"
-
+//#include "algorithminterface.h"
 class Node;
 class Popup;
 class PopupEdge;
 class Edge;
-class AlgorithmInterface;
+//class AlgorithmInterface;
 
 class Workspace: public QGraphicsScene
 {
@@ -60,9 +58,11 @@ class Workspace: public QGraphicsScene
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
 
-        void test();
         void startAlgorithm();
         void stopAlgorithm();
+
+    public slots:
+        void test();
 
     private:
         bool clickedOnNode(Node *&node, QPointF pos);
@@ -96,7 +96,7 @@ class Workspace: public QGraphicsScene
         Popup *popup;
         PopupEdge *popupedge;
 
-        AlgorithmInterface *loadedAlgorithm;
+        //AlgorithmInterface *loadedAlgorithm;
 
         static int IDCounter;
 };

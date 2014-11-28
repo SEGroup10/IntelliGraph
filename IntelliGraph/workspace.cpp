@@ -358,7 +358,7 @@ Node *Workspace::getNodeById( int id )
 void Workspace::handleNext()
 {
     //You should not be able to click the next button if no algorithm is loaded
-    Q_ASSERT_X( (loadedAlgorithm != NULL), "Workspace::handleNext()", "loadedAlgorithm is NULL");
+    /*Q_ASSERT_X( (loadedAlgorithm != NULL), "Workspace::handleNext()", "loadedAlgorithm is NULL");
 
     Node *oldNode = getNodeById( loadedAlgorithm->getHighlightedNode() );
     Q_ASSERT_X( (oldNode != NULL ), "Workspace::handleNext()", "old Node is NULL");
@@ -369,15 +369,15 @@ void Workspace::handleNext()
         Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
         Q_ASSERT_X( (node != NULL), "Workspace::handleNext()", "id returned by algorithm does not exist");
         node->highlight(QColor(255,0,0));
-    }
+    }*/
 
     //nodes.at(0)->highlight(QColor(255, 0, 0));
 }
 
 //Test function to test functionality of algorithms
 void Workspace::test() {
-    qDebug() << "resetting algorithm";
-    delete loadedAlgorithm;
+    qDebug() << "called test";
+    /*delete loadedAlgorithm;
 
     foreach( Node *node, nodes ) {
         node->removeHighlight();
@@ -389,7 +389,7 @@ void Workspace::test() {
     loadedAlgorithm->init();
     Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
     Q_ASSERT_X( (node != NULL), "Workspace::test()", "id returned by algorithm does not exist");
-    node->highlight(QColor(255,0,0));
+    node->highlight(QColor(255,0,0));*/
 }
 
 void Workspace::startAlgorithm()

@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     this->workspace = new Workspace( this, ui->graphicsView);
-    this->algorithm = new AlgorithmEngine(this->workspace, qApp->applicationDirPath());
+    this->algorithm = new AlgorithmEngine(this->workspace, ui->nextButton, qApp->applicationDirPath());
 
     // Load algorithmList
     refreshAlgorithms();

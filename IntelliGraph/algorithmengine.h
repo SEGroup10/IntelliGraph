@@ -9,7 +9,7 @@
 class AlgorithmEngine
 {
 public:
-    AlgorithmEngine(Workspace *parent, QString appdir);
+    AlgorithmEngine(Workspace *parent, QPushButton *nxt, QString appdir);
 
     // getters
     QList<QListWidgetItem*> getAlgorithms();
@@ -18,9 +18,12 @@ public:
     void init(QString file);
 
 private:
+    bool isInitiated;
     QString _path;
     Workspace *_context;
     QScriptEngine *_engine;
+    QScriptValue _handler;
+    QPushButton *_nextButton;
 };
 
 #endif // ALGORITHM_H

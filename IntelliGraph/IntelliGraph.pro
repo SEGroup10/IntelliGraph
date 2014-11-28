@@ -21,7 +21,6 @@ SOURCES += main.cpp\
     edge.cpp \
     popup.cpp \
     popupedge.cpp \
-    samplealgorithm.cpp \
     algorithmengine.cpp
 
 HEADERS  += mainwindow.h\
@@ -32,7 +31,6 @@ HEADERS  += mainwindow.h\
     popup.h \
     popupedge.h \
     algorithminterface.h \
-    samplealgorithm.h \
     algorithmengine.h
 
 FORMS    += mainwindow.ui \

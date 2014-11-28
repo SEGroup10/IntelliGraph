@@ -1,10 +1,6 @@
 #ifndef ALGORITHMINTERFACE_H
 #define ALGORITHMINTERFACE_H
 
-//This is an interface
-//This means you can't instantiate this class
-//Anything that derives from this class should implement every method defined here
-
 #include "node.h"
 #include "edge.h"
 
