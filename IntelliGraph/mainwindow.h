@@ -9,10 +9,10 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QListWidgetItem>
-#include <QScriptEngine>
 #include <QDir>
 #include <QDebug>
 #include "workspace.h"
+#include "algorithmengine.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,7 +24,6 @@ class MainWindow : public QMainWindow
 
 
 public slots:
-    void on_item_clicked(QListWidgetItem* item);
     void on_refreshButton_clicked();
     void on_nextButton_clicked();
     void on_exportButton_clicked();
@@ -44,7 +43,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Workspace *workspace;
-    QScriptEngine *engine;
+    AlgorithmEngine *algorithm;
 };
 
 #endif // MAINWINDOW_H

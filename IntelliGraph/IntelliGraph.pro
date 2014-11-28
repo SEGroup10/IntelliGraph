@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     edge.cpp \
     popup.cpp \
     popupedge.cpp \
-    samplealgorithm.cpp
+    samplealgorithm.cpp \
+    algorithmengine.cpp
 
 HEADERS  += mainwindow.h\
          workspace.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h\
     popup.h \
     popupedge.h \
     algorithminterface.h \
-    samplealgorithm.h
+    samplealgorithm.h \
+    algorithmengine.h
 
 FORMS    += mainwindow.ui \
     popup.ui \
@@ -40,4 +42,4 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     images.qrc
 
-INCLUDEPATH += $$PWD/algorithms
+#INCLUDEPATH += $$PWD/algorithms
