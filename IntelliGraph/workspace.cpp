@@ -390,3 +390,36 @@ void Workspace::test() {
     Q_ASSERT_X( (node != NULL), "Workspace::test()", "id returned by algorithm does not exist");
     node->highlight(QColor(255,0,0));
 }
+
+
+void Workspace::setnode(Node *target,NodeType::Type type){
+    int i;
+
+    if(type==NodeType::END){
+    for(   i = 0; i < Workspace::nodes.count(); i++ )
+    {
+        if((target!=Workspace::nodes.at(i)) && (Workspace::nodes.at(i)->getType()==NodeType::END))
+            Workspace::nodes.at(i)->setType(NodeType::STANDARD);
+    }
+    target->setType(type);
+
+    }
+
+    else if(type==NodeType::START){
+
+    for(  i = 0; i < Workspace::nodes.count(); i++ )
+    {
+        if((target!=Workspace::nodes.at(i))&& Workspace::nodes.at(i)->getType()==NodeType::START)
+            Workspace::nodes.at(i)->setType(NodeType::STANDARD);
+    }
+
+    target->setType(type);
+
+    }
+
+    else if(type==NodeType::STANDARD){
+
+        target->setType(NodeType::STANDARD);
+    }
+
+}

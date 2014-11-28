@@ -12,6 +12,12 @@ Popup::Popup(QWidget *parent, Node *_caller, Workspace *workspace) :
     this->setSliders( caller->getColour() );
     this->setWindowFlags(Qt::Tool);
     this->setWorkspace( workspace );
+    if(this->caller->getType()==NodeType::STANDARD)
+            ui->radioStandard->setChecked(true);
+        else if(this->caller->getType()==NodeType::START)
+            ui->radioStart->setChecked(true);
+        else if(this->caller->getType()==NodeType::END)
+            ui->radioEnd->setChecked(true);
 
 }
 
@@ -59,6 +65,15 @@ void Popup::on_buttonBox_accepted() {
     }
     else
         this->caller->setColour(newColor);
+
+    if(ui->radioEnd->isChecked()){
+            workspace->setnode( this->caller,NodeType::END);
+        }
+        else if(ui->radioStandard->isChecked())
+           workspace->setnode(this->caller,NodeType::STANDARD);
+        else if(ui->radioStart->isChecked()){
+           workspace->setnode(this->caller,NodeType::START);
+        }
 
 }
 

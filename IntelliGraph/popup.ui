@@ -151,9 +151,9 @@ QSlider {
   <widget class="QLabel" name="colourPreview">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>200</x>
      <y>70</y>
-     <width>171</width>
+     <width>51</width>
      <height>81</height>
     </rect>
    </property>
@@ -192,6 +192,58 @@ QSlider {
    <property name="text">
     <string>Delete</string>
    </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>50</y>
+     <width>171</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QRadioButton" name="radioStandard">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>151</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Standard Button</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioStart">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>121</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Button</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioEnd">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>117</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>End Button</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

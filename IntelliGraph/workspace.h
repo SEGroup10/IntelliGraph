@@ -59,7 +59,7 @@ class Workspace: public QGraphicsScene
         void deleteNode(Node *target);
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
-
+        void setnode(Node *target,NodeType::Type type);
         void test();
 
     private:
