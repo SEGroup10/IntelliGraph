@@ -30,7 +30,6 @@ HEADERS  += mainwindow.h\
     nodetype.h \
     popup.h \
     popupedge.h \
-    algorithminterface.h \
     algorithmengine.h
 
 FORMS    += mainwindow.ui \

@@ -76,6 +76,15 @@ QPointF Node::getCenter() const {
     return QPointF(x, y);
 }
 
+QString Node::getJSON() {
+    QString str("{\"id\":\"");
+    str.append(itos(getID()).c_str());
+    str.append("\",\"label\":\"");
+    str.append(_label.c_str());
+    str.append("\"}");
+    return str;
+}
+
 // Sets the Label
 void Node::setLabel(string label) {
     _label = label;

@@ -42,6 +42,7 @@ class Workspace: public QGraphicsScene
         void clearSelection();
 
         // Data functions
+        Node* getNodeById( int id );
         QList<Node*> getNodes();
         QList<Edge*> getEdges();
         void setMode(Workspace::Mode newMode);
@@ -60,8 +61,6 @@ class Workspace: public QGraphicsScene
 
         void startAlgorithm();
         void stopAlgorithm();
-
-    public slots:
         void test();
 
     private:
@@ -72,7 +71,6 @@ class Workspace: public QGraphicsScene
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
         void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
-        Node* getNodeById( int id );
 
         int getNewId();
 

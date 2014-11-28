@@ -5,6 +5,7 @@
 #include <QScriptValueIterator>
 #include <QDir>
 #include "workspace.h"
+#include "workspaceinterface.h"
 
 class AlgorithmEngine
 {
@@ -16,6 +17,7 @@ public:
 
     // actions
     void init(QString file);
+    void next();
 
 private:
     bool isInitiated;

@@ -77,6 +77,7 @@ void MainWindow::on_refreshButton_clicked()
 void MainWindow::on_nextButton_clicked()
 {
     qDebug() << "form next";
+    algorithm->next();
     /*QScriptValue next = this->algorithm.property("next");
     qDebug() << this->algorithm.call(next, QScriptValueList()).toString();*/
     //workspace->handleNext();

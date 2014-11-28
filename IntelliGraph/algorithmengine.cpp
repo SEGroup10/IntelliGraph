@@ -9,7 +9,9 @@ AlgorithmEngine::AlgorithmEngine(Workspace *parent, QPushButton *nxt, QString ap
     isInitiated = false;
 
     // expose workspace
-    /*QScriptValue scriptWorkspace = _engine->newQObject(_context);
+    /*WorkspaceInterface *wi = new WorkspaceInterface(_context);
+    QScriptValue scriptWorkspace = _engine->newObject();
+    scriptWorkspace.setProperty("highlight", _engine->newFunction(wi->highlightNode));
     QScriptValue global = _engine->globalObject();
     global.setProperty("workspace", scriptWorkspace);*/
 }
@@ -42,10 +44,34 @@ void AlgorithmEngine::init(QString file)
     alg.close();
 
     // call algorithm init
-    qDebug() << _handler.property("init").call().toString();
+    QList<Node*> nodes = _context->getNodes();
+    QString arg("[");
+    for(int i = 0; i < nodes.length(); i++) {
+        arg.append(nodes.at(i)->getJSON());
+        if (i < (nodes.length() - 1)) {
+            arg.append(QString(","));
+        }
+    }
+    arg.append("]");
+    qDebug() << _handler.property("init").call(QScriptValue(), QScriptValueList() << arg).toString();
 
     // bind algorithm next
     qScriptConnect(_nextButton, SIGNAL(clicked()), _handler, _handler.property("next"));
 
     isInitiated = !_handler.isError();
+}
+
+void AlgorithmEngine::next() {
+    qint32 nextNode = _handler.property("next").call().toInt32();
+    if (nextNode == -1) {
+        qDebug() << "end node reached";
+        return;
+    } else {
+        qDebug() << "highlighting: " << nextNode;
+    }
+    Node *n = _context->getNodeById(nextNode);
+    if (n == NULL)
+        return;
+    n->highlight(QColor(255, 0, 0));
+    _context->update();
 }

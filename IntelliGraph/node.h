@@ -42,6 +42,7 @@ class Node: public QGraphicsItem
         NodeType::Type getType();
         QColor getColour();
         QPointF getCenter() const;
+        QString getJSON();
 
         // Setters
         void setLabel(string label);
