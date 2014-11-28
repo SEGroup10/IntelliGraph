@@ -130,5 +130,5 @@ void PopupEdge::setWorkspace( Workspace *workspace )
 
 void PopupEdge::on_DeleteEdge_clicked()
 {
-    workspace->deleteEdge( caller );
+    workspace->deleteEdge( this->caller );
 }
