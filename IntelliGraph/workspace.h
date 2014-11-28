@@ -32,7 +32,7 @@ class Workspace: public QGraphicsScene
             selectMode,
             nodeMode,
             edgeMode,
-            viewMode
+            algorithmMode
         };
         Workspace( QWidget *widget, QGraphicsView *elem );
         ~Workspace();
@@ -61,6 +61,8 @@ class Workspace: public QGraphicsScene
         void deleteEdge(Edge *target);
 
         void test();
+        void startAlgorithm();
+        void stopAlgorithm();
 
     private:
         bool clickedOnNode(Node *&node, QPointF pos);

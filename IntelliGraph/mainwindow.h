@@ -9,6 +9,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <QListWidgetItem>
+#include <QScriptEngine>
 #include <QDir>
 #include <QDebug>
 #include "workspace.h"
@@ -43,6 +44,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Workspace *workspace;
+    QScriptEngine *engine;
 };
 
 #endif // MAINWINDOW_H

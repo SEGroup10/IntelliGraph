@@ -37,8 +37,8 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
     mode = Workspace::selectMode;
 
     //Adding initial nodes.
-    Node *start = addNode(100, 100, NodeType::START);
-    Node *end = addNode(400, 100, NodeType::END);
+    /*Node *start = */addNode(100, 100, NodeType::START);
+    /*Node *end =   */addNode(400, 100, NodeType::END);
     //addEdge(start, end);
 
     //Init popup and popupedge for systems that do not automatically initialize it with null
@@ -48,11 +48,11 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
     //Init loadedAlgorithm for systems that do not automatically initialize it with null
     //loadedAlgorithm = NULL;
     //TODO Remove this and uncomment above!
-    loadedAlgorithm = new SampleAlgorithm( this );
+    /*loadedAlgorithm = new SampleAlgorithm( this );
     //This should happen in the algorithm initializer
     loadedAlgorithm->processNodes( nodes );
     loadedAlgorithm->processEdges( edges );
-    loadedAlgorithm->init();
+    loadedAlgorithm->init();*/
 }
 
 Workspace::~Workspace()
@@ -210,7 +210,8 @@ Edge* Workspace::addEdge(Node *begin, Node *end)
 //Do not use this if you want to only delete one way
 void Workspace::deleteEdge(Edge *target)
 {
-    edges.removeAt(edges.indexOf(target));
+    edges.removeOne(target);
+    //edges.removeAt(edges.indexOf(target));
     this->removeItem( target );
     delete target;
 }
@@ -389,4 +390,16 @@ void Workspace::test() {
     Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
     Q_ASSERT_X( (node != NULL), "Workspace::test()", "id returned by algorithm does not exist");
     node->highlight(QColor(255,0,0));
+}
+
+void Workspace::startAlgorithm()
+{
+    setMode(Workspace::algorithmMode);
+}
+
+void Workspace::stopAlgorithm()
+{
+    if (getMode() == Workspace::algorithmMode) {
+        setMode(Workspace::selectMode);
+    }
 }

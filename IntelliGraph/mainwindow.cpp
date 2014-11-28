@@ -16,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(on_item_clicked(QListWidgetItem*)));
 
     this->workspace = new Workspace( this, ui->graphicsView);
+    this->engine = new QScriptEngine();
+
+    // disable next button
+    ui->nextButton->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -37,8 +41,9 @@ void MainWindow::refreshAlgorithms()
     for(int i = 0; i < fileList.count(); i++)
     {
         QListWidgetItem *itm = new QListWidgetItem;
-        QString txt = QString("%1").arg(fileList.at(i));
-        itm->setText(txt);
+        QString file = fileList.at(i);
+        itm->setText(file.mid(0, file.length() - 4));
+        itm->setStatusTip(file);
         ui->algorithmsList->addItem(itm);
     }
 }
@@ -62,7 +67,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::on_item_clicked(QListWidgetItem* item)
 {
     // load algorithm in algorithms/item->text();
-    qDebug() << item->text();
+    qDebug() << item->statusTip();
 }
 
 void MainWindow::on_refreshButton_clicked()
@@ -73,7 +78,7 @@ void MainWindow::on_refreshButton_clicked()
 
 void MainWindow::on_nextButton_clicked()
 {
-    workspace->handleNext();
+    //workspace->handleNext();
 }
 
 void MainWindow::on_modeButton_clicked()
@@ -84,7 +89,7 @@ void MainWindow::on_modeButton_clicked()
         ui->modeButton->setText(QString("Edge Mode"));
         foreach(Node* i, workspace->getNodes())
             i->setFlag(QGraphicsItem::ItemIsMovable, false);
-    } else {
+    } else if (workspace->getMode() == Workspace::edgeMode) {
         workspace->setMode(Workspace::selectMode);
         ui->modeButton->setText(QString("Select Mode"));
         foreach(Node* i, workspace->getNodes())
@@ -104,5 +109,20 @@ void MainWindow::on_exportButton_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    workspace->test();
+    //workspace->test();
+    QListWidgetItem *itm = ui->algorithmsList->selectedItems().at(0);
+    if (ui->pushButton->text() == QString("Start")) {
+        qDebug() << "start algorithm: " << itm->statusTip();
+        workspace->startAlgorithm();
+        QFile alg_file(QString("algorithms").append(itm->statusTip()));
+        qDebug() << "able to read file? " << alg_file.open(QIODevice::ReadOnly);
+        engine->evaluate(alg_file.readAll());
+        alg_file.close();
+        ui->nextButton->setDisabled(false);
+        ui->pushButton->setText(QString("Stop"));
+    } else {
+        workspace->stopAlgorithm();
+        ui->nextButton->setDisabled(true);
+        ui->pushButton->setText(QString("Start"));
+    }
 }
