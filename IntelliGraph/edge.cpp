@@ -125,7 +125,7 @@ QRectF Edge::boundingRect() const
 	QPointF s = _start->getCenter();
 	QPointF e = _end->getCenter();
 	int _practicalMargin;
-	_bidirectional ? _practicalMargin = _margin * 10 : _practicalMargin = _margin;
+    _bidirectional ? _practicalMargin = _margin : _practicalMargin = _margin;
 	QPointF topleft = QPointF(min(s.x(), e.x())-_practicalMargin, min(s.y(), e.y())-_practicalMargin);
 	QPointF bottomright = QPointF(max(s.x(), e.x())+_practicalMargin, max(s.y(), e.y())+_practicalMargin);
 
