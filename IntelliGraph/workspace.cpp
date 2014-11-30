@@ -263,6 +263,7 @@ void Workspace::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             }
             popup = new Popup(this->parent, n, this);
             popup->show();
+            popup->activateWindow();
         } else if (clickedOnEdge(e,event->scenePos())) {
             //Close dialog; if we don't do this, we loose the reference
             //creating a potential memory leak

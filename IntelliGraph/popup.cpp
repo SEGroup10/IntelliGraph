@@ -19,6 +19,8 @@ Popup::Popup(QWidget *parent, Node *_caller, Workspace *workspace) :
         else if(this->caller->getType()==NodeType::END)
             ui->radioEnd->setChecked(true);
 
+    ui->labelTextbox->selectAll();
+    ui->labelTextbox->setFocus();
 }
 
 Popup::~Popup()
