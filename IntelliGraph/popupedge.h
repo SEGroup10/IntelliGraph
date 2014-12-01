@@ -59,6 +59,7 @@ private:
     bool getCheckedLeftToRight();
     bool getCheckedRightToLeft();
     bool is_number(const std::string& s);
+    string onlyNumbers( const std::string& );
 
 };
 

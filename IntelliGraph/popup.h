@@ -41,6 +41,12 @@ private slots:
 
     void on_DeleteButton_clicked();
 
+    void on_radioStandard_clicked();
+
+    void on_radioStart_clicked();
+
+    void on_radioEnd_clicked();
+
 private:
     Ui::Popup *ui;
     QList<QColor> colors;
@@ -48,6 +54,7 @@ private:
     Workspace *workspace;
     QColor currentColor;
     QColor newColor;
+    int selectedNodeType;
 
     void fillColours();
     void setSliders(QColor currentColor);

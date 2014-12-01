@@ -135,9 +135,21 @@ void PopupEdge::on_DeleteEdge_clicked()
 
 void PopupEdge::on_leftToRightWeight_textChanged(const QString &arg1)
 {
-    if(!is_number((ui->leftToRightWeight->text().toStdString()))){
-        ui->leftToRightWeight->setText("");
+    if(!is_number(arg1.toStdString())){
+        ui->leftToRightWeight->setText( QString::fromStdString(this->onlyNumbers( arg1.toStdString() )) );
     }
+}
+
+string PopupEdge::onlyNumbers( const std::string& input ) {
+  std::string::const_iterator it = input.begin();
+  string output = "";
+  while (it != input.end()) {
+    if( std::isdigit(*it) ) {
+      output += *it;
+    }
+    it++;
+  }
+  return output;
 }
 
 bool PopupEdge::is_number(const std::string& s)
@@ -149,7 +161,7 @@ bool PopupEdge::is_number(const std::string& s)
 
 void PopupEdge::on_rightToLeftWeight_textChanged(const QString &arg1)
 {
-    if(!is_number((ui->rightToLeftWeight->text().toStdString()))){
-        ui->rightToLeftWeight->setText("");
-    }
+  if(!is_number(arg1.toStdString())){
+      ui->rightToLeftWeight->setText( QString::fromStdString(this->onlyNumbers( arg1.toStdString() )) );
+  }
 }

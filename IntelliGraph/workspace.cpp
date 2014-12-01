@@ -396,31 +396,21 @@ void Workspace::test() {
 void Workspace::setnode(Node *target,NodeType::Type type){
     int i;
 
-    if(type==NodeType::END){
-    for(   i = 0; i < Workspace::nodes.count(); i++ )
-    {
-        if((target!=Workspace::nodes.at(i)) && (Workspace::nodes.at(i)->getType()==NodeType::END))
-            Workspace::nodes.at(i)->setType(NodeType::STANDARD);
-    }
-    target->setType(type);
-
-    }
-
-    else if(type==NodeType::START){
-
-    for(  i = 0; i < Workspace::nodes.count(); i++ )
-    {
-        if((target!=Workspace::nodes.at(i))&& Workspace::nodes.at(i)->getType()==NodeType::START)
-            Workspace::nodes.at(i)->setType(NodeType::STANDARD);
+    if( type == NodeType::END || type == NodeType::START ) {
+        for( i = 0; i < Workspace::nodes.count(); i++ ) {
+            if( (target!=Workspace::nodes.at(i)) && (Workspace::nodes.at(i)->getType()==type) ) {
+                QColor color = Workspace::nodes.at(i)->getColour();
+                Workspace::nodes.at(i)->setType(NodeType::STANDARD);
+                if( type == NodeType::START && (color.red() != 0 || color.green() != 255 || color.blue() != 0) ) {
+                    //Used to be start node with non-standard color
+                    Workspace::nodes.at(i)->setColour( color );
+                } else if( type == NodeType::END && (color.red() != 255 || color.green() != 0 || color.blue() != 0) ) {
+                    //Used to be end node with non-standard color
+                    Workspace::nodes.at(i)->setColour( color );
+                }
+            }
+        }
     }
 
     target->setType(type);
-
-    }
-
-    else if(type==NodeType::STANDARD){
-
-        target->setType(NodeType::STANDARD);
-    }
-
 }

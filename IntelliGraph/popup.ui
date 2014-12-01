@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>462</width>
-    <height>211</height>
+    <width>464</width>
+    <height>399</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -81,13 +81,24 @@ QSlider {
 
 #blueSlider::handle:horizontal {
   background: #0000FF;
+}
+
+QGroupBox {
+  border: 1px solid #0E1B6E;
+  border-radius: 5px;
+}
+
+QGroupBox::title {
+  subcontrol-position: top left;
+  margin:2 13px;
+  background: transparent;
 }</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>170</y>
+     <y>330</y>
      <width>181</width>
      <height>21</height>
     </rect>
@@ -151,9 +162,9 @@ QSlider {
   <widget class="QLabel" name="colourPreview">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>250</x>
      <y>70</y>
-     <width>51</width>
+     <width>171</width>
      <height>81</height>
     </rect>
    </property>
@@ -196,55 +207,71 @@ QSlider {
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>50</y>
-     <width>171</width>
-     <height>111</height>
+     <x>30</x>
+     <y>220</y>
+     <width>391</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="title">
-    <string/>
+    <string>Choose a node type</string>
    </property>
-   <widget class="QRadioButton" name="radioStandard">
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>0</y>
-      <width>151</width>
-      <height>22</height>
+      <y>20</y>
+      <width>351</width>
+      <height>65</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Standard Button</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioStart">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>121</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start Button</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioEnd">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>70</y>
-      <width>117</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>End Button</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QRadioButton" name="radioStandard">
+       <property name="toolTip">
+        <string>Any node that is not a start node or an end node should be a standard node.</string>
+       </property>
+       <property name="text">
+        <string>Standard Node</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioStart">
+       <property name="toolTip">
+        <string>Only 1 start node can exist per graph. This will turn any other start node in the graph into a normal node.</string>
+       </property>
+       <property name="text">
+        <string>Start Node (An algorithm will start here; only 1 per graph)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioEnd">
+       <property name="toolTip">
+        <string>Only 1 end node can exist per graph. This will turn any other end node in the graph into a normal node.</string>
+       </property>
+       <property name="text">
+        <string>End Node (An algorithm will end here; only 1 per graph)</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
+  <zorder>buttonBox</zorder>
+  <zorder>colorComboBox</zorder>
+  <zorder>redSlider</zorder>
+  <zorder>greenSlider</zorder>
+  <zorder>blueSlider</zorder>
+  <zorder>colourPreview</zorder>
+  <zorder>splitter</zorder>
+  <zorder>DeleteButton</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>radioEnd</zorder>
+  <zorder>radioStart</zorder>
+  <zorder>radioStandard</zorder>
+  <zorder>verticalLayoutWidget</zorder>
  </widget>
  <resources/>
  <connections>
