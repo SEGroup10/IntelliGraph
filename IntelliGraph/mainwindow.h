@@ -23,6 +23,7 @@ class MainWindow : public QMainWindow
 
 
 public slots:
+    void on_item_clicked(QListWidgetItem* item);
     void on_refreshButton_clicked();
     void on_nextButton_clicked();
     void on_exportButton_clicked();
