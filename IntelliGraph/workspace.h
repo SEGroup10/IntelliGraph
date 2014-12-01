@@ -9,14 +9,21 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QScrollBar>
+#include <QPointF>
 
 #include "node.h"
 #include "edge.h"
 #include "nodetype.h"
+#include "popup.h"
+#include "popupedge.h"
+#include "algorithminterface.h"
+#include "samplealgorithm.h"
 
 class Node;
-
+class Popup;
+class PopupEdge;
 class Edge;
+class AlgorithmInterface;
 
 class Workspace: public QGraphicsScene
 {
@@ -24,7 +31,8 @@ class Workspace: public QGraphicsScene
         enum Mode {
             selectMode,
             nodeMode,
-            edgeMode
+            edgeMode,
+            viewMode
         };
         Workspace( QWidget *widget, QGraphicsView *elem );
         ~Workspace();
@@ -32,7 +40,7 @@ class Workspace: public QGraphicsScene
         // Main functions
         void handleClick( QMouseEvent *event);
         void handleResize();
-        void linkTest();
+        void handleNext();
         void clearSelection();
 
         // Data functions
@@ -40,28 +48,31 @@ class Workspace: public QGraphicsScene
         QList<Edge*> getEdges();
         void setMode(Workspace::Mode newMode);
         Workspace::Mode getMode();
-        //Node * getItem(int num);
-        //void setItem(Node * newItem, int num);
-        //void setSelectNode(Node * newSelectNode);
-        //Node * getSelectNode();
-        //void setSelectEdge(Edge * newSelectEdge);
-        //Edge * getSelectEdge();
+
+        //What does this do?
+        bool popupChecked;
 
         // Instance functions
         void updateConnectedEdges(Node *target);
         Node *addNode(int x, int y);
         Node *addNode(int x, int y, NodeType::Type type);
         void deleteNode(Node *target);
-        void addEdge(Node *begin, Node *end);
+        Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
+        void setnode(Node *target,NodeType::Type type);
+        void test();
 
     private:
-        bool clickedOnNode(Node *&node);
-        bool clickedOnEdge(Edge *&edge);
+        bool clickedOnNode(Node *&node, QPointF pos);
+        bool clickedOnEdge(Edge *&edge,QPointF pos);
 
         // events
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
         void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+        Node* getNodeById( int id );
+
+        int getNewId();
 
        // bool _dragging;
         QWidget * parent;
@@ -79,6 +90,13 @@ class Workspace: public QGraphicsScene
 
         QList<Node*> nodes;
         QList<Edge*> edges;
+
+        Popup *popup;
+        PopupEdge *popupedge;
+
+        AlgorithmInterface *loadedAlgorithm;
+
+        static int IDCounter;
 };
 
 #endif // WORKSPACE_H

@@ -8,10 +8,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Insert items to AlgorithmsList from code:
-    QListWidgetItem *itm = new QListWidgetItem;
-    itm->setText("Algorithm 1");
-    ui->algorithmsList->addItem(itm);
+    // Load algorithmList
+    refreshAlgorithms();
+
+    // Connect AlgorithmList signal to slot
+    connect(ui->algorithmsList, SIGNAL(itemClicked(QListWidgetItem*)),
+            this, SLOT(on_item_clicked(QListWidgetItem*)));
 
     this->workspace = new Workspace( this, ui->graphicsView);
 }
@@ -20,6 +22,25 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete workspace;
+}
+
+void MainWindow::refreshAlgorithms()
+{
+    ui->algorithmsList->clear();
+
+    // Search for algorithm files
+    QStringList nameFilter("*.alg");
+    QDir directory("algorithms");
+    QStringList fileList = directory.entryList(nameFilter);
+
+    // Insert items to AlgorithmsList from code:
+    for(int i = 0; i < fileList.count(); i++)
+    {
+        QListWidgetItem *itm = new QListWidgetItem;
+        QString txt = QString("%1").arg(fileList.at(i));
+        itm->setText(txt);
+        ui->algorithmsList->addItem(itm);
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -38,30 +59,37 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     workspace->handleResize();
 }
 
+void MainWindow::on_item_clicked(QListWidgetItem* item)
+{
+    // load algorithm in algorithms/item->text();
+    qDebug() << item->text();
+}
+
+void MainWindow::on_refreshButton_clicked()
+{
+    qDebug() << "refresh";
+    refreshAlgorithms();
+}
+
 void MainWindow::on_nextButton_clicked()
 {
-    // Some test messagebox for the nextButton
-     QMessageBox msgBox;
-     msgBox.setText("nextButton works");
-     msgBox.setStandardButtons(QMessageBox::Cancel);
-     msgBox.setDefaultButton(QMessageBox::Cancel);
-     msgBox.exec();
+    workspace->handleNext();
 }
 
-void MainWindow::on_selectButton_clicked()
+void MainWindow::on_modeButton_clicked()
 {
-    workspace->setMode(Workspace::selectMode);
     workspace->clearSelection();
-    foreach(Node* i, workspace->getNodes())
-        i->setFlag(QGraphicsItem::ItemIsMovable, true);
-}
-
-void MainWindow::on_edgeButton_clicked()
-{
-    workspace->setMode(Workspace::edgeMode);
-    workspace->clearSelection();
-    foreach(Node* i, workspace->getNodes())
-        i->setFlag(QGraphicsItem::ItemIsMovable, false);
+    if (workspace->getMode() == Workspace::selectMode) {
+        workspace->setMode(Workspace::edgeMode);
+        ui->modeButton->setText(QString("Edge Mode"));
+        foreach(Node* i, workspace->getNodes())
+            i->setFlag(QGraphicsItem::ItemIsMovable, false);
+    } else {
+        workspace->setMode(Workspace::selectMode);
+        ui->modeButton->setText(QString("Select Mode"));
+        foreach(Node* i, workspace->getNodes())
+            i->setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
 }
 
 void MainWindow::on_exportButton_clicked()
@@ -74,7 +102,7 @@ void MainWindow::on_exportButton_clicked()
     msgBox.exec();
 }
 
-void MainWindow::on_testLinks_clicked()
+void MainWindow::on_pushButton_clicked()
 {
-    workspace->linkTest();
+    workspace->test();
 }

@@ -21,10 +21,12 @@
 #include <sstream>
 
 #include "nodetype.h"
+#include "workspace.h"
 
 using namespace std;
 
 class Workspace;
+class Popup;
 
 class Node: public QGraphicsItem
 {
@@ -39,7 +41,7 @@ class Node: public QGraphicsItem
         string getLabel();
         NodeType::Type getType();
         QColor getColour();
-        QPointF getCenter();
+        QPointF getCenter() const;
 
         // Setters
         void setLabel(string label);
@@ -49,7 +51,11 @@ class Node: public QGraphicsItem
 
         // Painting functions
         QRectF boundingRect() const;
+        void highlight(QColor color);
+        void removeHighlight();
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+        bool isUnderMouse(QPointF mousepos) const;
 
     private:
         // Events
@@ -63,8 +69,9 @@ class Node: public QGraphicsItem
         int _id;
         string _label;
         NodeType::Type _type;
-        QColor _colour;
+        QColor _colour, _highlightColour;
         Workspace *_context;
+        bool _isHighlighted;
 };
 
 #endif

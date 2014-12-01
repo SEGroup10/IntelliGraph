@@ -1,6 +1,10 @@
 #ifndef EDGE_H
 #define EDGE_H
 
+#define EDGECLICKSPACE 8
+#define ARROWSIZE 30
+#define SMALLARROWSIZE 10
+
 #include <QGraphicsLineItem>
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
@@ -13,7 +17,12 @@
 #include <QString>
 #include <QGraphicsScene>
 #include <QLineF>
+#include <QRectF>
 #include <QtMath>
+#include <QPointF>
+
+#include "node.h"
+#include "workspace.h"
 
 class Workspace;
 class Node;
@@ -22,42 +31,54 @@ using namespace std;
 
 class Edge: public QGraphicsItem
 {
-    public:
-        // (de)Constructors
-        Edge(int id, Node *start, Node *end, Workspace *context);
-        ~Edge();
+	public:
+		// (de)Constructors
+		Edge(int id, Node *start, Node *end, Workspace *context);
+		~Edge();
 
-        // Getters
-        int getID();
-        string getLabel();
-        double getWeight();
-        bool hasNode(Node *target);
+		// Getters
+		int getID();
+		double getWeight(bool weight1);
+    string getWeightAsString(bool weight1);
+		bool getBidirectional();
+    Node *getBeginNode();
+    Node *getEndNode();
 
-        // Setters
-        void setLabel(string label);
-        void setWeight(double weight);
+    // Comparators
+    bool hasNode(Node *target);
+    bool hasStartNode(Node *target);
+    bool hasEndNode(Node *target);
 
-        // Painting functions
-        void update();
-        QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+		// Setters
+    void setWeight(double weight, bool weight1);
+    void setWeight(string str, bool weight1);
+		void setBidirectional(bool bidirectional);
 
-    private:
-        // Events
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+		// Painting functions
+		void update();
+		QRectF boundingRect() const;
+		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-        // Utility functions
-        string dtos(double number);
+		bool isUnderMouse( QPointF ) const;
+	private:
+		// Events
+		void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
-        // Data
-        int _id;
-        double _weight;
-        string _label;
-        bool _flip;
-        int _margin;
-        Node *_start;
-        Node *_end;
-        Workspace *_context;
+		// Utility functions
+		string dtos(double number);
+    double stod(string str);
+
+		// Data
+		int _id;
+		double _weight1;
+		double _weight2;
+		bool _flip;
+		int _margin;
+		bool _directional;
+		bool _bidirectional;
+		Node *_start;
+		Node *_end;
+		Workspace *_context;
 };
 
 #endif // EDGE_H
