@@ -40,12 +40,11 @@ void AlgorithmEngine::init(QString file)
     _engine->globalObject().setProperty("algorithm", _engine->newQObject(_interface));
 
     // load script
-    _handler = _engine->evaluate(this->getFileContents(_path.append(file)));
+    _handler = _engine->evaluate(QString(getFileContents(_path.append(file))));
 
     // start algorithm
     _handler.property("init").call(QJSValueList() << getNodes() << getEdges());
     _handler.property("start").call(QJSValueList() << getStartNode() << getEndNode());
-
 }
 
 bool AlgorithmEngine::next() {

@@ -1,6 +1,5 @@
 var map = {}, distance = {}, ids = {};
 var startNode, goalNode, previous = {};
-var inf = Number.POSITIVE_INFINITY;
 var path = [], currentPathNode = 0;
 
 function run(node) {
@@ -30,12 +29,17 @@ function walkPath() {
 
 ({
   init: function (nodes, edges) {
+    // resetting vars
+    map = {}; distance = {}; 
+    ids = {}; previous = {};
+    path = []; currentPathNode = 0;
+    
     algorithm.debug("initializing algorithm");
     var i, j, edge;
     ids = nodes;
     for (i = 0; i < nodes.length; i++) {
       map[nodes[i]] = [];
-      distance[nodes[i]] = inf;
+      distance[nodes[i]] = Number.POSITIVE_INFINITY;
     }
     for (j = 0; j < edges.length; j++) {
       edge = edges[j];

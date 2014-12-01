@@ -110,16 +110,24 @@ void MainWindow::on_pushButton_clicked()
 {
     QListWidgetItem *itm = ui->algorithmsList->selectedItems().at(0);
     if (ui->pushButton->text() == QString("Start")) {
-        qDebug() << "start algorithm: " << itm->statusTip();
-        workspace->setMode(Workspace::algorithmMode);
-        algorithm->init(itm->statusTip());
-        ui->modeButton->setDisabled(true);
-        ui->nextButton->setDisabled(false);
-        ui->pushButton->setText(QString("Stop"));
+        if (workspace->getEdges().length() > 0) {
+            qDebug() << "start algorithm: " << itm->statusTip();
+            workspace->setMode(Workspace::algorithmMode);
+            algorithm->init(itm->statusTip());
+            ui->modeButton->setDisabled(true);
+            ui->nextButton->setDisabled(false);
+            ui->pushButton->setText(QString("Stop"));
+        } else {
+            QMessageBox msgBox;
+            msgBox.setText("At least 1 edge is required");
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            msgBox.exec();
+        }
     } else {
         qDebug() << "stopping algorithm";
-        workspace->removeHighlight();
         workspace->setMode(Workspace::selectMode);
+        workspace->removeHighlight();
         algorithm->stop();
         ui->modeButton->setDisabled(false);
         ui->nextButton->setDisabled(true);
