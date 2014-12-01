@@ -1,34 +1,27 @@
 #ifndef ALGORITHMINTERFACE_H
 #define ALGORITHMINTERFACE_H
 
-//This is an interface
-//This means you can't instantiate this class
-//Anything that derives from this class should implement every method defined here
-
+#include <QDebug>
+#include <QObject>
 #include "node.h"
 #include "edge.h"
 
-class AlgorithmInterface {
+class AlgorithmInterface: public QObject
+{
+    Q_OBJECT
     public:
-        //An AlgorithmInterface can be destroyed before the algorithm is finised
-        virtual ~AlgorithmInterface() {}
+        explicit AlgorithmInterface(QObject *parent = 0, QColor _color = Qt::red);
+        void init(QList<Node*> nodes, QList<Edge*> edges);
 
-        //This is guaranteed to be called before the first time next() is called
-        virtual void init() = 0;
+    public slots:
+        Q_INVOKABLE void debug(QString data);
+        Q_INVOKABLE void highlightNode(QString nodeID);
 
-        //This is called whenever the next button is clicked. The internal state should be updated
-        virtual bool next() = 0;
-
-        //This should return the id of the node that should be highlighted
-        virtual int getHighlightedNode() = 0;
-
-        //An AlgorithmInterface can accept pushed information about nodes
-        //This interface shall not manipulate these Nodes in any way or form
-        virtual void processNodes( QList<Node*> ) = 0;
-
-        //An AlgorithmInterface can accept pushed information about edges
-        //This interface shall not manipulate these Edges in any way or form
-        virtual void processEdges( QList<Edge*> ) = 0;
+    private:
+        Node *_lastNode;
+        QList<Node*> _nodes;
+        QList<Edge*> _edges;
+        QColor _highlightColor;
 };
 
 #endif // ALGORITHMINTERFACE_H
