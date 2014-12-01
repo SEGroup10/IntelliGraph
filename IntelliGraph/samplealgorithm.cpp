@@ -69,10 +69,10 @@ void SampleAlgorithm::processEdges( QList<Edge*> consedges ) {
         qDebug() << "edge: " << edge->getID();
         Edge *cedge = edge;
         Edge* newEdge = new Edge(cedge->getID(),findNodeByID(cedge->getBeginNode()->getID()),findNodeByID(cedge->getEndNode()->getID()),workspace);
-        newEdge->setLabel(cedge->getLabel(true),true);
+        newEdge->setWeight(cedge->getWeightAsString(true),true);
         if( cedge->getBidirectional() ) {
             newEdge->setBidirectional(true);
-            newEdge->setLabel(cedge->getLabel(false),false);
+            newEdge->setWeight(cedge->getWeightAsString(false),false);
         }
         edges.append( newEdge );
     }

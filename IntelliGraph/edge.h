@@ -38,20 +38,20 @@ class Edge: public QGraphicsItem
 
 		// Getters
 		int getID();
-		string getLabel(bool label1);
 		double getWeight(bool weight1);
+    string getWeightAsString(bool weight1);
 		bool getBidirectional();
-        Node *getBeginNode();
-        Node *getEndNode();
+    Node *getBeginNode();
+    Node *getEndNode();
 
-        // Comparators
-        bool hasNode(Node *target);
-        bool hasStartNode(Node *target);
-        bool hasEndNode(Node *target);
+    // Comparators
+    bool hasNode(Node *target);
+    bool hasStartNode(Node *target);
+    bool hasEndNode(Node *target);
 
 		// Setters
-		void setLabel(string label, bool label1);
-		void setWeight(double weight, bool weight1);
+    void setWeight(double weight, bool weight1);
+    void setWeight(string str, bool weight1);
 		void setBidirectional(bool bidirectional);
 
 		// Painting functions
@@ -66,13 +66,12 @@ class Edge: public QGraphicsItem
 
 		// Utility functions
 		string dtos(double number);
+    double stod(string str);
 
 		// Data
 		int _id;
 		double _weight1;
 		double _weight2;
-		string _label1;
-		string _label2;
 		bool _flip;
 		int _margin;
 		bool _directional;

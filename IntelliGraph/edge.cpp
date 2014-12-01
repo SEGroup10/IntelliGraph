@@ -12,12 +12,10 @@ Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
 	_id = id;
 	_start = start;
 	_end = end;
-	_label1 = "1";
-	_label2 = "2";
 	_flip = false;
 	_margin = 50;
-	_weight1 = 1.0;
-	_weight2 = 1.0;
+  _weight1 = 1;
+  _weight2 = 2;
 	_context = context;
 	_directional = true;
 	_bidirectional = false;
@@ -38,10 +36,9 @@ int Edge::getID()
 
 //Returns label from begin to end if true is passed
 //Returns label from end to begin if false is passed
-string Edge::getLabel(bool label1)
+string Edge::getWeightAsString(bool weight1)
 {
-	if (label1) return _label1;
-	else return _label2;
+  return this->dtos( this->getWeight( weight1 ) );
 }
 
 
@@ -79,32 +76,24 @@ bool Edge::hasEndNode(Node *target)
 	return (_end == target);
 }
 
-// Sets the Label
-void Edge::setLabel(string label, bool label1)
-{
-	label1 ? _label1 = label : _label2 = label;
-	this->update();
-}
-
 // Sets the Weight
 void Edge::setWeight(double weight, bool weight1)
 {
 	// if label set to weight change it
 	if (weight1) {
-	if (dtos(_weight1) == _label1) {
-			_label1 = dtos(weight);
-		}
 		_directional = true;
 		_weight1 = weight;
 	}
 	else {
-		if (dtos(_weight2) == _label2) {
-				_label2 = dtos(weight);
-		}
 		_directional = true;
 		_weight2 = weight;
 	}
 	this->update();
+}
+
+void Edge::setWeight(string str, bool weight1)
+{
+  this->setWeight( stod(str), weight1 );
 }
 
 bool Edge::getBidirectional()
@@ -181,20 +170,19 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 		}
 	}
 
-
 	if (_bidirectional) {
 		pen.setColor(Qt::green);
 		painter->setPen(pen);
-		painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString(_label1.c_str()));
+    painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
 		pen.setColor(Qt::red);
 		painter->setPen(pen);
-		painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString(_label2.c_str()));
+    painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(false)));
 	}
 	else {
 		if(!_flip)
-			painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString(_label1.c_str()));
+      painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
 		else
-			painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString(_label1.c_str()));
+      painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
 	}
 }
 
@@ -205,6 +193,16 @@ string Edge::dtos(double number)
 	ostringstream temp;
 	temp << number;
 	return temp.str();
+}
+
+// Convert a string into a double
+double Edge::stod(string str)
+{
+  std::istringstream i(str);
+  double x;
+  if (!(i >> x))
+    return 0;
+  return x;
 }
 
 // Custom update routine

@@ -31,11 +31,11 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
-    void on_redSlider_sliderMoved(int position);
+    void on_redSlider_valueChanged(int position);
 
-    void on_greenSlider_sliderMoved(int position);
+    void on_greenSlider_valueChanged(int position);
 
-    void on_blueSlider_sliderMoved(int position);
+    void on_blueSlider_valueChanged(int position);
 
     void on_colorComboBox_currentIndexChanged(int index);
 

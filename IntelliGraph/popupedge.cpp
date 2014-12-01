@@ -9,10 +9,10 @@ PopupEdge::PopupEdge(QWidget *parent, Edge *_caller, Workspace *workspace ) :
     this->setCaller( _caller );
     this->setLabelLeft( _caller->getBeginNode()->getLabel() );
     this->setLabelRight( _caller->getEndNode()->getLabel() );
-    this->setWeightLeftToRight( _caller->getLabel(true) );
+    this->setWeightLeftToRight( _caller->getWeightAsString(true) );
     this->setCheckedLeftToRight( true );
     if( _caller->getBidirectional() ) {
-        this->setWeightRightToLeft( _caller->getLabel(false) );
+        this->setWeightRightToLeft( _caller->getWeightAsString(false) );
         this->setCheckedRightToLeft( true );
     } else {
         this->setCheckedRightToLeft( false );
@@ -90,7 +90,7 @@ void PopupEdge::on_buttonBox_accepted() {
         Node *end = caller->getEndNode();
         string weight;
         if( this->getWeightRightToLeft().length() == 0 ) {
-            weight = caller->getLabel( false );
+            weight = caller->getWeightAsString( false );
         } else {
             weight = this->getWeightRightToLeft();
         }
@@ -98,18 +98,21 @@ void PopupEdge::on_buttonBox_accepted() {
         workspace->deleteEdge( caller );
 
         Edge *newEdge = workspace->addEdge( end, begin );
-        newEdge->setLabel( weight, true );
+        newEdge->setWeight( weight, true );
     } else {
         //Left to right must be checked
 
         if( this->getWeightLeftToRight().length() > 0 ) {
-            this->caller->setLabel(this->getWeightLeftToRight(),true);
+            this->caller->setWeight(this->getWeightLeftToRight(),true);
         }
 
         if( this->getCheckedRightToLeft() && this->getWeightRightToLeft().length() > 0 ) {
             //Optionally set the weight of the other way too.
             this->caller->setBidirectional(true);
-            this->caller->setLabel(this->getWeightRightToLeft(),false);
+            this->caller->setWeight(this->getWeightRightToLeft(),false);
+        } else if( !this->getCheckedRightToLeft() ){
+            this->caller->setBidirectional(false);
+            this->caller->setWeight(0,false);
         }
     }
 }
@@ -136,32 +139,68 @@ void PopupEdge::on_DeleteEdge_clicked()
 void PopupEdge::on_leftToRightWeight_textChanged(const QString &arg1)
 {
     if(!is_number(arg1.toStdString())){
+        int oldcursorpos = ui->leftToRightWeight->cursorPosition();
         ui->leftToRightWeight->setText( QString::fromStdString(this->onlyNumbers( arg1.toStdString() )) );
+        ui->leftToRightWeight->setCursorPosition(oldcursorpos - 1);
     }
 }
 
+void PopupEdge::on_rightToLeftWeight_textChanged(const QString &arg1)
+{
+    if(!is_number(arg1.toStdString())){
+        int oldcursorpos = ui->rightToLeftWeight->cursorPosition();
+        ui->rightToLeftWeight->setText( QString::fromStdString(this->onlyNumbers( arg1.toStdString() )) );
+        ui->rightToLeftWeight->setCursorPosition(oldcursorpos - 1);
+    }
+}
+
+/* Filters out all characters that we do not expect
+ * in a number. Works mostly the same as is_number, but
+ * outputs a string that is a number
+ */
 string PopupEdge::onlyNumbers( const std::string& input ) {
   std::string::const_iterator it = input.begin();
   string output = "";
+  bool foundcomma = false;
+  if( it != input.end() && *it == '-' ) {
+    output += "-";
+    it++;
+  }
+
   while (it != input.end()) {
     if( std::isdigit(*it) ) {
       output += *it;
+    } else if( *it == '.' && !foundcomma ) {
+      output += *it;
+      foundcomma = true;
     }
     it++;
   }
   return output;
 }
 
+
+/* Returns true if the string is in the form of
+ * regex -?[0-9]*.?[0-9]*
+ * Special cases: -. -> 0, -1. -> -1, -.1 -> -0.1
+ * This is correct behaviour
+ */
 bool PopupEdge::is_number(const std::string& s)
 {
+    bool foundcomma = false;
     std::string::const_iterator it = s.begin();
-    while (it != s.end() && std::isdigit(*it)) ++it;
-    return !s.empty() && it == s.end();
-}
 
-void PopupEdge::on_rightToLeftWeight_textChanged(const QString &arg1)
-{
-  if(!is_number(arg1.toStdString())){
-      ui->rightToLeftWeight->setText( QString::fromStdString(this->onlyNumbers( arg1.toStdString() )) );
-  }
+    //Support for negative numbers
+    if( it != s.end() && *it == '-' ) ++it;
+
+    //If we encounter a non-digit this is not a number
+    while (it != s.end() ) {
+      if( !foundcomma && *it == '.' ) {
+        foundcomma = true;
+      } else if( !std::isdigit(*it) ) {
+        break;
+      }
+      it++;
+    }
+    return !s.empty() && it == s.end();
 }

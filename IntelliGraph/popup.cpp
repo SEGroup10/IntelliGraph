@@ -98,15 +98,15 @@ void Popup::setCaller(Node *_caller) {
     caller = _caller;
 }
 
-void Popup::on_redSlider_sliderMoved(int position) {
+void Popup::on_redSlider_valueChanged(int position) {
     updateColour(position, newColor.green(), newColor.blue());
 }
 
-void Popup::on_greenSlider_sliderMoved(int position) {
+void Popup::on_greenSlider_valueChanged(int position) {
     updateColour(newColor.red(), position, newColor.blue());
 }
 
-void Popup::on_blueSlider_sliderMoved(int position) {
+void Popup::on_blueSlider_valueChanged(int position) {
     updateColour(newColor.red(), newColor.green(), position);
 }
 
