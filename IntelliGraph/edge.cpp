@@ -14,11 +14,12 @@ Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
 	_end = end;
 	_flip = false;
 	_margin = 50;
-  _weight1 = 1;
-  _weight2 = 2;
+    _weight1 = 1;
+    _weight2 = 2;
 	_context = context;
 	_directional = true;
 	_bidirectional = false;
+    _isHighlighted = false;
 	this->setZValue(1);
 }
 
@@ -121,27 +122,38 @@ QRectF Edge::boundingRect() const
 	return QRectF(topleft, bottomright);//_start->getCenter(), _end->getCenter());
 }
 
+
+void Edge::highlight(QColor color)
+{
+    _isHighlighted = true;
+    _highlightColour = color;
+    this->update();
+}
+
 // Paint the object
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	QPen pen(Qt::black);
-	pen.setWidth(2);
-	painter->setPen(pen);
-	painter->setRenderHint(QPainter::Antialiasing);
-	QFont font = painter->font();
-	QLineF line(_end->getCenter(),_start->getCenter());
-	double angle = ::acos(line.dx() / line.length());
-	if (line.dy() >= 0) {
-		angle = 2*Pi - angle;
-	}
-	painter->drawLine(line);
+    // initialization
+    QPen pen(Qt::black);
+    QFont font = painter->font();
+    painter->setRenderHint(QPainter::Antialiasing);
 
-    int dist = line.length()/(NODESIZE * 2) * FONTSIZE;
-    if(dist <= 1)
-        dist = 1;
-    line.length() >= NODESIZE * 2 ? font.setPointSize(FONTSIZE) : font.setPointSize(dist);
+    // draw line
+    QLineF line(_end->getCenter(),_start->getCenter());
+    if (_isHighlighted) {
+        QPen hpen(_highlightColour);
+        hpen.setWidth(6);
+        painter->setPen(hpen);
+        painter->drawLine(line);
+    }
+    pen.setWidth(2);
+    painter->setPen(pen);
+    painter->drawLine(line);
 
+    double angle = (line.dy() >= 0) ? 2*Pi - acos(line.dx() / line.length()) : acos(line.dx() / line.length());
+    font.setPointSize((line.length() >= NODESIZE * 2) ? FONTSIZE : max(line.length()/(NODESIZE * 2) * FONTSIZE, qreal(1)));
     painter->setFont(font);
+
 
     //TODO LOOK AT IT OR DELETE
     //int angleDeg = (angle*360/(2*Pi));

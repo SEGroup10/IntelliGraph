@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     edge.cpp \
     popup.cpp \
     popupedge.cpp \
-    samplealgorithm.cpp
+    samplealgorithm.cpp \
+    algorithminterface.cpp
 
 HEADERS  += mainwindow.h\
          workspace.h \
@@ -40,3 +41,6 @@ RESOURCES += \
     images.qrc
 
 INCLUDEPATH += $$PWD/algorithms
+
+OTHER_FILES += \
+    algorithms/Dijkstra.alg
