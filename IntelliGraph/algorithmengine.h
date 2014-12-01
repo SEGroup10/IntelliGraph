@@ -1,11 +1,11 @@
-#ifndef ALGORITHM_H
-#define ALGORITHM_H
+#ifndef ALGORITHMENGINE_H
+#define ALGORITHMENGINE_H
 
-#include <QScriptEngine>
-#include <QScriptValueIterator>
+#include <QJSEngine>
+#include <QJSValue>
 #include <QDir>
 #include "workspace.h"
-#include "workspaceinterface.h"
+#include "algorithm.h"
 
 class AlgorithmEngine
 {
@@ -18,14 +18,22 @@ public:
     // actions
     void init(QString file);
     void next();
+    void stop();
 
 private:
+    QJSValue getNodes();
+    QJSValue getEdges();
+    QJSValue getStartNode();
+    QJSValue getEndNode();
+    QByteArray getFileContents(QString path);
+
     bool isInitiated;
     QString _path;
     Workspace *_context;
-    QScriptEngine *_engine;
-    QScriptValue _handler;
+    QJSEngine *_engine;
+    QJSValue _handler;
     QPushButton *_nextButton;
+    Algorithm *_interface;
 };
 
 #endif // ALGORITHM_H

@@ -40,6 +40,7 @@ class Workspace: public QGraphicsScene
         void handleResize();
         void handleNext();
         void clearSelection();
+        void removeHighlight();
 
         // Data functions
         Node* getNodeById( int id );

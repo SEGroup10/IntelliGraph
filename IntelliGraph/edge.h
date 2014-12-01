@@ -56,6 +56,7 @@ class Edge: public QGraphicsItem
 
 		// Painting functions
 		void update();
+        void highlight(QColor color);
 		QRectF boundingRect() const;
 		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -79,6 +80,8 @@ class Edge: public QGraphicsItem
 		bool _bidirectional;
 		Node *_start;
 		Node *_end;
+        bool _isHighlighted;
+        QColor _highlightColour;
 		Workspace *_context;
 };
 

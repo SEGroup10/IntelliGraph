@@ -1,4 +1,5 @@
 #include "popupedge.h"
+using namespace std;
 
 
 PopupEdge::PopupEdge(QWidget *parent, Edge *_caller, Workspace *workspace ) :
@@ -98,18 +99,18 @@ void PopupEdge::on_buttonBox_accepted() {
         workspace->deleteEdge( caller );
 
         Edge *newEdge = workspace->addEdge( end, begin );
-        newEdge->setLabel( weight, true );
+        newEdge->setWeight( atof(weight.c_str()), true );
     } else {
         //Left to right must be checked
 
         if( this->getWeightLeftToRight().length() > 0 ) {
-            this->caller->setLabel(this->getWeightLeftToRight(),true);
+            this->caller->setWeight(atof(this->getWeightLeftToRight().c_str()),true);
         }
 
         if( this->getCheckedRightToLeft() && this->getWeightRightToLeft().length() > 0 ) {
             //Optionally set the weight of the other way too.
             this->caller->setBidirectional(true);
-            this->caller->setLabel(this->getWeightRightToLeft(),false);
+            this->caller->setWeight(atof(this->getWeightRightToLeft().c_str()),false);
         }
     }
 }

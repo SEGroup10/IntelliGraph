@@ -1,18 +1,15 @@
+var map = {};
 ({
-  data: {},
-  i: 0,
-  init: function () {
-    this.data = JSON.parse(arguments[0]);
-    this.i = 0; 
-    return "parsed " + this.data.length + " nodes";
-  },
-  next: function () {
-    var j = this.i;
-    if (j < this.data.length) {
-      this.i++;
-      return this.data[j].id;
-    } else {
-      return -1;
+  init: function (nodes, edges) {
+    algorithm.debug("initializing algorithm");
+    var i, j, edge;
+    for (i = 0; i < nodes.length; i++) {
+      map[nodes[i]] = [];
     }
+    for (j = 0; j < edges.length; j++) {
+      edge = edges[j];
+      map[edge[0]].push(edge[1]);
+    }
+    algorithm.debug(JSON.stringify(map));
   },
 })

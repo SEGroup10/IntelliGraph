@@ -11,6 +11,7 @@
 #include <QList>
 #include <QDebug>
 #include "ui_popupedge.h"
+#include <stdlib.h>
 
 using namespace std;
 

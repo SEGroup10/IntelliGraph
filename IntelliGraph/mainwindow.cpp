@@ -129,6 +129,7 @@ void MainWindow::on_pushButton_clicked()
     } else {
         qDebug() << "stopping algorithm";
         workspace->stopAlgorithm();
+        algorithm->stop();
         ui->nextButton->setDisabled(true);
         ui->pushButton->setText(QString("Start"));
     }

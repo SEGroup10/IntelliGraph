@@ -118,6 +118,12 @@ void Workspace::clearSelection()
     selectedEdge = NULL;
 }
 
+void Workspace::removeHighlight() {
+    for (int i = 0; i < nodes.length(); i++) {
+        nodes.at(i)->removeHighlight();
+    }
+}
+
 QList<Node*> Workspace::getNodes()
 {
     return nodes;
@@ -199,6 +205,7 @@ void Workspace::deleteNode(Node *target)
 Edge* Workspace::addEdge(Node *begin, Node *end)
 {
     Edge* edge = new Edge(getNewId(),begin,end,this);
+    //edge->highlight(Qt::red);
     edges.append(edge);
 
     this->addItem( edge );
@@ -400,6 +407,8 @@ void Workspace::startAlgorithm()
 void Workspace::stopAlgorithm()
 {
     if (getMode() == Workspace::algorithmMode) {
+        removeHighlight();
         setMode(Workspace::selectMode);
     }
+
 }

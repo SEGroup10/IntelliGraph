@@ -1,19 +1,16 @@
 #include "algorithmengine.h"
+using namespace std;
 
 AlgorithmEngine::AlgorithmEngine(Workspace *parent, QPushButton *nxt, QString appdir)
 {
     _context = parent;
     _path = appdir.append("/algorithms/");
-    _engine = new QScriptEngine();
+    _engine = new QJSEngine();
     _nextButton = nxt;
     isInitiated = false;
+    _interface = new Algorithm();
 
-    // expose workspace
-    /*WorkspaceInterface *wi = new WorkspaceInterface(_context);
-    QScriptValue scriptWorkspace = _engine->newObject();
-    scriptWorkspace.setProperty("highlight", _engine->newFunction(wi->highlightNode));
-    QScriptValue global = _engine->globalObject();
-    global.setProperty("workspace", scriptWorkspace);*/
+
 }
 
 QList<QListWidgetItem *> AlgorithmEngine::getAlgorithms()
@@ -38,40 +35,88 @@ QList<QListWidgetItem *> AlgorithmEngine::getAlgorithms()
 
 void AlgorithmEngine::init(QString file)
 {
-    QFile alg(_path.append(file));
-    qDebug() << "able to read file? " << alg.open(QIODevice::ReadOnly);
-    _handler = _engine->evaluate(alg.readAll());
-    alg.close();
+    // init script environment
+    _interface->init(_context->getNodes(), _context->getEdges());
+    _engine->globalObject().setProperty("algorithm", _engine->newQObject(_interface));
 
-    // call algorithm init
-    QList<Node*> nodes = _context->getNodes();
-    QString arg("[");
-    for(int i = 0; i < nodes.length(); i++) {
-        arg.append(nodes.at(i)->getJSON());
-        if (i < (nodes.length() - 1)) {
-            arg.append(QString(","));
-        }
-    }
-    arg.append("]");
-    qDebug() << _handler.property("init").call(QScriptValue(), QScriptValueList() << arg).toString();
+    // load script
+    _handler = _engine->evaluate(getFileContents(_path.append(file)));
 
-    // bind algorithm next
-    qScriptConnect(_nextButton, SIGNAL(clicked()), _handler, _handler.property("next"));
+    // start algorithm
+    _handler.property("init").call(QJSValueList() << getNodes() << getEdges());
+    _handler.property("start").call(QJSValueList() << getStartNode() << getEndNode());
 
-    isInitiated = !_handler.isError();
 }
 
 void AlgorithmEngine::next() {
-    qint32 nextNode = _handler.property("next").call().toInt32();
-    if (nextNode == -1) {
-        qDebug() << "end node reached";
-        return;
-    } else {
-        qDebug() << "highlighting: " << nextNode;
+    qDebug() << "algorithm engine next";
+    if (!_handler.property("next").call().toBool()) {
+        qDebug() << "last node reached";
     }
-    Node *n = _context->getNodeById(nextNode);
-    if (n == NULL)
-        return;
-    n->highlight(QColor(255, 0, 0));
-    _context->update();
+}
+
+void AlgorithmEngine::stop() {
+}
+
+QJSValue AlgorithmEngine::getNodes()
+{
+    QString arr("([");
+    QList<Node*> nodes = _context->getNodes();
+    for (int i = 0; i < nodes.length(); i++) {
+        arr.append(QString::number(nodes.at(i)->getID()));
+        if (i < (nodes.length() - 1)) {
+            arr.append(",");
+        }
+    }
+    return _engine->evaluate(arr.append("])"));
+}
+
+QJSValue AlgorithmEngine::getEdges()
+{
+    Edge *current;
+    QList<Edge*> edges = _context->getEdges();
+    QJSValue ret =  _engine->newArray(edges.length());
+    for (int i = 0; i < edges.length(); i++) {
+        current = edges.at(i);
+        QJSValue tmp = _engine->newArray(2);
+        tmp.setProperty(0, QJSValue(current->getBeginNode()->getID()));
+        tmp.setProperty(1, QJSValue(current->getEndNode()->getID()));
+        tmp.setProperty(2, QJSValue(current->getWeight(true)));
+        ret.setProperty(i, tmp);
+    }
+    return ret;
+}
+
+QJSValue AlgorithmEngine::getStartNode() {
+    Node * tmp;
+    QList<Node*> nodes = _context->getNodes();
+    for (int i = 0; i < nodes.length(); i++) {
+        tmp = nodes.at(i);
+        if (tmp->getType() == NodeType::START) {
+            return QJSValue(tmp->getID());
+        }
+    }
+    return QJSValue();
+}
+
+QJSValue AlgorithmEngine::getEndNode() {
+    Node * tmp;
+    QList<Node*> nodes = _context->getNodes();
+    for (int i = 0; i < nodes.length(); i++) {
+        tmp = nodes.at(i);
+        if (tmp->getType() == NodeType::END) {
+            return QJSValue(tmp->getID());
+        }
+    }
+    return QJSValue();
+}
+
+QByteArray getFileContents(QString path) {
+    QByteArray ret;
+    QFile file(path);
+    if (file.open(QIODevice::ReadOnly)) {
+        ret = file.readAll();
+    }
+    file.close();
+    return ret;
 }

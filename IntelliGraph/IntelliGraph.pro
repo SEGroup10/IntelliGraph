@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += script
+QT       += qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     edge.cpp \
     popup.cpp \
     popupedge.cpp \
-    algorithmengine.cpp
+    algorithmengine.cpp \
+    algorithm.cpp
 
 HEADERS  += mainwindow.h\
          workspace.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h\
     nodetype.h \
     popup.h \
     popupedge.h \
-    algorithmengine.h
+    algorithmengine.h \
+    algorithm.h
 
 FORMS    += mainwindow.ui \
     popup.ui \
@@ -40,3 +42,7 @@ RESOURCES += \
     images.qrc
 
 #INCLUDEPATH += $$PWD/algorithms
+
+OTHER_FILES += \
+    algorithms/ProofOfConcept.alg \
+    algorithms/Dijkstra.alg
