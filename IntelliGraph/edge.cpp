@@ -20,7 +20,7 @@ Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
 	_directional = true;
 	_bidirectional = false;
     _isHighlighted = false;
-	this->setZValue(1);
+    this->setZValue(1);
 }
 
 // Deconstructs the edge class instance
@@ -145,18 +145,22 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setRenderHint(QPainter::Antialiasing);
 
     // draw line
-    QLineF line(_end->getCenter(),_start->getCenter());
+    QLineF l(_end->getCenter(), _start->getCenter());
+    double angle = (l.dy() >= 0) ? 2*Pi - acos(l.dx() / l.length()) : acos(l.dx() / l.length());
+    QPointF endPoint = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
+    QPointF startPoint =_start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
+    QLineF line(endPoint, startPoint);
     if (_isHighlighted) {
         QPen hpen(_highlightColour);
         hpen.setWidth(6);
         painter->setPen(hpen);
         painter->drawLine(line);
     }
+
     pen.setWidth(2);
     painter->setPen(pen);
     painter->drawLine(line);
 
-    double angle = (line.dy() >= 0) ? 2*Pi - acos(line.dx() / line.length()) : acos(line.dx() / line.length());
     font.setPointSize((line.length() >= NODESIZE * 2) ? FONTSIZE : max(line.length()/(NODESIZE * 2) * FONTSIZE, qreal(1)));
     painter->setFont(font);
 
@@ -172,18 +176,18 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 			//then 60 for a bigger arrow
 			int ArrowSize;
             line.length() >= NODESIZE * 3 ? ArrowSize = ARROWSIZE : ArrowSize = line.length()/(NODESIZE * 3) * ARROWSIZE;
-			QPointF Point1 = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
-			QPointF Point2 = Point1 - QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
-			QPointF Point3 = Point1 - QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
-			painter->setBrush(Qt::green);
-            painter->drawPolygon(QPolygonF() << Point1 << Point2 << Point3);
+            //QPointF Point1 = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
+            QPointF Point2 = endPoint - QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
+            QPointF Point3 = endPoint - QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
+            painter->setBrush(Qt::green);
+            painter->drawPolygon(QPolygonF() << endPoint << Point2 << Point3);
 			//qDebug() << "DrawPolygon";
 			if (_bidirectional) {
-				QPointF Point4 = _start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
-				QPointF Point5 = Point4 + QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
-				QPointF Point6 = Point4 + QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
+                //QPointF Point4 = _start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
+                QPointF Point5 = startPoint + QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
+                QPointF Point6 = startPoint + QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
 				painter->setBrush(Qt::red);
-				painter->drawPolygon(QPolygonF() << Point4 << Point5 << Point6);
+                painter->drawPolygon(QPolygonF() << startPoint << Point5 << Point6);
 			}
 		}
 	}
