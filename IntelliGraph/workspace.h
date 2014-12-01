@@ -17,13 +17,12 @@
 #include "popup.h"
 #include "popupedge.h"
 #include "algorithminterface.h"
-#include "samplealgorithm.h"
 
 class Node;
 class Popup;
 class PopupEdge;
 class Edge;
-class AlgorithmInterface;
+//class AlgorithmInterface;
 
 class Workspace: public QGraphicsScene
 {
@@ -32,7 +31,7 @@ class Workspace: public QGraphicsScene
             selectMode,
             nodeMode,
             edgeMode,
-            viewMode
+            algorithmMode
         };
         Workspace( QWidget *widget, QGraphicsView *elem );
         ~Workspace();
@@ -42,8 +41,10 @@ class Workspace: public QGraphicsScene
         void handleResize();
         void handleNext();
         void clearSelection();
+        void removeHighlight();
 
         // Data functions
+        Node* getNodeById( int id );
         QList<Node*> getNodes();
         QList<Edge*> getEdges();
         void setMode(Workspace::Mode newMode);
@@ -59,18 +60,15 @@ class Workspace: public QGraphicsScene
         void deleteNode(Node *target);
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
-        void setnode(Node *target,NodeType::Type type);
-        void test();
 
-    private:
+        void setnode(Node *target, NodeType::Type type);
+private:
         bool clickedOnNode(Node *&node, QPointF pos);
         bool clickedOnEdge(Edge *&edge,QPointF pos);
 
         // events
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
         void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
-        Node* getNodeById( int id );
 
         int getNewId();
 
@@ -93,8 +91,6 @@ class Workspace: public QGraphicsScene
 
         Popup *popup;
         PopupEdge *popupedge;
-
-        AlgorithmInterface *loadedAlgorithm;
 
         static int IDCounter;
 };

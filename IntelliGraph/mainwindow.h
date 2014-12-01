@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QDebug>
 #include "workspace.h"
+#include "algorithmengine.h"
 
 namespace Ui {
 class MainWindow;
@@ -43,6 +44,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Workspace *workspace;
+    AlgorithmEngine *algorithm;
 };
 
 #endif // MAINWINDOW_H

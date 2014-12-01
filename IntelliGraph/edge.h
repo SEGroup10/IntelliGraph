@@ -57,6 +57,7 @@ class Edge: public QGraphicsItem
 		// Painting functions
 		void update();
         void highlight(QColor color);
+        void removeHighlight();
 		QRectF boundingRect() const;
 		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

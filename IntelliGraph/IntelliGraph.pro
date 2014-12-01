@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,8 +21,8 @@ SOURCES += main.cpp\
     edge.cpp \
     popup.cpp \
     popupedge.cpp \
-    samplealgorithm.cpp \
-    algorithminterface.cpp
+    algorithminterface.cpp \
+    algorithmengine.cpp
 
 HEADERS  += mainwindow.h\
          workspace.h \
@@ -31,7 +32,7 @@ HEADERS  += mainwindow.h\
     popup.h \
     popupedge.h \
     algorithminterface.h \
-    samplealgorithm.h
+    algorithmengine.h
 
 FORMS    += mainwindow.ui \
     popup.ui \

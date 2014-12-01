@@ -83,7 +83,7 @@ QMainWindow {
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
-          <string>TestAlgorithm</string>
+          <string>Start</string>
          </property>
         </widget>
        </item>

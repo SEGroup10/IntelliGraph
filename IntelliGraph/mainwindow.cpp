@@ -8,14 +8,19 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->workspace = new Workspace( this, ui->graphicsView);
+    this->algorithm = new AlgorithmEngine(this->workspace, ui->nextButton, qApp->applicationDirPath());
+
     // Load algorithmList
     refreshAlgorithms();
+
+    // disable buttons
+    ui->nextButton->setDisabled(true);
+    ui->pushButton->setDisabled(true);
 
     // Connect AlgorithmList signal to slot
     connect(ui->algorithmsList, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(on_item_clicked(QListWidgetItem*)));
-
-    this->workspace = new Workspace( this, ui->graphicsView);
 }
 
 MainWindow::~MainWindow()
@@ -29,17 +34,13 @@ void MainWindow::refreshAlgorithms()
     ui->algorithmsList->clear();
 
     // Search for algorithm files
-    QStringList nameFilter("*.alg");
-    QDir directory("algorithms");
-    QStringList fileList = directory.entryList(nameFilter);
+
+    QList<QListWidgetItem*> alg_list = this->algorithm->getAlgorithms();
 
     // Insert items to AlgorithmsList from code:
-    for(int i = 0; i < fileList.count(); i++)
+    for(int i = 0; i < alg_list.count(); i++)
     {
-        QListWidgetItem *itm = new QListWidgetItem;
-        QString txt = QString("%1").arg(fileList.at(i));
-        itm->setText(txt);
-        ui->algorithmsList->addItem(itm);
+        ui->algorithmsList->addItem(alg_list.at(i));
     }
 }
 
@@ -62,6 +63,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::on_item_clicked(QListWidgetItem* item)
 {
     // load algorithm in algorithms/item->text();
+    ui->pushButton->setDisabled(false);
     qDebug() << item->text();
 }
 
@@ -73,7 +75,9 @@ void MainWindow::on_refreshButton_clicked()
 
 void MainWindow::on_nextButton_clicked()
 {
-    workspace->handleNext();
+    if (!algorithm->next()) {
+        ui->nextButton->setText(QString("Last node reached"));
+    }
 }
 
 void MainWindow::on_modeButton_clicked()
@@ -104,5 +108,22 @@ void MainWindow::on_exportButton_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    workspace->test();
+    QListWidgetItem *itm = ui->algorithmsList->selectedItems().at(0);
+    if (ui->pushButton->text() == QString("Start")) {
+        qDebug() << "start algorithm: " << itm->statusTip();
+        workspace->setMode(Workspace::algorithmMode);
+        algorithm->init(itm->statusTip());
+        ui->modeButton->setDisabled(true);
+        ui->nextButton->setDisabled(false);
+        ui->pushButton->setText(QString("Stop"));
+    } else {
+        qDebug() << "stopping algorithm";
+        workspace->removeHighlight();
+        workspace->setMode(Workspace::selectMode);
+        algorithm->stop();
+        ui->modeButton->setDisabled(false);
+        ui->nextButton->setDisabled(true);
+        ui->nextButton->setText(QString("Next"));
+        ui->pushButton->setText(QString("Start"));
+    }
 }

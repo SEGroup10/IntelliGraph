@@ -130,6 +130,12 @@ void Edge::highlight(QColor color)
     this->update();
 }
 
+void Edge::removeHighlight()
+{
+    _isHighlighted = false;
+    this->update();
+}
+
 // Paint the object
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
