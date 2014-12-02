@@ -20,8 +20,8 @@ Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
     _directional = true;
     _bidirectional = false;
     _isHighlighted = false;
-    arrow1Colour = QColor(41, 128, 185);
-    arrow2Colour = QColor(142, 68, 173);
+    arrow1Colour = QColor(52, 152, 219);
+    arrow2Colour = QColor(52, 73, 94);
     this->setZValue(1);
 }
 
