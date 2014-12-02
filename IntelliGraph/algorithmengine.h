@@ -7,6 +7,9 @@
 #include "workspace.h"
 #include "algorithminterface.h"
 
+class Workspace;
+class AlgorithmInterface;
+
 class AlgorithmEngine
 {
 public:

@@ -9,16 +9,16 @@ static const double Pi = 3.14159265358979323846264338327950288419717;
 // initializes the edge class
 Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
 {
-	_id = id;
-	_start = start;
-	_end = end;
-	_flip = false;
-	_margin = 50;
+    _id = id;
+    _start = start;
+    _end = end;
+    _flip = false;
+    _margin = 50;
     _weight1 = 1;
     _weight2 = 2;
-	_context = context;
-	_directional = true;
-	_bidirectional = false;
+    _context = context;
+    _directional = true;
+    _bidirectional = false;
     _isHighlighted = false;
     this->setZValue(1);
 }
@@ -32,14 +32,14 @@ Edge::~Edge()
 // Gets the Id
 int Edge::getID()
 {
-	return _id;
+    return _id;
 }
 
 //Returns label from begin to end if true is passed
 //Returns label from end to begin if false is passed
 string Edge::getWeightAsString(bool weight1)
 {
-  return this->dtos( this->getWeight( weight1 ) );
+    return this->dtos( this->getWeight( weight1 ) );
 }
 
 
@@ -47,8 +47,8 @@ string Edge::getWeightAsString(bool weight1)
 //Returns weight from end to begin if false is passed
 double Edge::getWeight(bool weight1)
 {
-	if (weight1) return _weight1;
-	else return _weight2;
+    if (weight1) return _weight1;
+    else return _weight2;
 }
 
 Node *Edge::getBeginNode()
@@ -64,62 +64,61 @@ Node *Edge::getEndNode()
 // Checks if this edge is connected to target
 bool Edge::hasNode(Node *target)
 {
-	return (_start == target || _end == target);
+    return (_start == target || _end == target);
 }
 
 bool Edge::hasStartNode(Node *target)
 {
-	return (_start == target);
+    return (_start == target);
 }
 
 bool Edge::hasEndNode(Node *target)
 {
-	return (_end == target);
+    return (_end == target);
 }
 
 // Sets the Weight
 void Edge::setWeight(double weight, bool weight1)
 {
-	// if label set to weight change it
-	if (weight1) {
-		_directional = true;
-		_weight1 = weight;
-	}
-	else {
-		_directional = true;
-		_weight2 = weight;
-	}
-	this->update();
+    // if label set to weight change it
+    if (weight1) {
+        _directional = true;
+        _weight1 = weight;
+    } else {
+        _directional = true;
+        _weight2 = weight;
+    }
+    this->update();
 }
 
 void Edge::setWeight(string str, bool weight1)
 {
-  this->setWeight( stod(str), weight1 );
+    this->setWeight( stod(str), weight1 );
 }
 
 bool Edge::getBidirectional()
 {
-	return _bidirectional;
+    return _bidirectional;
 }
 
 //Makes an edge bidirectional
 //Do not put any 'side-effects' in this function
 void Edge::setBidirectional(bool bidirectional)
 {
-	_bidirectional = bidirectional;
+    _bidirectional = bidirectional;
 }
 
 // Return bounding rectangle
 QRectF Edge::boundingRect() const
 {
-	QPointF s = _start->getCenter();
-	QPointF e = _end->getCenter();
-	int _practicalMargin;
+    QPointF s = _start->getCenter();
+    QPointF e = _end->getCenter();
+    int _practicalMargin;
     _bidirectional ? _practicalMargin = _margin : _practicalMargin = _margin;
-	QPointF topleft = QPointF(min(s.x(), e.x())-_practicalMargin, min(s.y(), e.y())-_practicalMargin);
-	QPointF bottomright = QPointF(max(s.x(), e.x())+_practicalMargin, max(s.y(), e.y())+_practicalMargin);
+    QPointF topleft = QPointF(min(s.x(), e.x())-_practicalMargin, min(s.y(), e.y())-_practicalMargin);
+    QPointF bottomright = QPointF(max(s.x(), e.x())+_practicalMargin, max(s.y(), e.y())+_practicalMargin);
 
-	return QRectF(topleft, bottomright);//_start->getCenter(), _end->getCenter());
+    return QRectF(topleft, bottomright);//_start->getCenter(), _end->getCenter());
 }
 
 
@@ -139,73 +138,80 @@ void Edge::removeHighlight()
 // Paint the object
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    // initialization
     QPen pen(Qt::black);
     QFont font = painter->font();
     painter->setRenderHint(QPainter::Antialiasing);
 
+    pen.setWidth(2);
+    painter->setPen(pen);
+
+    //I could use endPoint and startPoint here, but this way we avoid having to worry about zero-length lines.
+    QLineF line(_end->getCenter(),_start->getCenter());
+
+    //Not visible anyway, so let cut it short. Added pros:
+    //if line.length() == 0 we are dividing by zero!
+    if( line.length() <= NODESIZE ) return;
+
     // draw line
-    QLineF l(_end->getCenter(), _start->getCenter());
-    double angle = (l.dy() >= 0) ? 2*Pi - acos(l.dx() / l.length()) : acos(l.dx() / l.length());
-    QPointF endPoint = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
-    QPointF startPoint =_start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
-    QLineF line(endPoint, startPoint);
     if (_isHighlighted) {
         QPen hpen(_highlightColour);
         hpen.setWidth(6);
         painter->setPen(hpen);
         painter->drawLine(line);
     }
-
     pen.setWidth(2);
     painter->setPen(pen);
     painter->drawLine(line);
 
-    font.setPointSize((line.length() >= NODESIZE * 2) ? FONTSIZE : max(line.length()/(NODESIZE * 2) * FONTSIZE, qreal(1)));
-    painter->setFont(font);
+    //Prepare for drawing the rest
+    double angle = (line.dy() >= 0) ? 2*Pi - acos(line.dx() / line.length()) : acos(line.dx() / line.length());
+    QPointF endPoint = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
+    QPointF startPoint =_start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
 
+    font.setPointSize((line.length() >= NODESIZE * 1.6) ? FONTSIZE : max(line.length()/(NODESIZE * 1.6) * FONTSIZE, qreal(1)));
+    painter->setFont(font);
 
     //TODO LOOK AT IT OR DELETE
     //int angleDeg = (angle*360/(2*Pi));
     //painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg+45)*16, 90*16);
     //painter->drawArc(_start->getCenter().x(),_start->getCenter().y(),-line.dx()-100,-line.dy()-100,(angleDeg-45)*16, -90*16);
-	//dont touch this, work in progress to make a double arch.
-	if (_directional) {
-		if (line.length() >= NODESIZE) {
-			//lets first check if the distance between the two is more than 20 pixels...
-			//then 60 for a bigger arrow
-			int ArrowSize;
+    //dont touch this, work in progress to make a double arch.
+    if (_directional) {
+        //if (line.length() >= NODESIZE) {
+            //lets first check if the distance between the two is more than 20 pixels...
+            //then 60 for a bigger arrow
+            int ArrowSize;
             line.length() >= NODESIZE * 3 ? ArrowSize = ARROWSIZE : ArrowSize = line.length()/(NODESIZE * 3) * ARROWSIZE;
             //QPointF Point1 = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
             QPointF Point2 = endPoint - QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
             QPointF Point3 = endPoint - QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
             painter->setBrush(Qt::green);
             painter->drawPolygon(QPolygonF() << endPoint << Point2 << Point3);
-			//qDebug() << "DrawPolygon";
-			if (_bidirectional) {
+            //qDebug() << "DrawPolygon";
+            if (_bidirectional) {
                 //QPointF Point4 = _start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
                 QPointF Point5 = startPoint + QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
                 QPointF Point6 = startPoint + QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
-				painter->setBrush(Qt::red);
+                painter->setBrush(Qt::red);
                 painter->drawPolygon(QPolygonF() << startPoint << Point5 << Point6);
-			}
-		}
-	}
+            }
+        //}
+    }
 
-	if (_bidirectional) {
-		pen.setColor(Qt::green);
-		painter->setPen(pen);
-    painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
-		pen.setColor(Qt::red);
-		painter->setPen(pen);
-    painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(false)));
-	}
-	else {
-		if(!_flip)
-      painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
-		else
-      painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
-	}
+    if (_bidirectional) {
+        pen.setColor(Qt::green);
+        painter->setPen(pen);
+        painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
+        pen.setColor(Qt::red);
+        painter->setPen(pen);
+        painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(false)));
+    }	else {
+        if(!_flip) {
+            painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
+        } else {
+            painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
+        }
+    }
 }
 
 

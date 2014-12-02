@@ -20,6 +20,10 @@ function walkPath() {
   var tmp = [], n;
   n = goalNode;
   while (n != startNode) {
+    if( tmp.indexOf( n ) != -1 ) {
+      path = null;
+      return;
+    }
     tmp.push(n);
     n = previous[n];
   }
@@ -59,6 +63,10 @@ function walkPath() {
     algorithm.debug(JSON.stringify(path));
   },
   next: function () {
+    //There is no path
+    if(path == null) return false;
+
+    //Well, in this case there is :D
     algorithm.debug("Highlighting: "+path[currentPathNode]);
     algorithm.highlightNode(path[currentPathNode]);
     algorithm.highlightNode(path[currentPathNode]);

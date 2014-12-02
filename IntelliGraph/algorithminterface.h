@@ -6,6 +6,9 @@
 #include "node.h"
 #include "edge.h"
 
+class Node;
+class Edge;
+
 class AlgorithmInterface: public QObject
 {
     Q_OBJECT

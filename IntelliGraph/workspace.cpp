@@ -129,8 +129,27 @@ QList<Edge*> Workspace::getEdges()
     return edges;
 }
 
+/* This function handles workspace-related changes for a mode change. This should not be called
+ * on it's own. Let ui elements call MainWindow::setMode instead, which will invoke this function
+ * when the time is right.
+ */
 void Workspace::setMode(Workspace::Mode newMode)
 {
+    if( newMode == Workspace::edgeMode ) {
+        foreach( Node* i, this->getNodes() ) {
+            i->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
+    } else if( newMode == Workspace::selectMode ) {
+        foreach( Node* i, this->getNodes() ) {
+            i->setFlag(QGraphicsItem::ItemIsMovable, true);
+        }
+    } else if( newMode == Workspace::algorithmMode ) {
+        foreach( Node* i, this->getNodes() ) {
+            i->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
+    } else {
+        Q_ASSERT_X( false, "Workspace::setMode", "unhandled mode!" );
+    }
     mode = newMode;
 }
 

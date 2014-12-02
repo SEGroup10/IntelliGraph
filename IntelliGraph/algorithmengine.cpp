@@ -40,7 +40,7 @@ void AlgorithmEngine::init(QString file)
     _engine->globalObject().setProperty("algorithm", _engine->newQObject(_interface));
 
     // load script
-    _handler = _engine->evaluate(QString(getFileContents(_path.append(file))));
+    _handler = _engine->evaluate(QString(getFileContents(_path + file)));
 
     // start algorithm
     _handler.property("init").call(QJSValueList() << getNodes() << getEdges());
@@ -111,8 +111,12 @@ QJSValue AlgorithmEngine::getEndNode() {
 QByteArray AlgorithmEngine::getFileContents(QString path) {
     QByteArray ret;
     QFile file(path);
+    qDebug() << path;
     if (file.open(QIODevice::ReadOnly)) {
+        qDebug() << "file could be opened!";
         ret = file.readAll();
+    } else {
+        qDebug() << "file could not be opened?!";
     }
     file.close();
     return ret;

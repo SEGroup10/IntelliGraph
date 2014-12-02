@@ -14,6 +14,9 @@
 #include "workspace.h"
 #include "algorithmengine.h"
 
+class Workspace;
+class AlgorithmEngine;
+
 namespace Ui {
 class MainWindow;
 }
@@ -24,7 +27,6 @@ class MainWindow : public QMainWindow
 
 
 public slots:
-    void on_item_clicked(QListWidgetItem* item);
     void on_refreshButton_clicked();
     void on_nextButton_clicked();
     void on_exportButton_clicked();
@@ -34,17 +36,23 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void setMode( Workspace::Mode );
+    Workspace::Mode getMode();
     void refreshAlgorithms();
     void mousePressEvent(QMouseEvent *event);
     void resizeEvent(QResizeEvent *event);
 
 private slots:
-    void on_pushButton_clicked();
+    void on_startStopButton_clicked();
+
+    void on_algorithmsList_itemSelectionChanged();
 
 private:
     Ui::MainWindow *ui;
     Workspace *workspace;
     AlgorithmEngine *algorithm;
+    QListWidgetItem *selectedAlgorithmItem;
+    Workspace::Mode savedMode;
 };
 
 #endif // MAINWINDOW_H
