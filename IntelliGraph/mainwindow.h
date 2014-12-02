@@ -10,6 +10,7 @@
 #include <QGraphicsItem>
 #include <QListWidgetItem>
 #include <QDir>
+#include <QFileDialog>
 #include <QDebug>
 #include "workspace.h"
 #include "algorithmengine.h"
@@ -27,7 +28,7 @@ class MainWindow : public QMainWindow
 
 
 public slots:
-    void on_refreshButton_clicked();
+    void on_importButton_clicked();
     void on_nextButton_clicked();
     void on_exportButton_clicked();
     void on_modeButton_clicked();

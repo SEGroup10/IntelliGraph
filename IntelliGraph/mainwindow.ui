@@ -74,9 +74,9 @@ QMainWindow {
         <number>4</number>
        </property>
        <item>
-        <widget class="QPushButton" name="refreshButton">
+        <widget class="QPushButton" name="importButton">
          <property name="text">
-          <string>Refresh</string>
+          <string>Import</string>
          </property>
         </widget>
        </item>

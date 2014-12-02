@@ -85,9 +85,34 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     workspace->handleResize();
 }
 
-void MainWindow::on_refreshButton_clicked()
+void MainWindow::on_importButton_clicked()
 {
-    qDebug() << "refresh";
+    QFile sourceFile(QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("Files (*.alg)")));
+    QFileInfo fileInfo(sourceFile.fileName());
+    QString destination("algorithms/" + fileInfo.fileName());
+    QFile destinationFile(destination);
+
+    qDebug() << sourceFile.fileName();
+    qDebug() << destination;
+
+    //popup window "Are you sure you want to overwrite?"
+
+    if(destinationFile.exists())
+    {
+        QMessageBox::StandardButton choiceDialog;
+        choiceDialog = QMessageBox::question(this, "Warning", "Algorithm already exists, overwrite?",QMessageBox::Yes|QMessageBox::No);
+
+        if (choiceDialog == QMessageBox::Yes)
+        {
+            destinationFile.remove();
+            sourceFile.copy(destination);
+        }
+    }
+    else
+    {
+      sourceFile.copy(destination);
+    }
+
     refreshAlgorithms();
 }
 
