@@ -95,22 +95,23 @@ void MainWindow::on_importButton_clicked()
     qDebug() << sourceFile.fileName();
     qDebug() << destination;
 
-    //popup window "Are you sure you want to overwrite?"
-
-    if(destinationFile.exists())
+    if(sourceFile.fileName() != "")
     {
-        QMessageBox::StandardButton choiceDialog;
-        choiceDialog = QMessageBox::question(this, "Warning", "Algorithm already exists, overwrite?",QMessageBox::Yes|QMessageBox::No);
-
-        if (choiceDialog == QMessageBox::Yes)
+        if(destinationFile.exists())
         {
-            destinationFile.remove();
-            sourceFile.copy(destination);
+            QMessageBox::StandardButton choiceDialog;
+            choiceDialog = QMessageBox::question(this, "Warning", "Algorithm already exists, overwrite?",QMessageBox::Yes|QMessageBox::No);
+
+            if (choiceDialog == QMessageBox::Yes)
+            {
+                destinationFile.remove();
+                sourceFile.copy(destination);
+            }
         }
-    }
-    else
-    {
-      sourceFile.copy(destination);
+        else
+        {
+          sourceFile.copy(destination);
+        }
     }
 
     refreshAlgorithms();
