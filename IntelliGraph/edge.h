@@ -83,6 +83,8 @@ class Edge: public QGraphicsItem
         bool _isHighlighted;
         QColor _highlightColour;
 		Workspace *_context;
+        QColor arrow1Colour;
+        QColor arrow2Colour;
 };
 
 #endif // EDGE_H

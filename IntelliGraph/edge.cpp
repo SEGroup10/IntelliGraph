@@ -20,6 +20,8 @@ Edge::Edge(int id, Node *start, Node *end, Workspace *context): QGraphicsItem()
     _directional = true;
     _bidirectional = false;
     _isHighlighted = false;
+    arrow1Colour = QColor(41, 128, 185);
+    arrow2Colour = QColor(142, 68, 173);
     this->setZValue(1);
 }
 
@@ -185,24 +187,24 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             //QPointF Point1 = _end->getCenter() - QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
             QPointF Point2 = endPoint - QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
             QPointF Point3 = endPoint - QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
-            painter->setBrush(Qt::green);
+            painter->setBrush(arrow1Colour);
             painter->drawPolygon(QPolygonF() << endPoint << Point2 << Point3);
             //qDebug() << "DrawPolygon";
             if (_bidirectional) {
                 //QPointF Point4 = _start->getCenter() + QPointF(sin(angle - Pi/2) * NODESIZE/2, cos(angle - Pi/2) * NODESIZE/2 );
                 QPointF Point5 = startPoint + QPointF(sin(angle - Pi/3) * ArrowSize, cos(angle - Pi/3) * ArrowSize );
                 QPointF Point6 = startPoint + QPointF(sin(angle - Pi + Pi/3) * ArrowSize, cos(angle - Pi + Pi/3) * ArrowSize );
-                painter->setBrush(Qt::red);
+                painter->setBrush(arrow2Colour);
                 painter->drawPolygon(QPolygonF() << startPoint << Point5 << Point6);
             }
         //}
     }
 
     if (_bidirectional) {
-        pen.setColor(Qt::green);
+        pen.setColor(arrow1Colour);
         painter->setPen(pen);
         painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*50,qCos(line.angle()*M_PI/180)*50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(true)));
-        pen.setColor(Qt::red);
+        pen.setColor(arrow2Colour);
         painter->setPen(pen);
         painter->drawText(boundingRect().adjusted(qSin(line.angle()*M_PI/180)*-50,qCos(line.angle()*M_PI/180)*-50,0,0), Qt::AlignCenter, QString::fromStdString(this->getWeightAsString(false)));
     }	else {
