@@ -57,6 +57,7 @@ class Workspace: public QGraphicsScene
         void updateConnectedEdges(Node *target);
         Node *addNode(int x, int y);
         Node *addNode(int x, int y, NodeType::Type type);
+        Edge *findEdge(Node *a, Node *b);
         void deleteNode(Node *target);
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);

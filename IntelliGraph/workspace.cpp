@@ -190,24 +190,28 @@ Node *Workspace::addNode(int x, int y, NodeType::Type type)
     return node;
 }
 
+Edge *Workspace::findEdge(Node *a, Node *b)
+{
+    Edge *tmp;
+    for (int i = 0; i < edges.length(); i++) {
+        tmp = edges.at(i);
+        if ((tmp->hasStartNode(a) && tmp->hasEndNode(b)) ||
+            (tmp->hasStartNode(b) && tmp->hasEndNode(a))) {
+            return tmp;
+        }
+    }
+    return NULL;
+}
+
 void Workspace::deleteNode(Node *target)
 {
-    bool repeat = true;
-    while( repeat ) {
-        //If no edges had to be deleted, repeat will be false at the end of the while loop
-        repeat = false;
-
-        //Delete any edge that connects to the deleted node
-        for( int i = 0; i < edges.count(); i++ )
+    Edge *temp = NULL;
+    for (int i = 0; i < edges.length(); i++)
+    {
+        temp = edges.at(i);
+        if (temp != NULL && temp->hasNode(target))
         {
-            if( edges.at(i)->hasNode(target))
-            {
-                deleteEdge(edges.at(i));
-                //Continueing with this loop will result in undefined behaviour
-                //break out of for loop and start all over again
-                repeat = true;
-                break;
-            }
+            deleteEdge(temp);
         }
     }
 

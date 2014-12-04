@@ -48,6 +48,8 @@ private slots:
 
     void on_algorithmsList_itemSelectionChanged();
 
+    void on_prevButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Workspace *workspace;
