@@ -1,8 +1,7 @@
 var map = {}, distance = {}, ids = {};
 var startNode, goalNode, previous = {};
-var path = [], currentPathNode = 0;
 
-function run(node) {
+function dijkstra(node) {
   var neighbors = map[node];
   var i, len, neighbor;
   for (i = 0; i < neighbors.length; i++) {
@@ -11,14 +10,14 @@ function run(node) {
     if (len < distance[neighbor[0]]) {
       distance[neighbor[0]] = len;
       previous[neighbor[0]] = node;
-      run(neighbor[0]);
+      dijkstra(neighbor[0]);
     }
   }
 }
 
 function walkPath() {
-  var tmp = [], n;
-  n = goalNode;
+  var tmp = [], path = [];
+  var n = goalNode;
   while (n != startNode) {
     if( tmp.indexOf( n ) != -1 ) {
       path = null;
@@ -29,6 +28,8 @@ function walkPath() {
   }
   tmp.push(startNode);
   path = tmp.reverse();
+  console.log(JSON.stringify(path));
+  return path;
 }
 
 ({
@@ -36,9 +37,8 @@ function walkPath() {
     // resetting vars
     map = {}; distance = {}; 
     ids = {}; previous = {};
-    path = []; currentPathNode = 0;
     
-    algorithm.debug("initializing algorithm");
+    console.log("initializing algorithm");
     var i, j, edge;
     ids = nodes;
     for (i = 0; i < nodes.length; i++) {
@@ -49,32 +49,16 @@ function walkPath() {
       edge = edges[j];
       map[edge[0]].push([edge[1], edge[2]]);
     }
-    algorithm.debug(JSON.stringify(map));
+    console.log(JSON.stringify(map));
   },
-  start: function (start, end) {
-    algorithm.debug("algortithm start");
+  run: function (start, end) {
+    console.log("algortithm start");
     startNode = start;
     goalNode = end;
     distance[startNode] = 0;
     // start algorithm
-    run(startNode);
+    dijkstra(startNode);
     // get shortest path
-    walkPath();
-    algorithm.debug(JSON.stringify(path));
-  },
-  next: function () {
-    //There is no path
-    if(path == null) return false;
-
-    //Well, in this case there is :D
-    algorithm.debug("Highlighting: "+path[currentPathNode]);
-    algorithm.highlightNode(path[currentPathNode]);
-    algorithm.highlightNode(path[currentPathNode]);
-    if (currentPathNode < path.length) {
-      currentPathNode++;
-      return true;
-    } else {
-      return false;
-    }
+    return walkPath();
   },
 })

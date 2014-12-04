@@ -1,16 +1,12 @@
 #include "algorithmengine.h"
 using namespace std;
 
-AlgorithmEngine::AlgorithmEngine(Workspace *parent, QPushButton *nxt, QString appdir)
+AlgorithmEngine::AlgorithmEngine(Workspace *parent, QString appdir)
 {
     _context = parent;
     _path = appdir.append("/algorithms/");
     _engine = new QJSEngine();
-    _nextButton = nxt;
     isInitiated = false;
-    _interface = new AlgorithmInterface();
-
-
 }
 
 QList<QListWidgetItem *> AlgorithmEngine::getAlgorithms()
@@ -36,23 +32,55 @@ QList<QListWidgetItem *> AlgorithmEngine::getAlgorithms()
 void AlgorithmEngine::init(QString file)
 {
     // init script environment
-    _interface->init(_context->getNodes(), _context->getEdges());
-    _engine->globalObject().setProperty("algorithm", _engine->newQObject(_interface));
+    _engine->globalObject().setProperty("console", _engine->newQObject(new AlgorithmInterface()));
 
     // load script
     _handler = _engine->evaluate(QString(getFileContents(_path + file)));
 
+    // check algorithm functions
+    if (!_handler.hasProperty("init") || !_handler.hasProperty("run")) {
+        qDebug() << "Algorithm doesn't have required functions";
+        return;
+    }
+
     // start algorithm
     _handler.property("init").call(QJSValueList() << getNodes() << getEdges());
-    _handler.property("start").call(QJSValueList() << getStartNode() << getEndNode());
+    QJSValue bestPath = _handler.property("run").call(QJSValueList() << getStartNode() << getEndNode());
+    if (bestPath.toVariant().userType() == QVariant::List) {
+        _algorithmPath = bestPath.toVariant().toList();
+        _algorithmIterator = 0;
+        isInitiated = true;
+        // highlight start node
+        _context->getNodeById(_algorithmPath.at(0).toInt())->highlight(Qt::red);
+    }
+}
+
+bool AlgorithmEngine::previous() {
+    Node *_prev, *_curr; Edge *_e;
+    if (isInitiated && _algorithmIterator > 0) {
+        _prev = _context->getNodeById(_algorithmPath.at(_algorithmIterator-1).toInt());
+        _curr = _context->getNodeById(_algorithmPath.at(_algorithmIterator).toInt());
+        _curr->removeHighlight();
+        _e = _context->findEdge(_curr, _prev);
+        _e->removeHighlight();
+        _algorithmIterator--;
+        return true;
+    }
+    return false;
 }
 
 bool AlgorithmEngine::next() {
-    qDebug() << "algorithm engine next";
-    return _handler.property("next").call().toBool();
-}
-
-void AlgorithmEngine::stop() {
+    Node *_curr, *_next; Edge *_e;
+    if (isInitiated && _algorithmIterator < (_algorithmPath.length()-1)) {
+        _curr = _context->getNodeById(_algorithmPath.at(_algorithmIterator).toInt());
+        _next = _context->getNodeById(_algorithmPath.at(_algorithmIterator+1).toInt());
+        _next->highlight(Qt::red);
+        _e = _context->findEdge(_curr, _next);
+        _e->highlight(Qt::red);
+        _algorithmIterator++;
+        return true;
+    }
+    return false;
 }
 
 QJSValue AlgorithmEngine::getNodes()

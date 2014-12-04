@@ -3,28 +3,16 @@
 
 #include <QDebug>
 #include <QObject>
-#include "node.h"
-#include "edge.h"
-
-class Node;
-class Edge;
 
 class AlgorithmInterface: public QObject
 {
     Q_OBJECT
     public:
-        explicit AlgorithmInterface(QObject *parent = 0, QColor _color = Qt::red);
-        void init(QList<Node*> nodes, QList<Edge*> edges);
+        explicit AlgorithmInterface(QObject *parent = 0);
 
     public slots:
-        Q_INVOKABLE void debug(QString data);
-        Q_INVOKABLE void highlightNode(QString nodeID);
+        Q_INVOKABLE void log(QString data);
 
-    private:
-        Node *_lastNode;
-        QList<Node*> _nodes;
-        QList<Edge*> _edges;
-        QColor _highlightColor;
 };
 
 #endif // ALGORITHMINTERFACE_H
