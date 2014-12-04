@@ -38,7 +38,9 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
 
     //Adding initial nodes.
     Node *start = addNode(100, 100, NodeType::START);
+    start->setLabel( "start" );
     Node *end = addNode(400, 100, NodeType::END);
+    end->setLabel( "end" );
     //addEdge(start, end);
 
     //Init popup and popupedge for systems that do not automatically initialize it with null
