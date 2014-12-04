@@ -39,23 +39,25 @@ class Edge: public QGraphicsItem
 		// Getters
 		int getID();
 		double getWeight(bool weight1);
-    string getWeightAsString(bool weight1);
+        string getWeightAsString(bool weight1);
 		bool getBidirectional();
-    Node *getBeginNode();
-    Node *getEndNode();
+        Node *getBeginNode();
+        Node *getEndNode();
 
-    // Comparators
-    bool hasNode(Node *target);
-    bool hasStartNode(Node *target);
-    bool hasEndNode(Node *target);
+        // Comparators
+        bool hasNode(Node *target);
+        bool hasStartNode(Node *target);
+        bool hasEndNode(Node *target);
 
 		// Setters
-    void setWeight(double weight, bool weight1);
-    void setWeight(string str, bool weight1);
+        void setWeight(double weight, bool weight1);
+        void setWeight(string str, bool weight1);
 		void setBidirectional(bool bidirectional);
 
 		// Painting functions
 		void update();
+        void highlight(QColor color);
+        void removeHighlight();
 		QRectF boundingRect() const;
 		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -66,7 +68,7 @@ class Edge: public QGraphicsItem
 
 		// Utility functions
 		string dtos(double number);
-    double stod(string str);
+        double stod(string str);
 
 		// Data
 		int _id;
@@ -78,7 +80,11 @@ class Edge: public QGraphicsItem
 		bool _bidirectional;
 		Node *_start;
 		Node *_end;
+        bool _isHighlighted;
+        QColor _highlightColour;
 		Workspace *_context;
+        QColor arrow1Colour;
+        QColor arrow2Colour;
 };
 
 #endif // EDGE_H

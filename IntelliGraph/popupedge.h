@@ -5,6 +5,7 @@
 #include <QPlainTextEdit>
 #include <QString>
 #include <string>
+#include <cctype>
 
 #include "workspace.h"
 #include "edge.h"

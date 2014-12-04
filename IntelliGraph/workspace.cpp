@@ -38,21 +38,15 @@ Workspace::Workspace( QWidget *widget, QGraphicsView *elem ): QGraphicsScene( wi
 
     //Adding initial nodes.
     Node *start = addNode(100, 100, NodeType::START);
+    start->setLabel( "start" );
     Node *end = addNode(400, 100, NodeType::END);
+    end->setLabel( "end" );
     //addEdge(start, end);
 
     //Init popup and popupedge for systems that do not automatically initialize it with null
     popup = NULL;
     popupedge = NULL;
 
-    //Init loadedAlgorithm for systems that do not automatically initialize it with null
-    //loadedAlgorithm = NULL;
-    //TODO Remove this and uncomment above!
-    loadedAlgorithm = new SampleAlgorithm( this );
-    //This should happen in the algorithm initializer
-    loadedAlgorithm->processNodes( nodes );
-    loadedAlgorithm->processEdges( edges );
-    loadedAlgorithm->init();
 }
 
 Workspace::~Workspace()
@@ -118,6 +112,15 @@ void Workspace::clearSelection()
     selectedEdge = NULL;
 }
 
+void Workspace::removeHighlight() {
+    for (int i = 0; i < nodes.length(); i++) {
+        nodes.at(i)->removeHighlight();
+    }
+    for (int i = 0; i < edges.length(); i++) {
+        edges.at(i)->removeHighlight();
+    }
+}
+
 QList<Node*> Workspace::getNodes()
 {
     return nodes;
@@ -128,8 +131,27 @@ QList<Edge*> Workspace::getEdges()
     return edges;
 }
 
+/* This function handles workspace-related changes for a mode change. This should not be called
+ * on it's own. Let ui elements call MainWindow::setMode instead, which will invoke this function
+ * when the time is right.
+ */
 void Workspace::setMode(Workspace::Mode newMode)
 {
+    if( newMode == Workspace::edgeMode ) {
+        foreach( Node* i, this->getNodes() ) {
+            i->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
+    } else if( newMode == Workspace::selectMode ) {
+        foreach( Node* i, this->getNodes() ) {
+            i->setFlag(QGraphicsItem::ItemIsMovable, true);
+        }
+    } else if( newMode == Workspace::algorithmMode ) {
+        foreach( Node* i, this->getNodes() ) {
+            i->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
+    } else {
+        Q_ASSERT_X( false, "Workspace::setMode", "unhandled mode!" );
+    }
     mode = newMode;
 }
 
@@ -170,8 +192,29 @@ Node *Workspace::addNode(int x, int y, NodeType::Type type)
     return node;
 }
 
+Edge *Workspace::findEdge(Node *a, Node *b)
+{
+    Edge *tmp;
+    for (int i = 0; i < edges.length(); i++) {
+        tmp = edges.at(i);
+        if ((tmp->hasStartNode(a) && tmp->hasEndNode(b)) ||
+            (tmp->hasStartNode(b) && tmp->hasEndNode(a))) {
+            return tmp;
+        }
+    }
+    return NULL;
+}
+
+//Deletes a node and all connected edges
 void Workspace::deleteNode(Node *target)
 {
+    /* ATTENTION
+     *
+     * Do not change this function unless you understand that if you delete elements in a list
+     * while iterating through that list, iterating through that list after the first deletion
+     * produces undefined behaviour, and that undefined behaviour is bad. Do not simplify this
+     * function to use a single for-loop again, because the application will break again...
+     */
     bool repeat = true;
     while( repeat ) {
         //If no edges had to be deleted, repeat will be false at the end of the while loop
@@ -353,45 +396,6 @@ Node *Workspace::getNodeById( int id )
     }
     return NULL;
 }
-
-//Handles a click on the next button
-void Workspace::handleNext()
-{
-    //You should not be able to click the next button if no algorithm is loaded
-    Q_ASSERT_X( (loadedAlgorithm != NULL), "Workspace::handleNext()", "loadedAlgorithm is NULL");
-
-    Node *oldNode = getNodeById( loadedAlgorithm->getHighlightedNode() );
-    Q_ASSERT_X( (oldNode != NULL ), "Workspace::handleNext()", "old Node is NULL");
-    oldNode->removeHighlight();
-
-    if( loadedAlgorithm->next() ) {
-        qDebug() << "loaded Next: " << loadedAlgorithm->getHighlightedNode();
-        Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
-        Q_ASSERT_X( (node != NULL), "Workspace::handleNext()", "id returned by algorithm does not exist");
-        node->highlight(QColor(255,0,0));
-    }
-
-    //nodes.at(0)->highlight(QColor(255, 0, 0));
-}
-
-//Test function to test functionality of algorithms
-void Workspace::test() {
-    qDebug() << "resetting algorithm";
-    delete loadedAlgorithm;
-
-    foreach( Node *node, nodes ) {
-        node->removeHighlight();
-    }
-
-    loadedAlgorithm = new SampleAlgorithm( this );
-    loadedAlgorithm->processNodes( nodes );
-    loadedAlgorithm->processEdges( edges );
-    loadedAlgorithm->init();
-    Node *node = this->getNodeById( loadedAlgorithm->getHighlightedNode() );
-    Q_ASSERT_X( (node != NULL), "Workspace::test()", "id returned by algorithm does not exist");
-    node->highlight(QColor(255,0,0));
-}
-
 
 void Workspace::setnode(Node *target,NodeType::Type type){
     int i;
