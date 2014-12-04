@@ -203,15 +203,32 @@ Edge *Workspace::findEdge(Node *a, Node *b)
     return NULL;
 }
 
+//Deletes a node and all connected edges
 void Workspace::deleteNode(Node *target)
 {
-    Edge *temp = NULL;
-    for (int i = 0; i < edges.length(); i++)
-    {
-        temp = edges.at(i);
-        if (temp != NULL && temp->hasNode(target))
+    /* ATTENTION
+     *
+     * Do not change this function unless you understand that if you delete elements in a list
+     * while iterating through that list, iterating through that list after the first deletion
+     * produces undefined behaviour, and that undefined behaviour is bad. Do not simplify this
+     * function to use a single for-loop again, because the application will break again...
+     */
+    bool repeat = true;
+    while( repeat ) {
+        //If no edges had to be deleted, repeat will be false at the end of the while loop
+        repeat = false;
+
+        //Delete any edge that connects to the deleted node
+        for( int i = 0; i < edges.count(); i++ )
         {
-            deleteEdge(temp);
+            if( edges.at(i)->hasNode(target))
+            {
+                deleteEdge(edges.at(i));
+                //Continueing with this loop will result in undefined behaviour
+                //break out of for loop and start all over again
+                repeat = true;
+                break;
+            }
         }
     }
 
