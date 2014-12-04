@@ -418,3 +418,22 @@ void Workspace::setnode(Node *target,NodeType::Type type){
 
     target->setType(type);
 }
+
+void Workspace::exportGraph() {
+    QString fileName = QFileDialog::getSaveFileName(0, tr("Save File"), "", tr("Images (*.png *.xpm *.jpg)"));
+    drawingArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    drawingArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QPixmap pixMap = drawingArea->grab();
+    pixMap.save(fileName);
+    drawingArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    drawingArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+}
+
+
+
+
+
+
+
+
+

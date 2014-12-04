@@ -143,12 +143,7 @@ void MainWindow::on_modeButton_clicked()
 
 void MainWindow::on_exportButton_clicked()
 {
-    // Some test messagebox for the exportButton
-    QMessageBox msgBox;
-    msgBox.setText("exportButton works");
-    msgBox.setStandardButtons(QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Cancel);
-    msgBox.exec();
+    workspace->exportGraph();
 }
 
 void MainWindow::on_startStopButton_clicked()

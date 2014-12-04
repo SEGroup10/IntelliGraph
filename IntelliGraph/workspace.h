@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QScrollBar>
 #include <QPointF>
+#include <QFileDialog>
 
 #include "node.h"
 #include "edge.h"
@@ -61,7 +62,7 @@ class Workspace: public QGraphicsScene
         void deleteNode(Node *target);
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
-
+        void exportGraph();
         void setnode(Node *target, NodeType::Type type);
 private:
         bool clickedOnNode(Node *&node, QPointF pos);
