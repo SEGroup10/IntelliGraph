@@ -18,8 +18,7 @@ class AlgorithmInterface: public QObject
     public slots:
         Q_INVOKABLE void log(QString data);
         Q_INVOKABLE void setName(QString name);
-        Q_INVOKABLE void setNodeLabel(QString id, QString label);
-        Q_INVOKABLE void setEdgeLabel(QString a, QString b, QString label);
+        Q_INVOKABLE void setLabel(QString id, QString label);
         Q_INVOKABLE void highlightColor(QString r, QString g, QString b);
         Q_INVOKABLE void highlightNode(QString id);
         Q_INVOKABLE void highlightEdge(QString a, QString b);

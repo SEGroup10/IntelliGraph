@@ -20,7 +20,7 @@ var edgeIterator, lastEdge;
       map[nodes[i]] = [];
       distance[nodes[i]] = Number.POSITIVE_INFINITY;
       visited[nodes[i]] = false;
-      console.setNodeLabel(i, "infinity");
+      console.setLabel(i, "infinity");
     }
     for (j = 0; j < edges.length; j++) {
       edge = edges[j];
@@ -33,7 +33,7 @@ var edgeIterator, lastEdge;
     visited[currentNode] = true;
     console.highlightColor(255, 0, 0);
     console.highlightNode(currentNode);
-    console.setNodeLabel(currentNode, 0);
+    console.setLabel(currentNode, 0);
   },
   next: function() {
     if (map.hasOwnProperty(currentNode)) {
@@ -53,7 +53,7 @@ var edgeIterator, lastEdge;
         // algorithm
         var len = distance[currentNode] + e[1];
         if (len < distance[e[0]]) {
-          console.setNodeLabel(e[0], len);
+          console.setLabel(e[0], len);
           distance[e[0]] = len;
           previous[e[0]] = currentNode;
         }

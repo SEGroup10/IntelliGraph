@@ -20,17 +20,12 @@ void AlgorithmInterface::setName(QString name)
     _name = name;
 }
 
-void AlgorithmInterface::setNodeLabel(QString id, QString label)
+void AlgorithmInterface::setLabel(QString id, QString label)
 {
     Node * n = _context->getNodeById(id.toInt());
     if (n != NULL) {
         n->setAlgorithmLabel(label);
     }
-}
-
-void AlgorithmInterface::setEdgeLabel(QString a, QString b, QString label)
-{
-
 }
 
 void AlgorithmInterface::highlightColor(QString r, QString g, QString b)
