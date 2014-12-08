@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->nextButton->setDisabled(true);
     ui->resetButton->setDisabled(true);
     ui->startStopButton->setDisabled(true);
+    ui->editButton->setDisabled(true);
 
 }
 
@@ -52,12 +53,17 @@ void MainWindow::setMode( Workspace::Mode newmode ) {
     ui->nextButton->setDisabled(true);
     ui->resetButton->setDisabled(true);
 
+    if( this->selectedAlgorithmItem != NULL ) {
+        ui->editButton->setDisabled(false);
+    }
+
     if( newmode == Workspace::selectMode ) {
 
     } else if( newmode == Workspace::edgeMode ) {
 
     } else if( newmode == Workspace::algorithmMode ) {
         ui->modeButton->setDisabled(true);
+        ui->editButton->setDisabled(true);
         ui->nextButton->setDisabled(false);
     } else {
         Q_ASSERT_X( false, "MainWindow::setMode", "unhandled mode!");
@@ -128,12 +134,15 @@ void MainWindow::on_nextButton_clicked()
 void MainWindow::on_modeButton_clicked()
 {
     workspace->clearSelection();
+    QKeySequence a = ui->modeButton->shortcut();
     if (this->getMode() == Workspace::selectMode) {
         this->setMode(Workspace::edgeMode);
         ui->modeButton->setText(QString("Edge Mode"));
+        ui->modeButton->setShortcut( a );
     } else {
         this->setMode(Workspace::selectMode);
         ui->modeButton->setText(QString("Select Mode"));
+        ui->modeButton->setShortcut( a );
     }
 }
 
@@ -169,6 +178,12 @@ void MainWindow::on_startStopButton_clicked()
     }
 }
 
+void MainWindow::on_editButton_clicked()
+{
+    if(selectedAlgorithmItem->statusTip() != "")
+        QDesktopServices::openUrl(QUrl::fromLocalFile("algorithms/" + selectedAlgorithmItem->statusTip()));
+}
+
 void MainWindow::on_algorithmsList_itemSelectionChanged()
 {
     if( this->getMode() == Workspace::algorithmMode ) {
@@ -181,9 +196,11 @@ void MainWindow::on_algorithmsList_itemSelectionChanged()
         if( ui->algorithmsList->selectedItems().length() == 1 ) {
             ui->startStopButton->setDisabled(false);
             this->selectedAlgorithmItem = ui->algorithmsList->selectedItems().at(0);
+            ui->editButton->setDisabled(false);
         } else {
             ui->startStopButton->setDisabled(true);
             this->selectedAlgorithmItem = NULL;
+            ui->editButton->setDisabled(true);
         }
     }
 }
