@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // disable buttons
     ui->nextButton->setDisabled(true);
-    ui->prevButton->setDisabled(true);
+    ui->resetButton->setDisabled(true);
     ui->startStopButton->setDisabled(true);
 
 }
@@ -50,7 +50,7 @@ void MainWindow::refreshAlgorithms()
 void MainWindow::setMode( Workspace::Mode newmode ) {
     ui->modeButton->setDisabled(false);
     ui->nextButton->setDisabled(true);
-    ui->prevButton->setDisabled(true);
+    ui->resetButton->setDisabled(true);
 
     if( newmode == Workspace::selectMode ) {
 
@@ -121,12 +121,8 @@ void MainWindow::on_importButton_clicked()
 
 void MainWindow::on_nextButton_clicked()
 {
-    if (algorithm->next()) {
-        ui->prevButton->setDisabled(false);
-    } else {
-        qDebug() << "failed to select next state";
-        ui->nextButton->setDisabled(true);
-    }
+    algorithm->next();
+    ui->resetButton->setDisabled(false);
 }
 
 void MainWindow::on_modeButton_clicked()
@@ -168,6 +164,7 @@ void MainWindow::on_startStopButton_clicked()
         qDebug() << "stopping algorithm";
         this->setMode(savedMode);
         workspace->removeHighlight();
+        workspace->removeAlgorithmLabels();
         ui->startStopButton->setText(QString("Start"));
     }
 }
@@ -191,13 +188,8 @@ void MainWindow::on_algorithmsList_itemSelectionChanged()
     }
 }
 
-void MainWindow::on_prevButton_clicked()
+void MainWindow::on_resetButton_clicked()
 {
-    if (algorithm->previous()) {
-        ui->nextButton->setDisabled(false);
-    } else {
-        qDebug() << "failed to select previous state";
-        ui->prevButton->setDisabled(true);
-    }
-
+    algorithm->reset();
+    ui->nextButton->setDisabled(false);
 }

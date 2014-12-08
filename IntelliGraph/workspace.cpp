@@ -121,6 +121,13 @@ void Workspace::removeHighlight() {
     }
 }
 
+void Workspace::removeAlgorithmLabels()
+{
+    for (int i = 0; i < nodes.length(); i++) {
+        nodes.at(i)->resetLabel();
+    }
+}
+
 QList<Node*> Workspace::getNodes()
 {
     return nodes;

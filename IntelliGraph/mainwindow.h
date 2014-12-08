@@ -48,7 +48,7 @@ private slots:
 
     void on_algorithmsList_itemSelectionChanged();
 
-    void on_prevButton_clicked();
+    void on_resetButton_clicked();
 
 private:
     Ui::MainWindow *ui;

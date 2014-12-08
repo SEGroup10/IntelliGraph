@@ -43,6 +43,7 @@ class Workspace: public QGraphicsScene
         void handleNext();
         void clearSelection();
         void removeHighlight();
+        void removeAlgorithmLabels();
 
         // Data functions
         Node* getNodeById( int id );
