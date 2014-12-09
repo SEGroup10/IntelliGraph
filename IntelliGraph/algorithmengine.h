@@ -22,12 +22,10 @@ public:
 
     // actions
     void init(QString file);
-    bool previous();
-    bool next();
+    void reset();
+    void next();
 
 private:
-    QJSValue getNodes();
-    QJSValue getEdges();
     QJSValue getStartNode();
     QJSValue getEndNode();
     QByteArray getFileContents(QString path);

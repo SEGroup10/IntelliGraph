@@ -44,7 +44,9 @@ class Node: public QGraphicsItem
         QPointF getCenter() const;
 
         // Setters
+        void resetLabel();
         void setLabel(string label);
+        void setAlgorithmLabel(QString label);
         void setType(NodeType::Type type);
         void setColour(QColor colour);
         void setColourRGB(int r, int g, int b);
@@ -67,11 +69,13 @@ class Node: public QGraphicsItem
 
         // Data
         int _id;
+        QString _algorithmLabel;
         string _label;
         NodeType::Type _type;
         QColor _colour, _highlightColour;
         Workspace *_context;
         bool _isHighlighted;
+        bool _useAlgorithmLabel;
 };
 
 #endif

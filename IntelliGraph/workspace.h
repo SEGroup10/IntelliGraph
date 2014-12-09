@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QScrollBar>
 #include <QPointF>
+#include <QFileDialog>
 
 #include "node.h"
 #include "edge.h"
@@ -42,6 +43,8 @@ class Workspace: public QGraphicsScene
         void handleNext();
         void clearSelection();
         void removeHighlight();
+        void removeAlgorithmLabels();
+        bool nodesConnected();
 
         // Data functions
         Node* getNodeById( int id );
@@ -61,9 +64,10 @@ class Workspace: public QGraphicsScene
         void deleteNode(Node *target);
         Edge *addEdge(Node *begin, Node *end);
         void deleteEdge(Edge *target);
-
+        void exportGraph();
         void setnode(Node *target, NodeType::Type type);
 private:
+        QList<Node *> getConnectedNodes(Node *node);
         bool clickedOnNode(Node *&node, QPointF pos);
         bool clickedOnEdge(Edge *&edge,QPointF pos);
 

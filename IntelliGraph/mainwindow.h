@@ -11,6 +11,7 @@
 #include <QListWidgetItem>
 #include <QDir>
 #include <QFileDialog>
+#include <QDesktopServices>
 #include <QDebug>
 #include "workspace.h"
 #include "algorithmengine.h"
@@ -31,6 +32,7 @@ public slots:
     void on_importButton_clicked();
     void on_nextButton_clicked();
     void on_exportButton_clicked();
+    void on_editButton_clicked();
     void on_modeButton_clicked();
 
 public:
@@ -48,7 +50,7 @@ private slots:
 
     void on_algorithmsList_itemSelectionChanged();
 
-    void on_prevButton_clicked();
+    void on_resetButton_clicked();
 
 private:
     Ui::MainWindow *ui;

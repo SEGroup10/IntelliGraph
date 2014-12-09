@@ -9,6 +9,7 @@ Node::Node(int id, QPointF position, Workspace *context): QGraphicsItem()
     _label = itos(id);
     _context = context;
     _isHighlighted = false;
+    _useAlgorithmLabel = false;
     this->setZValue(2);
     this->setType(NodeType::STANDARD);
 
@@ -27,6 +28,7 @@ Node::Node(int id, QPointF position, Workspace *context, NodeType::Type type): Q
     _label = itos(id);
     _context = context;
     _isHighlighted = false;
+    _useAlgorithmLabel = false;
     this->setZValue(2);
     this->setType(type);
 
@@ -76,9 +78,22 @@ QPointF Node::getCenter() const {
     return QPointF(x, y);
 }
 
+void Node::resetLabel()
+{
+    _useAlgorithmLabel = false;
+    this->update();
+}
+
 // Sets the Label
 void Node::setLabel(string label) {
     _label = label;
+    this->update();
+}
+
+void Node::setAlgorithmLabel(QString label)
+{
+    _algorithmLabel = label;
+    _useAlgorithmLabel = true;
     this->update();
 }
 
@@ -117,7 +132,7 @@ void Node::setColourRGB(int r, int g, int b)
 // Return bounding rectangle
 QRectF Node::boundingRect() const
 {
-    return QRectF(0, 0, NODESIZE, NODESIZE);
+    return QRectF(-2, -2, NODESIZE + 4, NODESIZE + 4);
 }
 
 // highlights current node
@@ -135,7 +150,7 @@ void Node::removeHighlight() {
 // Paints the node
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QRectF rect = boundingRect();
+    QRectF rect = QRectF(0, 0, NODESIZE, NODESIZE);
     QBrush brush(_colour);
     QPen pen(Qt::black);
     QFont font = painter->font();
@@ -154,7 +169,11 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->setPen(pen);
     painter->setBrush(brush);
     painter->drawEllipse(rect);
-    painter->drawText(rect, Qt::AlignCenter, QString(_label.c_str()));
+    if (_useAlgorithmLabel) {
+        painter->drawText(rect, Qt::AlignCenter, _algorithmLabel);
+    } else {
+        painter->drawText(rect, Qt::AlignCenter, QString(_label.c_str()));
+    }
 }
 
 // convert an int to a string

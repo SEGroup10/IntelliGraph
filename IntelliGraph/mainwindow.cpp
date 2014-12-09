@@ -17,8 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // disable buttons
     ui->nextButton->setDisabled(true);
-    ui->prevButton->setDisabled(true);
+    ui->resetButton->setDisabled(true);
     ui->startStopButton->setDisabled(true);
+    ui->editButton->setDisabled(true);
 
 }
 
@@ -50,7 +51,11 @@ void MainWindow::refreshAlgorithms()
 void MainWindow::setMode( Workspace::Mode newmode ) {
     ui->modeButton->setDisabled(false);
     ui->nextButton->setDisabled(true);
-    ui->prevButton->setDisabled(true);
+    ui->resetButton->setDisabled(true);
+
+    if( this->selectedAlgorithmItem != NULL ) {
+        ui->editButton->setDisabled(false);
+    }
 
     if( newmode == Workspace::selectMode ) {
 
@@ -58,6 +63,7 @@ void MainWindow::setMode( Workspace::Mode newmode ) {
 
     } else if( newmode == Workspace::algorithmMode ) {
         ui->modeButton->setDisabled(true);
+        ui->editButton->setDisabled(true);
         ui->nextButton->setDisabled(false);
     } else {
         Q_ASSERT_X( false, "MainWindow::setMode", "unhandled mode!");
@@ -121,34 +127,28 @@ void MainWindow::on_importButton_clicked()
 
 void MainWindow::on_nextButton_clicked()
 {
-    if (algorithm->next()) {
-        ui->prevButton->setDisabled(false);
-    } else {
-        qDebug() << "failed to select next state";
-        ui->nextButton->setDisabled(true);
-    }
+    algorithm->next();
+    ui->resetButton->setDisabled(false);
 }
 
 void MainWindow::on_modeButton_clicked()
 {
     workspace->clearSelection();
+    QKeySequence a = ui->modeButton->shortcut();
     if (this->getMode() == Workspace::selectMode) {
         this->setMode(Workspace::edgeMode);
         ui->modeButton->setText(QString("Edge Mode"));
+        ui->modeButton->setShortcut( a );
     } else {
         this->setMode(Workspace::selectMode);
         ui->modeButton->setText(QString("Select Mode"));
+        ui->modeButton->setShortcut( a );
     }
 }
 
 void MainWindow::on_exportButton_clicked()
 {
-    // Some test messagebox for the exportButton
-    QMessageBox msgBox;
-    msgBox.setText("exportButton works");
-    msgBox.setStandardButtons(QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Cancel);
-    msgBox.exec();
+    workspace->exportGraph();
 }
 
 void MainWindow::on_startStopButton_clicked()
@@ -156,25 +156,32 @@ void MainWindow::on_startStopButton_clicked()
     Q_ASSERT_X( ui->algorithmsList->selectedItems().length() == 1, "MainWndow::on_startStopButton_clicked()", "Either 0 or more than 1 items have been selected");
     QListWidgetItem *itm = ui->algorithmsList->selectedItems().at(0);
     if (ui->startStopButton->text() == QString("Start")) {
-        if (workspace->getEdges().length() > 0) {
+        if (!workspace->nodesConnected()) {
+            QMessageBox msgBox;
+            msgBox.setText("Start and End node need to be connected!");
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            msgBox.exec();
+        } else {
             qDebug() << "start algorithm: " << itm->statusTip();
             savedMode = this->getMode();
             this->setMode(Workspace::algorithmMode);
             algorithm->init(itm->statusTip());
             ui->startStopButton->setText(QString("Stop"));
-        } else {
-            QMessageBox msgBox;
-            msgBox.setText("At least 1 edge is required");
-            msgBox.setStandardButtons(QMessageBox::Ok);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            msgBox.exec();
         }
     } else {
         qDebug() << "stopping algorithm";
         this->setMode(savedMode);
         workspace->removeHighlight();
+        workspace->removeAlgorithmLabels();
         ui->startStopButton->setText(QString("Start"));
     }
+}
+
+void MainWindow::on_editButton_clicked()
+{
+    if(selectedAlgorithmItem->statusTip() != "")
+        QDesktopServices::openUrl(QUrl::fromLocalFile("algorithms/" + selectedAlgorithmItem->statusTip()));
 }
 
 void MainWindow::on_algorithmsList_itemSelectionChanged()
@@ -189,20 +196,17 @@ void MainWindow::on_algorithmsList_itemSelectionChanged()
         if( ui->algorithmsList->selectedItems().length() == 1 ) {
             ui->startStopButton->setDisabled(false);
             this->selectedAlgorithmItem = ui->algorithmsList->selectedItems().at(0);
+            ui->editButton->setDisabled(false);
         } else {
             ui->startStopButton->setDisabled(true);
             this->selectedAlgorithmItem = NULL;
+            ui->editButton->setDisabled(true);
         }
     }
 }
 
-void MainWindow::on_prevButton_clicked()
+void MainWindow::on_resetButton_clicked()
 {
-    if (algorithm->previous()) {
-        ui->nextButton->setDisabled(false);
-    } else {
-        qDebug() << "failed to select previous state";
-        ui->prevButton->setDisabled(true);
-    }
-
+    algorithm->reset();
+    ui->nextButton->setDisabled(false);
 }

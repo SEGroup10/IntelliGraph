@@ -63,6 +63,17 @@ Node *Edge::getEndNode()
     return _end;
 }
 
+Node *Edge::getOtherNode(Node *tmp)
+{
+    if (hasStartNode(tmp)) {
+        return _end;
+    }
+    if (hasEndNode(tmp)) {
+        return _start;
+    }
+    return NULL;
+}
+
 // Checks if this edge is connected to target
 bool Edge::hasNode(Node *target)
 {

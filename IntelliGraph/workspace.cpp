@@ -121,6 +121,35 @@ void Workspace::removeHighlight() {
     }
 }
 
+void Workspace::removeAlgorithmLabels()
+{
+    for (int i = 0; i < nodes.length(); i++) {
+        nodes.at(i)->resetLabel();
+    }
+}
+
+bool Workspace::nodesConnected()
+{
+    Node *start, *tmp;
+    for (int i = 0; i < nodes.length(); i++) {
+         start = nodes.at(i);
+         if (start->getType() == NodeType::START) { break; }
+    }
+    QList<Node*> toDo = getConnectedNodes(start), done;
+    while (toDo.length() > 0) {
+        tmp = toDo.at(0);
+        toDo.removeAt(0);
+        if (!done.contains(tmp)) {
+            done.append(tmp);
+            toDo.append(getConnectedNodes(tmp));
+        }
+        if (tmp->getType() == NodeType::END) {
+            return true;
+        }
+    }
+    return false;
+}
+
 QList<Node*> Workspace::getNodes()
 {
     return nodes;
@@ -418,3 +447,34 @@ void Workspace::setnode(Node *target,NodeType::Type type){
 
     target->setType(type);
 }
+
+QList<Node *> Workspace::getConnectedNodes(Node *node)
+{
+    QList<Node*> ret;
+    for (int i = 0; i < edges.length(); i++) {
+        Edge *e = edges.at(i);
+        if (e->hasStartNode(node) || (e->getBidirectional() && e->hasNode(node))) {
+            ret.append(e->getOtherNode(node));
+        }
+    }
+    return ret;
+}
+
+void Workspace::exportGraph() {
+    QString fileName = QFileDialog::getSaveFileName(0, tr("Save File"), "", tr("Images (*.png *.xpm *.jpg)"));
+    drawingArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    drawingArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QPixmap pixMap = drawingArea->grab();
+    pixMap.save(fileName);
+    drawingArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    drawingArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+}
+
+
+
+
+
+
+
+
+
