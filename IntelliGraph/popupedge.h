@@ -39,6 +39,8 @@ private slots:
 
     void on_rightToLeftWeight_textChanged(const QString &arg1);
 
+    void on_leftToRightCheckbox_stateChanged(int arg1);
+
 private:
     Ui::PopupEdge *ui;
     QList<QColor> colors;

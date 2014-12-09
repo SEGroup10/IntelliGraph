@@ -85,16 +85,26 @@ QJSValue AlgorithmInterface::getNodes()
 
 QJSValue AlgorithmInterface::getEdges()
 {
+    int c = 0;
     Edge *current;
     QList<Edge*> edges = _context->getEdges();
     QJSValue ret =  _engine->newArray(edges.length());
     for (int i = 0; i < edges.length(); i++) {
         current = edges.at(i);
-        QJSValue tmp = _engine->newArray(2);
+        QJSValue tmp = _engine->newArray(3);
+        if (current->getBidirectional()) {
+            tmp.setProperty(0, QJSValue(current->getEndNode()->getID()));
+            tmp.setProperty(1, QJSValue(current->getBeginNode()->getID()));
+            tmp.setProperty(2, QJSValue(current->getWeight(true)));
+            ret.setProperty(c, tmp);
+            c++;
+            tmp = _engine->newArray(3);
+        }
         tmp.setProperty(0, QJSValue(current->getBeginNode()->getID()));
         tmp.setProperty(1, QJSValue(current->getEndNode()->getID()));
         tmp.setProperty(2, QJSValue(current->getWeight(true)));
-        ret.setProperty(i, tmp);
+        ret.setProperty(c, tmp);
+        c++;
     }
     return ret;
 }

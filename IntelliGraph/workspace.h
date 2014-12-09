@@ -44,6 +44,7 @@ class Workspace: public QGraphicsScene
         void clearSelection();
         void removeHighlight();
         void removeAlgorithmLabels();
+        bool nodesConnected();
 
         // Data functions
         Node* getNodeById( int id );
@@ -66,6 +67,7 @@ class Workspace: public QGraphicsScene
         void exportGraph();
         void setnode(Node *target, NodeType::Type type);
 private:
+        QList<Node *> getConnectedNodes(Node *node);
         bool clickedOnNode(Node *&node, QPointF pos);
         bool clickedOnEdge(Edge *&edge,QPointF pos);
 

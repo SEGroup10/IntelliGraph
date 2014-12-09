@@ -156,18 +156,18 @@ void MainWindow::on_startStopButton_clicked()
     Q_ASSERT_X( ui->algorithmsList->selectedItems().length() == 1, "MainWndow::on_startStopButton_clicked()", "Either 0 or more than 1 items have been selected");
     QListWidgetItem *itm = ui->algorithmsList->selectedItems().at(0);
     if (ui->startStopButton->text() == QString("Start")) {
-        if (workspace->getEdges().length() > 0) {
+        if (!workspace->nodesConnected()) {
+            QMessageBox msgBox;
+            msgBox.setText("Start and End node need to be connected!");
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            msgBox.exec();
+        } else {
             qDebug() << "start algorithm: " << itm->statusTip();
             savedMode = this->getMode();
             this->setMode(Workspace::algorithmMode);
             algorithm->init(itm->statusTip());
             ui->startStopButton->setText(QString("Stop"));
-        } else {
-            QMessageBox msgBox;
-            msgBox.setText("At least 1 edge is required");
-            msgBox.setStandardButtons(QMessageBox::Ok);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            msgBox.exec();
         }
     } else {
         qDebug() << "stopping algorithm";

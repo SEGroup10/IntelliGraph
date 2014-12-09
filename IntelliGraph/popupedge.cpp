@@ -204,3 +204,7 @@ bool PopupEdge::is_number(const std::string& s)
     }
     return !s.empty() && it == s.end();
 }
+
+void PopupEdge::on_leftToRightCheckbox_stateChanged(int arg1)
+{
+}

@@ -43,6 +43,7 @@ class Edge: public QGraphicsItem
 		bool getBidirectional();
         Node *getBeginNode();
         Node *getEndNode();
+        Node *getOtherNode(Node *tmp);
 
         // Comparators
         bool hasNode(Node *target);
