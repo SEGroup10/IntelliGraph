@@ -132,7 +132,7 @@ void Node::setColourRGB(int r, int g, int b)
 // Return bounding rectangle
 QRectF Node::boundingRect() const
 {
-    return QRectF(0, 0, NODESIZE, NODESIZE);
+    return QRectF(-2, -2, NODESIZE + 4, NODESIZE + 4);
 }
 
 // highlights current node
@@ -150,7 +150,7 @@ void Node::removeHighlight() {
 // Paints the node
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QRectF rect = boundingRect();
+    QRectF rect = QRectF(0, 0, NODESIZE, NODESIZE);
     QBrush brush(_colour);
     QPen pen(Qt::black);
     QFont font = painter->font();
