@@ -42,6 +42,8 @@ void MainWindow::refreshAlgorithms()
     {
         ui->algorithmsList->addItem(alg_list.at(i));
     }
+
+    selectedAlgorithmItem = NULL;
 }
 
 
@@ -52,6 +54,7 @@ void MainWindow::setMode( Workspace::Mode newmode ) {
     ui->modeButton->setDisabled(false);
     ui->nextButton->setDisabled(true);
     ui->resetButton->setDisabled(true);
+    ui->importButton->setDisabled(true);
 
     if( this->selectedAlgorithmItem != NULL ) {
         ui->editButton->setDisabled(false);
@@ -65,6 +68,8 @@ void MainWindow::setMode( Workspace::Mode newmode ) {
         ui->modeButton->setDisabled(true);
         ui->editButton->setDisabled(true);
         ui->nextButton->setDisabled(false);
+        ui->editButton->setDisabled(true);
+        ui->importButton->setDisabled(true);
     } else {
         Q_ASSERT_X( false, "MainWindow::setMode", "unhandled mode!");
     }
@@ -112,8 +117,13 @@ void MainWindow::on_importButton_clicked()
 
             if (choiceDialog == QMessageBox::Yes)
             {
-                destinationFile.remove();
-                sourceFile.copy(destination);
+                sourceFile.open(QIODevice::ReadOnly);
+                QByteArray filecontents = sourceFile.readAll();
+                sourceFile.close();
+                destinationFile.open(QIODevice::WriteOnly);
+                destinationFile.write( filecontents );
+                destinationFile.close();
+                //sourceFile.copy(destination);
             }
         }
         else
